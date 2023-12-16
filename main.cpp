@@ -4,25 +4,6 @@ using std::cout;
 using std::string;
 using std::vector;
 
-class User{
-private:
-    string username;
-    string password;
-    string phone_number;
-    string email;
-    string home_address;
-    std::vector<string> skill_list;
-
-public:
-    User(string usernameVal = "", string passwordVal = "", string phone_numberVal = "", string emailVal = "",
-         string home_addressVal = "", std::vector<string> skill_listVal = {})
-    : username(usernameVal), password(passwordVal), phone_number(phone_numberVal), 
-      email(emailVal), home_address(home_addressVal), skill_list(skill_listVal.begin(), skill_listVal.end()){
-        // for(int i = 0; i < skill_listVal.size(); ++i){
-        //     skill_list.push_back(skill_listVal[i]);
-        // }
-    }
-};
 int main(){
     cout << "EEET2482/COSC2082 ASSIGNMENT\n"
          << "'TIME BANK' APPLICATION\n"
