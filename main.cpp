@@ -46,6 +46,11 @@ int main(){
          << "\t\t-------------------------------------\n"
          << ">Your choice: ";
 
-
+    int user_choice; //Get the input of the user's ipnut
+    switch(user_choice){
+        case 1:
+            break;
+    }
+    
     return 0;
 }
