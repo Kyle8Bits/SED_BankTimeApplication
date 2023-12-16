@@ -6,7 +6,7 @@ using std::string;
 using std::endl;
 
 class Account{
-private:
+protected:
     string user_name;
     string email;
     string pass_word;
@@ -27,4 +27,18 @@ public:
     void setPassword(string pass_word){
         this->pass_word = pass_word;
     }
+
+    void setEmail(string email){
+        this->email = email;
+    }
+};
+
+class Member : public Account{
+private:
+    //INHERITANCE FROM ACCOUNT 
+    // string user_name;
+    // string email;
+    // string pass_word;
+
+
 };
