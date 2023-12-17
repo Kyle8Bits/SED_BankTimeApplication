@@ -3,7 +3,6 @@
 #include <fstream>
 #include <string>
 
-
 #include "Member.cpp"
 
 using std::cout;
@@ -31,16 +30,24 @@ public:
         return -1;
     }
 
+    bool checkEmtpy(const string& str){
+        if(str.empty()){
+            cout << "Please enter non-empty value!" << endl;
+            return false;
+        }
+
+        return true;
+    }
+
     bool registerMember(){
         string user_name_input; 
         string pass_word_input; //these 2 attributes to take the value from input
         cout << "****Your registration adds great value to our community. Thank you!****" << endl;
-        cout << "Please enter these basic information below: " << endl;
+        cout << "Please enter username & password: " << endl;
         cout << ">Username: " ;
         getline(cin >> std::ws, user_name_input); //std::ws to ignore the reduntant space
 
-        if(user_name_input.empty()){//Check wether the users not type anything?
-            cout << "Please enter non-empty value" << endl;
+        if(!checkEmtpy(user_name_input)){//Call the check empty function
             return false;
         }
         //Check the username is existed or not?
@@ -56,17 +63,52 @@ public:
         cout << "Password: ";
         getline(cin >> std::ws, pass_word_input);
 
-        if(pass_word_input.empty()){
-            cout << "Please enter non-empty value" << endl;
+        if(!checkEmtpy(pass_word_input)){//Call the check empty function
             return false;
         }
 
+        string full_name_input, phone_number_input, address_input, city_input;//declare 3 variables to get basic information of users
+        cout << "****Please enter few basic information to complete the registration****" << endl;
+        cout << ">Your full name: ";
+        getline(cin >> std::ws, full_name_input);
 
+        do{//Do until users type valid phone number 
+            cout << "Your phone number: ";
+            std::getline(cin >> std::ws, phone_number_input);
+        }while(!isValidPhone(phone_number_input));
+        
+        cout << "Your address: ";
+        getline(cin >> std::ws, address_input);
+
+        int user_choice = 0;
+        cout <<"****Our application only exists at Ho Chi Minh and Hanoi****" << endl;
+        cout << "1. Hanoi" << endl
+             << "2. Ho Chi Minh" << endl
+             << ">Your choice: ";
+        cin >> user_choice;
+        switch(user_choice){
+            case 1://Hanoi
+                city_input = "Hanoi";
+                break;
+            case 2://Ho Chi MInh
+                city_input = "Ho Chi Minh";
+                break;
+            default: //invlaid input
+                cout << "Please enter valid input!" << endl;
+                return false;
+                break;
+        }
+
+        cout << "Succesfully collecting your info" << std::endl;
         //Create a member and push it in the lsit
         Member* new_member = new Member(user_name_input, pass_word_input);
+        //SET SOME BASIC INFORMATION
+        new_member->setFullName(full_name_input);
+        new_member->setPhoneNumber(phone_number_input);
+        new_member->setAddress(address_input);
+        new_member->setCity(city_input);
 
-        addPersonalData(new_member);
-
+        //push it in the list
         member_list.push_back( new_member );
         //SUCCESSFUL REGISTER
         cout << "Register member succesffully!" << endl;
@@ -94,14 +136,6 @@ public:
         return false;
     }
 
-    void displayMemberList(){
-        cout << "****Member list****" << endl;
-        loop(this->member_list.size()){
-            //Go to each member to print the information
-            cout << member_list[i]->getUsername() << ":" << member_list[i]->getPassword() << endl;
-        }
-    }
-
     bool saveToFile(){
         std::fstream my_file;
         my_file.open(FILENAME, std::ios::out);//use trunc to remove all the old content
@@ -112,14 +146,26 @@ public:
 
         loop(member_list.size()){
             if(i == member_list.size() - 1){//If go to the last element
-                my_file << member_list[i]->getUsername() << "-" << member_list[i]->getPassword() << "-" << member_list[i]->getFullName() << "-" << member_list[i]->getPhoneNumber() << "-" <<member_list[i]->getAddress() << "-" << member_list[i]->getCity();//save to file without endl
+                my_file << member_list[i]->getUsername() << "-" << member_list[i]->getPassword() << "-" << member_list[i]->getMemberId() << "-" << member_list[i]->getFullName() << "-" << member_list[i]->getPhoneNumber() << "-" <<member_list[i]->getAddress() << "-" << member_list[i]->getCity();//save to file without endl
             }else{
-                my_file << member_list[i]->getUsername() << "-" << member_list[i]->getPassword() << "-" << member_list[i]->getFullName() << "-" << member_list[i]->getPhoneNumber() << "-" << member_list[i]->getAddress() << "-" << member_list[i]->getCity() << std::endl;
+                my_file << member_list[i]->getUsername() << "-" << member_list[i]->getPassword() << "-" << member_list[i]->getMemberId() << "-" << member_list[i]->getFullName() << "-" << member_list[i]->getPhoneNumber() << "-" << member_list[i]->getAddress() << "-" << member_list[i]->getCity() << endl;
             }
         }
 
         my_file.close();
-        cout << "Save to file SUCCESFULLY!";
+        cout << "Save to file SUCCESFULLY!" << endl;
+        return true;
+    }
+
+    //This boolean to read all data 
+    bool readDataFromFileCheck(std::fstream& my_file, string& username, string& password, string& id, string& full_name, string& phone_number, string& address, string& city){
+        //Read data from file
+        if(! (getline(my_file, username, '-') &&  getline(my_file, password, '-') && getline(my_file, id, '-') && 
+              getline(my_file, full_name, '-') && getline(my_file, phone_number, '-') && getline(my_file, address, '-') && getline(my_file, city, '-'))){
+            //IF faile to read data from file
+            return false;
+        }
+
         return true;
     }
 
@@ -134,96 +180,75 @@ public:
         
         member_list.clear(); //clear the member list before load the data
         
-        string username_from_file, password_from_file; // 2 varibles to store the username and password to pass into the list
-        while (getline(my_file, username_from_file, '-') && getline(my_file, password_from_file)) {
-            // Read data from the file
-            if (username_from_file.empty() || password_from_file.empty()) {
-                break; // If the username or password cannot get the value anymore, break the loop
-            }
+        string username_from_file, password_from_file, id_from_file, full_name_from_file, phonenumber_from_file, address_from_file, city_from_file; // varibles to store data from file and push into the list
+        
+        while(getline(my_file, username_from_file, '-') &&  getline(my_file, password_from_file, '-') && getline(my_file, id_from_file, '-') && 
+              getline(my_file, full_name_from_file, '-') && getline(my_file, phonenumber_from_file, '-') && getline(my_file, address_from_file, '-') && getline(my_file, city_from_file)){
 
-            // Include it all in the list
-            Member* new_member = new Member(username_from_file, password_from_file);
+            //add it into the list
+            Member* new_member = new Member(username_from_file, password_from_file, id_from_file, 20, full_name_from_file, phonenumber_from_file, address_from_file, city_from_file);
             member_list.push_back(new_member);
         }
-
         my_file.close();
-        return true;
-    }
 
-    bool addPersonalData(Member* member){
-        string full_name, phone_number, address, city;
+        if(!member_list.empty()){//if the list is not empty, run teh code below
+            string max_id = member_list[0]->getMemberId();
+            string number_part = max_id.substr(1);// take the string from the second position to end (it will skill character "M")
+            int max_id_numeric = std::stoi(number_part);//Assume that the first member is the member which has the maximum id
+            
+            for(int i = 1; i < member_list.size(); i++){
+                string id_string = member_list[i]->getMemberId();
+                string number_part_id = id_string.substr(1);//take the string from the second position to end (it will skill character "M")
+                int id_numeric = std::stoi(number_part_id);
 
-        cout << "Please enter your information to complete your registration" << std::endl;
-        cout << "Your full name: ";
-        std::getline(cin, full_name);
-
-        while (1){
-        cout <<"Your phone number: ";
-        std::getline(cin, phone_number);
-
-            if (isValidPhone(phone_number)){
-                break;
+                if(max_id_numeric < id_numeric){// Assign the value of id_numeric to the max_id_numeric if id_numeric is larger than max_id_numeric
+                    max_id_numeric = id_numeric;
+                }
             }
-            else{
-                cout <<"Your phone number is invalid \n."<< 
-                    "Please input again: ";
-            }
+
+            //Assign teh max value to the number_of_student in Member file
+            Member::number_of_student = max_id_numeric;   
         }
-
-        cout << "Your address: ";
-        std::getline(cin, address);
-
-        int choice;
-        while (1){
-        cout << "Your city" <<std::endl;
-        cout << "Input the number from your keyboard" << std::endl;
-        cout << "1. Hanoi\n" <<
-                "2. Ho Chi Minh \n" <<
-                "3. Other" << std::endl ;
-        cin >> choice;
-
-            if (choice == 1){
-                city = "Ha Noi";
-                break;
-            }
-            else if (choice == 2){
-                city = "Ho Chi Minh";
-                break;
-            }
-            else {
-                cout <<"The application is only available in Ha Noi or Ho Chi Minh.\n" <<
-                "Please choose again" << std::endl;
-            }
-        }
-
-        member->setFullName(full_name);
-        member->setPhoneNumber(phone_number);
-        member->setAddress(address);
-        member->setCity(city);
-
-        cout << "Succesfully collecting your info" << std::endl;
+        
         return true;
     }
 
     //method to check phone number
-    bool isValidPhone(string str) {
-    // check if the string length is exactly 10
-    if (str.length() != 10) {
-        return false;
-    }
-
-    // check if all characters in the string are digits
-    for (char ch : str) {
-        if (!std::isdigit(ch)) {
+    bool isValidPhone(const string& str) {
+        
+        // check if all characters in the string are digits
+        for (char ch : str) {
+            if (!std::isdigit(ch)) {
+                cout << "You can not type character!" << endl;
+                return false;
+            }
+        }
+        // check if the string length is exactly 10
+        if (str.length() != 10) {
+            cout << "Your phone number must have 10 numbers" << endl;
             return false;
         }
+        
+        
+        // if both conditions are satisfied, return true
+        return true;
     }
 
-    // if both conditions are satisfied, return true
-    return true;
-}
-
-
+    void displayMemberList(){
+        cout << "****Member list****" << endl;
+        loop(this->member_list.size()){
+            //Go to each member to print the information
+            cout << "Member " << i + 1 << ": " << endl;
+            cout << "username: " << member_list[i]->getUsername() 
+                 << ", password: "<< member_list[i]->getPassword()
+                 << ", member id: " << member_list[i]->getMemberId()
+                 << ", credit point: " << member_list[i]->getCreditPoint()
+                 << ", fullname: " << member_list[i]->getFullName()
+                 << ", address: " << member_list[i]->getAddress()
+                 << ", city: " << member_list[i]->getCity() << endl;
+            
+        }
+    }
 
     ~System() {//Clear the member to advoid memory leak
         for (Member* member : member_list) {
