@@ -1,6 +1,8 @@
 #include <iostream>
 #include <vector>
 #include <fstream>
+#include <string>
+
 
 #include "Member.cpp"
 
@@ -36,6 +38,7 @@ public:
         cout << "Please enter these basic information below: " << endl;
         cout << ">Username: " ;
         getline(cin >> std::ws, user_name_input); //std::ws to ignore the reduntant space
+
         if(user_name_input.empty()){//Check wether the users not type anything?
             cout << "Please enter non-empty value" << endl;
             return false;
@@ -57,8 +60,13 @@ public:
             cout << "Please enter non-empty value" << endl;
             return false;
         }
+
+
         //Create a member and push it in the lsit
         Member* new_member = new Member(user_name_input, pass_word_input);
+
+        addPersonalData(new_member);
+
         member_list.push_back( new_member );
         //SUCCESSFUL REGISTER
         cout << "Register member succesffully!" << endl;
@@ -104,9 +112,9 @@ public:
 
         loop(member_list.size()){
             if(i == member_list.size() - 1){//If go to the last element
-                my_file << member_list[i]->getUsername() << "-" << member_list[i]->getPassword();//save to file without endl
+                my_file << member_list[i]->getUsername() << "-" << member_list[i]->getPassword() << "-" << member_list[i]->getFullName() << "-" << member_list[i]->getPhoneNumber() << "-" <<member_list[i]->getAddress() << "-" << member_list[i]->getCity();//save to file without endl
             }else{
-                my_file << member_list[i]->getUsername() << "-" << member_list[i]->getPassword() << endl;
+                my_file << member_list[i]->getUsername() << "-" << member_list[i]->getPassword() << "-" << member_list[i]->getFullName() << "-" << member_list[i]->getPhoneNumber() << "-" << member_list[i]->getAddress() << "-" << member_list[i]->getCity() << std::endl;
             }
         }
 
@@ -142,9 +150,80 @@ public:
         return true;
     }
 
-    bool addPersonalData(){
-        
+    bool addPersonalData(Member* member){
+        string full_name, phone_number, address, city;
+
+        cout << "Please enter your information to complete your registration" << std::endl;
+        cout << "Your full name: ";
+        std::getline(cin, full_name);
+
+        while (1){
+        cout <<"Your phone number: ";
+        std::getline(cin, phone_number);
+
+            if (isValidPhone(phone_number)){
+                break;
+            }
+            else{
+                cout <<"Your phone number is invalid \n."<< 
+                    "Please input again: ";
+            }
+        }
+
+        cout << "Your address: ";
+        std::getline(cin, address);
+
+        int choice;
+        while (1){
+        cout << "Your city" <<std::endl;
+        cout << "Input the number from your keyboard" << std::endl;
+        cout << "1. Hanoi\n" <<
+                "2. Ho Chi Minh \n" <<
+                "3. Other" << std::endl ;
+        cin >> choice;
+
+            if (choice == 1){
+                city = "Ha Noi";
+                break;
+            }
+            else if (choice == 2){
+                city = "Ho Chi Minh";
+                break;
+            }
+            else {
+                cout <<"The application is only available in Ha Noi or Ho Chi Minh.\n" <<
+                "Please choose again" << std::endl;
+            }
+        }
+
+        member->setFullName(full_name);
+        member->setPhoneNumber(phone_number);
+        member->setAddress(address);
+        member->setCity(city);
+
+        cout << "Succesfully collecting your info" << std::endl;
+        return true;
     }
+
+    //method to check phone number
+    bool isValidPhone(string str) {
+    // check if the string length is exactly 10
+    if (str.length() != 10) {
+        return false;
+    }
+
+    // check if all characters in the string are digits
+    for (char ch : str) {
+        if (!std::isdigit(ch)) {
+            return false;
+        }
+    }
+
+    // if both conditions are satisfied, return true
+    return true;
+}
+
+
 
     ~System() {//Clear the member to advoid memory leak
         for (Member* member : member_list) {

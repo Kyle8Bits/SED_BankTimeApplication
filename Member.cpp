@@ -46,6 +46,106 @@ public:
     }
 
     string getMemberId(){return this->member_id;}
+
+
+    //Getter and setter
+
+    int getCreditPoint() const {
+    return credit_point;
+}
+
+void setCreditPoint(int value) {
+    credit_point = value;
+}
+
+string getFullName() const {
+    return full_name;
+}
+
+void setFullName(string value) {
+    full_name = value;
+}
+
+string getPhoneNumber() const {
+    return phone_number;
+}
+
+void setPhoneNumber(string value) {
+    phone_number = value;
+}
+
+string getAddress() const {
+    return address;
+}
+
+void setAddress(string value) {
+    address = value;
+}
+
+string getCity() const {
+    return city;
+}
+
+void setCity(string value) {
+    city = value;
+}
+
+string getAboutMe() const {
+    return about_me;
+}
+
+void setAboutMe(string value) {
+    about_me = value;
+}
+
+double getSkillRatingScore() const {
+    return skill_rating_score;
+}
+
+void setSkillRatingScore(double value) {
+    skill_rating_score = value;
+}
+
+double getSupportRatingScore() const {
+    return support_rating_score;
+}
+
+void setSupportRatingScore(double value) {
+    support_rating_score = value;
+}
+
+double getHostRatingScore() const {
+    return host_rating_score;
+}
+
+void setHostRatingScore(double value) {
+    host_rating_score = value;
+}
+
+int getSupportCount() const {
+    return support_count;
+}
+
+void setSupportCount(int value) {
+    support_count = value;
+}
+
+int getHostCount() const {
+    return host_count;
+}
+
+void setHostCount(int value) {
+    host_count = value;
+}
+
+const std::vector<string>& getBlockList() const {
+    return block_list;
+}
+
+void setBlockList(const std::vector<string>& value) {
+    block_list = value;
+}
+
 };
 
 int Member::number_of_student = 0;
