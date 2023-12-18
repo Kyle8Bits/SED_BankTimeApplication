@@ -16,7 +16,7 @@ private:
 
     //ATTRIBUTE OF MEMBER
     string member_id; 
-    static int number_of_student;//the number of the student 
+    static int number_of_member;//the number of the student 
     int credit_point;
     string full_name;
     string phone_number;
@@ -41,10 +41,10 @@ public:
       city(city), about_me(about_me), skill_rating_score(skill_rating_score), support_rating_score(support_rating_score),
       host_rating_score(host_rating_score), support_count(support_count), host_count(host_count), block_list(block_list)
     {
-        number_of_student++;//Increse the student by 1
+        number_of_member++;//Increse the student by 1
 
         if(member_id == "M"){//If the member id is M (Default value), we auto generate the id with the number of the number
-            this->member_id = member_id + std::to_string(number_of_student);//AUTO GENERATE THE ID FOR MEMBER
+            this->member_id = member_id + std::to_string(number_of_member);//AUTO GENERATE THE ID FOR MEMBER
         }
     }
 
@@ -151,4 +151,4 @@ public:
     friend class System;//Make system is friend of Member
 };
 
-int Member::number_of_student = 0;
+int Member::number_of_member = 0;

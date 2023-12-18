@@ -4,6 +4,7 @@
 #include <string>
 
 #include "Member.cpp"
+#include "BookingSupporter.cpp"
 
 using std::cout;
 using std::cin;
@@ -11,12 +12,20 @@ using std::string;
 using std::endl;
 
 #define loop(n) for(int i = 0; i < n; ++i)
-#define FILENAME "members.dat"
+#define MEMBERFILE "members.dat"
+#define BOOKINGFILE "booking.dat"
+
 
 class System{
 private:
     std::vector<Member*> member_list;
+    std::vector<BookingSupporter*> booking_list;
+    string currentUser;
 public:
+    void setCurrentUser(string currentUser){
+        this->currentUser = currentUser;
+    }
+
     //CONSTRUCTOR
     System(std::vector<Member*> member_list = {}) : member_list(member_list){}
 
@@ -129,6 +138,7 @@ public:
         loop(member_list.size()){
             if(member_list[i]->getUsername() == user_name_input && member_list[i]->getPassword() == pass_word_input){
                 cout << "Login SUCCESSFULLY!" << endl;
+                setCurrentUser(member_list[i]->getMemberId());
                 return true;
             }
         }
@@ -138,9 +148,9 @@ public:
 
     bool saveToFile(){
         std::fstream my_file;
-        my_file.open(FILENAME, std::ios::out);//use trunc to remove all the old content
+        my_file.open(MEMBERFILE, std::ios::out);//use trunc to remove all the old content
         if (!my_file.is_open()) {
-            cout << "Can not open the file" << endl;
+            cout << "Can not open the member file" << endl;
             return false;
         }
 
@@ -153,7 +163,7 @@ public:
         }
 
         my_file.close();
-        cout << "Save to file SUCCESFULLY!" << endl;
+        cout << "SAVE MEMBER SUCCESS" << endl;
         return true;
     }
 
@@ -171,7 +181,7 @@ public:
 
     bool loadData(){
         std::fstream my_file;
-        my_file.open(FILENAME, std::ios::in);
+        my_file.open(MEMBERFILE, std::ios::in);
 
         if (!my_file.is_open()) {
             cout << "Can not open the file" << endl;
@@ -207,7 +217,7 @@ public:
             }
 
             //Assign teh max value to the number_of_student in Member file
-            Member::number_of_student = max_id_numeric;   
+            Member::number_of_member = max_id_numeric;   
         }
         
         return true;
@@ -250,6 +260,111 @@ public:
         }
     }
 
+    void displayAvailableList(){
+        cout << "****Available list****" << endl;
+        cout << "================================================================\n";
+        loop(this->member_list.size()){
+            //Go to each member to print the information
+            cout << "Member " << i + 1 << ": " << endl;
+            cout << "Member id: " << member_list[i]->getMemberId() <<endl;
+            cout << "Fullname: " << member_list[i]->getFullName() << endl;
+            cout << "City: " << member_list[i]->getCity() << endl;
+            cout << "================================================================\n";
+        }
+    }
+
+    bool saveBookingFile(){
+        std::fstream my_file;
+        my_file.open(BOOKINGFILE, std::ios::out);
+        if(!my_file.is_open()){
+            cout << "Can not open the booking file"<< endl;
+            return false;
+        }
+
+        loop(booking_list.size()){
+            if(i == booking_list.size() - 1){//If go to the last element
+                my_file << booking_list[i]->getBookingId() << "-" << booking_list[i]->getHostId() << "-" << booking_list[i]->getSupportId() << "-" <<  booking_list[i]->getStatus();//save to file without endl
+            }else{
+                my_file << booking_list[i]->getBookingId() << "-" << booking_list[i]->getHostId() << "-" << booking_list[i]->getSupportId() << "-" <<  booking_list[i]->getStatus() << endl;
+            }
+        }
+        my_file.close();
+        cout << "SAVE BOOKING SUCCESS" << endl;
+        return true;
+    }
+
+    bool loadBookingFile(){
+        std::fstream my_file;
+        my_file.open(BOOKINGFILE, std::ios::in);
+
+        if (!my_file.is_open()){
+            std::cerr << "Cannot read the booking file" << endl;
+            return false;
+        }
+
+        booking_list.clear(); //clear the list before reload data
+
+        string bookingid_from_file, hostid_from_file, supportid_from_file, status_from_file;
+
+        while (getline(my_file, bookingid_from_file, '-') && getline(my_file, hostid_from_file, '-') && getline(my_file, supportid_from_file, '-') && getline(my_file,status_from_file)){
+            BookingSupporter *booking  = new BookingSupporter(hostid_from_file, supportid_from_file, status_from_file, bookingid_from_file);
+            booking_list.push_back(booking);
+        }
+        my_file.close();
+
+        if (!booking_list.empty()) {
+            string max_id = booking_list[0]->getBookingId();
+            string number_part = max_id.substr(2);  // Skip the first two characters (prefix "BK")
+            int max_id_numeric;
+            max_id_numeric = std::stoi(number_part);
+           
+
+        for (int i = 1; i < booking_list.size(); i++) {
+            string id_string = booking_list[i]->getBookingId();
+            string part_id = id_string.substr(2);  // Skip the first two characters (prefix "BK")
+            int id_numeric;
+            id_numeric =  std::stoi(part_id);
+
+            if (max_id_numeric < id_numeric) {
+                max_id_numeric = id_numeric;
+            }
+        }
+        
+            //Assign new start value for booking in BookingSupporter class
+            BookingSupporter::number_of_booking = max_id_numeric;
+        }
+        return true;
+    }
+
+    bool isAvailable(string id, string input){
+        for (int i = 0; i < input.size(); i++) {
+            if (std::tolower(id[i]) != std::tolower(input[i])) {
+                cout << "Cannot file the support" << endl;
+                return false;
+                break;
+            }       
+        }
+        return true;
+    }
+
+   void createBooking(){
+        cout << "****WELCOME TO BOOKING DASHBOARD****"<<endl;
+        displayAvailableList();
+        cout << "Please input the id of the supporter you want to book: ";
+        string choose;
+        cin >> choose;
+
+        loop(member_list.size()){
+            if (isAvailable(member_list[i]->getMemberId(),choose)){
+                BookingSupporter* booking = new BookingSupporter(currentUser, member_list[i]->getMemberId());
+                booking_list.push_back(booking);
+                cout << "Your booking has been created!" << endl;
+                break;
+            }
+
+        }
+   }
+
     ~System() {//Clear the member to advoid memory leak
         for (Member* member : member_list) {
             delete member;
@@ -259,7 +374,7 @@ public:
 
 int main(){
     System system;
-    if(!system.loadData()){//If the loadData() function return false
+    if(!system.loadData() || !system.loadBookingFile()){//If the loadData() function return false
         cout << "Fail to load data" << endl;
     }
 
@@ -269,7 +384,8 @@ int main(){
         cout << "1. register\n" 
              << "2. Login\n"
              << "3. show member\n"
-             << "4. EXIT! \n";
+             << "4. book a supporter\n"
+             << "5. EXIT! \n";
         cin >> user_choice;
         switch (user_choice){
         case 1:
@@ -282,6 +398,9 @@ int main(){
             system.displayMemberList();
             break;
         case 4:
+            system.createBooking();
+            break;
+        case 5:
             check = false;
             break;  
         default:
@@ -290,10 +409,10 @@ int main(){
         }
     }
 
-    if(!system.saveToFile()){
+    if(system.saveToFile() && system.saveBookingFile()) {
+        cout << "Have a nice day bro" << endl;
+    }
+    else{
         cout << "Can not save to file" << endl;
     }
-
-    cout << "Have a nice day bro" << endl;
-
 }
