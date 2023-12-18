@@ -150,10 +150,7 @@ public:
         block_list = value;
     }
     friend class System;//Make system is friend of Member
-
-    bool addCategory(Category& category){
-        this->category_list.push_back(category);
-    }
+    friend class FileProcess;
 };
 
 int Member::number_of_member = 0;

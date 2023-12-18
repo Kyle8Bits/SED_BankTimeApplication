@@ -4,7 +4,6 @@
 #include <string>
 
 #include "Member.cpp"
-#include "LoadFile.cpp"
 
 using std::cout;
 using std::cin;
@@ -140,70 +139,70 @@ public:
         return false;
     }
 
-    bool saveToFile(){
-        std::fstream my_file;
-        my_file.open(FILENAME, std::ios::out);//use trunc to remove all the old content
-        if (!my_file.is_open()) {
-            cout << "Can not open the file" << endl;
-            return false;
-        }
+    // bool saveToFile(){
+    //     std::fstream my_file;
+    //     my_file.open(FILENAME, std::ios::out);//use trunc to remove all the old content
+    //     if (!my_file.is_open()) {
+    //         cout << "Can not open the file" << endl;
+    //         return false;
+    //     }
 
-        loop(member_list.size()){
-            if(i == member_list.size() - 1){//If go to the last element
-                my_file << member_list[i]->getUsername() << "-" << member_list[i]->getPassword() << "-" << member_list[i]->getMemberId() << "-" << member_list[i]->getFullName() << "-" << member_list[i]->getPhoneNumber() << "-" <<member_list[i]->getAddress() << "-" << member_list[i]->getCity() << "-" << member_list[i]->getAboutMe();//save to file without endl
-            }else{
-                my_file << member_list[i]->getUsername() << "-" << member_list[i]->getPassword() << "-" << member_list[i]->getMemberId() << "-" << member_list[i]->getFullName() << "-" << member_list[i]->getPhoneNumber() << "-" << member_list[i]->getAddress() << "-" << member_list[i]->getCity() << "-" << member_list[i]->getAboutMe() << endl ;
-            }
-        }
+    //     loop(member_list.size()){
+    //         if(i == member_list.size() - 1){//If go to the last element
+    //             my_file << member_list[i]->getUsername() << "-" << member_list[i]->getPassword() << "-" << member_list[i]->getMemberId() << "-" << member_list[i]->getFullName() << "-" << member_list[i]->getPhoneNumber() << "-" <<member_list[i]->getAddress() << "-" << member_list[i]->getCity() << "-" << member_list[i]->getAboutMe();//save to file without endl
+    //         }else{
+    //             my_file << member_list[i]->getUsername() << "-" << member_list[i]->getPassword() << "-" << member_list[i]->getMemberId() << "-" << member_list[i]->getFullName() << "-" << member_list[i]->getPhoneNumber() << "-" << member_list[i]->getAddress() << "-" << member_list[i]->getCity() << "-" << member_list[i]->getAboutMe() << endl ;
+    //         }
+    //     }
 
-        my_file.close();
-        cout << "Save to file SUCCESFULLY!" << endl;
-        return true;
-    }
+    //     my_file.close();
+    //     cout << "Save to file SUCCESFULLY!" << endl;
+    //     return true;
+    // }
 
-    bool loadData(){
-        std::fstream my_file;
-        my_file.open(FILENAME, std::ios::in);
+    // bool loadData(){
+    //     std::fstream my_file;
+    //     my_file.open(FILENAME, std::ios::in);
 
-        if (!my_file.is_open()) {
-            cout << "Can not open the file" << endl;
-            return false;
-        }
+    //     if (!my_file.is_open()) {
+    //         cout << "Can not open the file" << endl;
+    //         return false;
+    //     }
         
-        member_list.clear(); //clear the member list before load the data
+    //     member_list.clear(); //clear the member list before load the data
         
-        string username_from_file, password_from_file, id_from_file, full_name_from_file, phonenumber_from_file, address_from_file, city_from_file, about_me_from_file; // varibles to store data from file and push into the list
+    //     string username_from_file, password_from_file, id_from_file, full_name_from_file, phonenumber_from_file, address_from_file, city_from_file, about_me_from_file; // varibles to store data from file and push into the list
         
-        while(getline(my_file, username_from_file, '-') &&  getline(my_file, password_from_file, '-') && getline(my_file, id_from_file, '-') && 
-              getline(my_file, full_name_from_file, '-') && getline(my_file, phonenumber_from_file, '-') && getline(my_file, address_from_file, '-') && getline(my_file, city_from_file, '-') && getline(my_file, about_me_from_file)){
+    //     while(getline(my_file, username_from_file, '-') &&  getline(my_file, password_from_file, '-') && getline(my_file, id_from_file, '-') && 
+    //           getline(my_file, full_name_from_file, '-') && getline(my_file, phonenumber_from_file, '-') && getline(my_file, address_from_file, '-') && getline(my_file, city_from_file, '-') && getline(my_file, about_me_from_file)){
 
-            //add it into the list
-            Member* new_member = new Member(username_from_file, password_from_file, id_from_file, 20, full_name_from_file, phonenumber_from_file, address_from_file, city_from_file, about_me_from_file);
-            member_list.push_back(new_member);
-        }
-        my_file.close();
+    //         //add it into the list
+    //         Member* new_member = new Member(username_from_file, password_from_file, id_from_file, 20, full_name_from_file, phonenumber_from_file, address_from_file, city_from_file, about_me_from_file);
+    //         member_list.push_back(new_member);
+    //     }
+    //     my_file.close();
 
-        if(!member_list.empty()){//if the list is not empty, run teh code below
-            string max_id = member_list[0]->getMemberId();
-            string number_part = max_id.substr(1);// take the string from the second position to end (it will skill character "M")
-            int max_id_numeric = std::stoi(number_part);//Assume that the first member is the member which has the maximum id
+    //     if(!member_list.empty()){//if the list is not empty, run teh code below
+    //         string max_id = member_list[0]->getMemberId();
+    //         string number_part = max_id.substr(1);// take the string from the second position to end (it will skill character "M")
+    //         int max_id_numeric = std::stoi(number_part);//Assume that the first member is the member which has the maximum id
             
-            for(int i = 1; i < member_list.size(); i++){
-                string id_string = member_list[i]->getMemberId();
-                string number_part_id = id_string.substr(1);//take the string from the second position to end (it will skill character "M")
-                int id_numeric = std::stoi(number_part_id);
+    //         for(int i = 1; i < member_list.size(); i++){
+    //             string id_string = member_list[i]->getMemberId();
+    //             string number_part_id = id_string.substr(1);//take the string from the second position to end (it will skill character "M")
+    //             int id_numeric = std::stoi(number_part_id);
 
-                if(max_id_numeric < id_numeric){// Assign the value of id_numeric to the max_id_numeric if id_numeric is larger than max_id_numeric
-                    max_id_numeric = id_numeric;
-                }
-            }
+    //             if(max_id_numeric < id_numeric){// Assign the value of id_numeric to the max_id_numeric if id_numeric is larger than max_id_numeric
+    //                 max_id_numeric = id_numeric;
+    //             }
+    //         }
 
-            //Assign teh max value to the number_of_4student in Member file
-            Member::number_of_member = max_id_numeric;   
-        }
+    //         //Assign teh max value to the number_of_4student in Member file
+    //         Member::number_of_member = max_id_numeric;   
+    //     }
         
-        return true;
-    }
+    //     return true;
+    // }
 
     //method to check phone number
     bool isValidPhone(const string& str) {
@@ -258,74 +257,72 @@ public:
         return false;
     }
 
-    bool addSkill(){//This use for users want to add the skill
-        int user_input;
-
-        cout << "What is your skill category\n" 
-             << "1. Education\n"
-             << "2. Household\n"
-             << "3. gardening\n";
-        
-        cin >> user_input;
-        switch(user_input){
-            case 1:
-                break;
-            case 2:
-        }
-    }
 
     ~System() {//Clear the member to advoid memory leak
         for (Member* member : member_list) {
             delete member;
         }
     }
+
+    std::vector<Member*>& getMemberList(){
+        return this->member_list;
+    }
+
+    void setMemberList(std::vector<Member*>& new_member_list){
+        this->member_list = new_member_list;
+    }
+
+    Member* getLoggedInMember(){
+        return this->logged_in_member;
+    }
+
 };
 
-int main(){
-    System system;
-    if(!system.loadData()){//If the loadData() function return false
-        cout << "Fail to load data" << endl;
-    }
+// int main(){
+//     System system;
+//     if(!system.loadData()){//If the loadData() function return false
+//         cout << "Fail to load data" << endl;
+//     }
 
-    int user_choice = 0;
-    bool check = true;
-    while (check){
-        cout << "1. register\n" 
-             << "2. Login\n"
-             << "3. show member\n"
-             << "4. EXIT! \n";
-        cin >> user_choice;
-        switch (user_choice){
-        case 1:
-            system.registerMember();
-            break;
-        case 2:
-            system.loginMember();
-            char user_choice;
-            cout << "Do you want to add more information about you?" << endl;
-            cout << "[Y/N]: ";
-            cin >> user_choice;
+//     int user_choice = 0;
+//     bool check = true;
+//     while (check){
+//         cout << "1. register\n" 
+//              << "2. Login\n"
+//              << "3. show member\n"
+//              << "4. EXIT! \n";
+//         cin >> user_choice;
+//         switch (user_choice){
+//         case 1:
+//             system.registerMember();
+//             break;
+//         case 2:
+//             system.loginMember();
+//             char user_choice;
+//             cout << "Do you want to add more information about you?" << endl;
+//             cout << "[Y/N]: ";
+//             cin >> user_choice;
 
-            if(user_choice == 'Y'){
-                system.addInformation();
-            }
-            break;
-        case 3:
-            system.displayMemberList();
-            break;
-        case 4:
-            check = false;
-            break;  
-        default:
-            check = false;
-            break;
-        }
-    }
+//             if(user_choice == 'Y'){
+//                 system.addInformation();
+//             }
+//             break;
+//         case 3:
+//             system.displayMemberList();
+//             break;
+//         case 4:
+//             check = false;
+//             break;  
+//         default:
+//             check = false;
+//             break;
+//         }
+//     }
 
-    if(!system.saveToFile()){
-        cout << "Can not save to file" << endl;
-    }
+//     if(!system.saveToFile()){
+//         cout << "Can not save to file" << endl;
+//     }
 
-    cout << "Have a nice day bro" << endl;
+//     cout << "Have a nice day bro" << endl;
 
-}
+// }
