@@ -1,10 +1,15 @@
 #include <iostream>
 #include <vector>
+
+#include "System.cpp"
+#include "LoadFile.cpp"
 using std::cout;
 using std::string;
 using std::vector;
 
 int main(){
+    System system;
+
     cout << "EEET2482/COSC2082 ASSIGNMENT\n"
          << "'TIME BANK' APPLICATION\n"
          << "Instructor: Mr. Tran Duc Linh\n"

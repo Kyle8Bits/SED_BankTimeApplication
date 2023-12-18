@@ -4,6 +4,7 @@
 #include <string>
 
 #include "Member.cpp"
+#include "LoadFile.cpp"
 
 using std::cout;
 using std::cin;
@@ -15,7 +16,7 @@ using std::endl;
 
 class System{
 private:
-    std::vector<Member*> member_list;
+    std::vector<Member*> member_list; 
     Member* logged_in_member;//This pointer of member to store the information of the member who has logged in successfully
 public:
     //CONSTRUCTOR
@@ -270,7 +271,6 @@ public:
             case 1:
                 break;
             case 2:
-            
         }
     }
 
