@@ -16,6 +16,7 @@ using std::endl;
 class System{
 private:
     std::vector<Member*> member_list;
+    Member* logged_in_member;//This pointer of member to store the information of the member who has logged in successfully
 public:
     //CONSTRUCTOR
     System(std::vector<Member*> member_list = {}) : member_list(member_list){}
@@ -30,7 +31,7 @@ public:
         return -1;
     }
 
-    bool checkEmtpy(const string& str){
+    bool checkNonEmpty(const string& str){
         if(str.empty()){
             cout << "Please enter non-empty value!" << endl;
             return false;
@@ -47,7 +48,7 @@ public:
         cout << ">Username: " ;
         getline(cin >> std::ws, user_name_input); //std::ws to ignore the reduntant space
 
-        if(!checkEmtpy(user_name_input)){//Call the check empty function
+        if(!checkNonEmpty(user_name_input)){//Call the check empty function
             return false;
         }
         //Check the username is existed or not?
@@ -63,7 +64,7 @@ public:
         cout << "Password: ";
         getline(cin >> std::ws, pass_word_input);
 
-        if(!checkEmtpy(pass_word_input)){//Call the check empty function
+        if(!checkNonEmpty(pass_word_input)){//Call the check empty function
             return false;
         }
 
@@ -129,6 +130,8 @@ public:
         loop(member_list.size()){
             if(member_list[i]->getUsername() == user_name_input && member_list[i]->getPassword() == pass_word_input){
                 cout << "Login SUCCESSFULLY!" << endl;
+
+                logged_in_member = member_list[i];//set the loggedinmember = the member_list at index i
                 return true;
             }
         }
@@ -146,26 +149,14 @@ public:
 
         loop(member_list.size()){
             if(i == member_list.size() - 1){//If go to the last element
-                my_file << member_list[i]->getUsername() << "-" << member_list[i]->getPassword() << "-" << member_list[i]->getMemberId() << "-" << member_list[i]->getFullName() << "-" << member_list[i]->getPhoneNumber() << "-" <<member_list[i]->getAddress() << "-" << member_list[i]->getCity();//save to file without endl
+                my_file << member_list[i]->getUsername() << "-" << member_list[i]->getPassword() << "-" << member_list[i]->getMemberId() << "-" << member_list[i]->getFullName() << "-" << member_list[i]->getPhoneNumber() << "-" <<member_list[i]->getAddress() << "-" << member_list[i]->getCity() << "-" << member_list[i]->getAboutMe();//save to file without endl
             }else{
-                my_file << member_list[i]->getUsername() << "-" << member_list[i]->getPassword() << "-" << member_list[i]->getMemberId() << "-" << member_list[i]->getFullName() << "-" << member_list[i]->getPhoneNumber() << "-" << member_list[i]->getAddress() << "-" << member_list[i]->getCity() << endl;
+                my_file << member_list[i]->getUsername() << "-" << member_list[i]->getPassword() << "-" << member_list[i]->getMemberId() << "-" << member_list[i]->getFullName() << "-" << member_list[i]->getPhoneNumber() << "-" << member_list[i]->getAddress() << "-" << member_list[i]->getCity() << "-" << member_list[i]->getAboutMe() << endl ;
             }
         }
 
         my_file.close();
         cout << "Save to file SUCCESFULLY!" << endl;
-        return true;
-    }
-
-    //This boolean to read all data 
-    bool readDataFromFileCheck(std::fstream& my_file, string& username, string& password, string& id, string& full_name, string& phone_number, string& address, string& city){
-        //Read data from file
-        if(! (getline(my_file, username, '-') &&  getline(my_file, password, '-') && getline(my_file, id, '-') && 
-              getline(my_file, full_name, '-') && getline(my_file, phone_number, '-') && getline(my_file, address, '-') && getline(my_file, city, '-'))){
-            //IF faile to read data from file
-            return false;
-        }
-
         return true;
     }
 
@@ -180,13 +171,13 @@ public:
         
         member_list.clear(); //clear the member list before load the data
         
-        string username_from_file, password_from_file, id_from_file, full_name_from_file, phonenumber_from_file, address_from_file, city_from_file; // varibles to store data from file and push into the list
+        string username_from_file, password_from_file, id_from_file, full_name_from_file, phonenumber_from_file, address_from_file, city_from_file, about_me_from_file; // varibles to store data from file and push into the list
         
         while(getline(my_file, username_from_file, '-') &&  getline(my_file, password_from_file, '-') && getline(my_file, id_from_file, '-') && 
-              getline(my_file, full_name_from_file, '-') && getline(my_file, phonenumber_from_file, '-') && getline(my_file, address_from_file, '-') && getline(my_file, city_from_file)){
+              getline(my_file, full_name_from_file, '-') && getline(my_file, phonenumber_from_file, '-') && getline(my_file, address_from_file, '-') && getline(my_file, city_from_file, '-') && getline(my_file, about_me_from_file)){
 
             //add it into the list
-            Member* new_member = new Member(username_from_file, password_from_file, id_from_file, 20, full_name_from_file, phonenumber_from_file, address_from_file, city_from_file);
+            Member* new_member = new Member(username_from_file, password_from_file, id_from_file, 20, full_name_from_file, phonenumber_from_file, address_from_file, city_from_file, about_me_from_file);
             member_list.push_back(new_member);
         }
         my_file.close();
@@ -206,8 +197,8 @@ public:
                 }
             }
 
-            //Assign teh max value to the number_of_student in Member file
-            Member::number_of_student = max_id_numeric;   
+            //Assign teh max value to the number_of_4student in Member file
+            Member::number_of_member = max_id_numeric;   
         }
         
         return true;
@@ -245,7 +236,40 @@ public:
                  << ", credit point: " << member_list[i]->getCreditPoint()
                  << ", fullname: " << member_list[i]->getFullName()
                  << ", address: " << member_list[i]->getAddress()
-                 << ", city: " << member_list[i]->getCity() << endl;
+                 << ", city: " << member_list[i]->getCity()
+                 << ", about me: " << member_list[i]->getAboutMe() << endl;
+            
+        }
+    }
+
+    bool addInformation(){ //THIS IS SET ABOUT ME
+        cout << "In this section you can introduce yourself, so that the another member can know about you and your skills!" << endl;
+
+        string input_from_user;
+        getline(cin >> std::ws, input_from_user);
+        
+        if(checkNonEmpty(input_from_user)){
+            logged_in_member->setAboutMe(input_from_user);
+            cout << "Modify information sucessfully!" << endl;
+            return true;
+        }
+
+        return false;
+    }
+
+    bool addSkill(){//This use for users want to add the skill
+        int user_input;
+
+        cout << "What is your skill category\n" 
+             << "1. Education\n"
+             << "2. Household\n"
+             << "3. gardening\n";
+        
+        cin >> user_input;
+        switch(user_input){
+            case 1:
+                break;
+            case 2:
             
         }
     }
@@ -277,6 +301,14 @@ int main(){
             break;
         case 2:
             system.loginMember();
+            char user_choice;
+            cout << "Do you want to add more information about you?" << endl;
+            cout << "[Y/N]: ";
+            cin >> user_choice;
+
+            if(user_choice == 'Y'){
+                system.addInformation();
+            }
             break;
         case 3:
             system.displayMemberList();
