@@ -1,5 +1,8 @@
 #include <iostream>
 #include <fstream>
+#include <vector>
+
+#include "Member.cpp"
 
 using std::endl;
 using std::cout;
