@@ -29,18 +29,18 @@ int main(){
     bool check = true;//this boolean for the while loop below
     while(check){
         cout << "\t\t____________________________________\n"
-            << "\t\t|        WELCOME TO TIME BANK       |\n"
-            << "\t\t|                                   |\n"
-            << "\t\t|         Use the app as            |\n"
-            << "\t\t|                                   |\n"
-            << "\t\t|          1. Guest                 |\n"
-            << "\t\t|                                   |\n"
-            << "\t\t|          2. Member                |\n"
-            << "\t\t|                                   |\n"
-            << "\t\t|          3. Admin                 |\n"
-            << "\t\t|                                   |\n"
-            << "\t\t-------------------------------------\n"
-            << ">Your choice: ";
+             << "\t\t|        WELCOME TO TIME BANK       |\n"
+             << "\t\t|                                   |\n"
+             << "\t\t|         Use the app as            |\n"
+             << "\t\t|                                   |\n"
+             << "\t\t|          1. Guest                 |\n"
+             << "\t\t|                                   |\n"
+             << "\t\t|          2. Member                |\n"
+             << "\t\t|                                   |\n"
+             << "\t\t|          3. Admin                 |\n"
+             << "\t\t|                                   |\n"
+             << "\t\t-------------------------------------\n"
+             << ">Your choice: ";
 
         int user_choice; cin >> user_choice; //Get the input of the user's ipnut
         switch(user_choice){
@@ -62,7 +62,10 @@ int main(){
                 }
                 break;
             case 2:
-                system.loginMember();
+                if(system.loginMember()){
+                    cout << "HI " << system.getLoggedInMember()->getFullName() << endl;
+                }
+                
                 break;
             case 3:
                 //TEST, THIS ADMIN TO SHOW ALL THE MEMBERS IN THE LIST
