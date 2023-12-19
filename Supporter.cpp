@@ -109,5 +109,7 @@ public:
         return "From: " + this->start_time.getTime() + " To: " + this->end_time.getTime();
     }
 
-
+    string toString() override{
+        return Member::toString() + "-" + this->start_time.getHour() + "-" + this->start_time.getMinute() + "-" +this->end_time.getHour() + "-" + this->end_time.getMinute() + "-" + std::to_string(this->cost) + "-" + std::to_string(this->skill_rating_score) + "-" + std::to_string(this->support_rating_score) + "-" + std::to_string(this->support_count);
+    }
 };

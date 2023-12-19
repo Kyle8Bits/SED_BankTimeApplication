@@ -76,7 +76,7 @@ int main(){
                 if(choice == 'Y' || choice == 'y'){
                     system.upgradeToSupporter();
                     cout << "Your cost: " << (system.getLoggedInSupporter())->getCost() << endl;
-                    cout << "Time period: " << (system.getLoggedInSupporter())->getAvailabilityPeriod();
+                    cout << "Time period: " << (system.getLoggedInSupporter())->getAvailabilityPeriod() << endl;
                 }
                 break;
             case 3:

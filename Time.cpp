@@ -13,5 +13,12 @@ public:
     string getTime(){
         return std::to_string(this->hour) + ":" + std::to_string(this->minute);
     }
+
+    string getHour(){
+        return std::to_string(this->hour);
+    }
+    string getMinute(){
+        return std::to_string(this->minute);
+    }
 };
 #endif 

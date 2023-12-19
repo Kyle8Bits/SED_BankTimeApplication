@@ -177,6 +177,8 @@ public:
                  << ", address: " << member_list[i]->getAddress()
                  << ", city: " << member_list[i]->getCity()
                  << ", about me: " << member_list[i]->getAboutMe() << endl;
+
+            // cout << member_list[i]->toString() << endl;
             
         }
     }
@@ -250,22 +252,22 @@ public:
         cin >> cost_input;
         //----------------------ADD ALL IT IN SUPPORTER---------------------
         //first change the id of logged_in_member from M to S
-        string supporter_id = logged_in_member->getMemberId();
-        supporter_id[0] ='S';//Change the first cahracter of id from M to S
+        string supporter_id = logged_in_member->getMemberId(); supporter_id[0] ='S';//Change the first cahracter of id from M to S
+        //set the id of logged_in_member
+        logged_in_member->setMemberId(supporter_id);
         //create new pointer supporter
+        
         Supporter* new_supporter = new Supporter(*logged_in_member, Time(start_time_hour, start_time_minute), 
                                                  Time(end_time_hour, end_time_minute), skill_list_input, cost_input);
 
         loop(member_list.size()){
             if(member_list[i] == logged_in_member){
                 member_list.erase(member_list.begin() + i);
-                delete logged_in_member;//If the users become the supporter, we do not need the logged_in_member anymore, we use logged_in_supporter instead;
                 break;
             }
         }
         
         logged_in_supporter = new_supporter;//make the logged_in_supporter = new_supporter
-
         //Add the new_supporter to the list
         member_list.push_back(new_supporter);
         cout << "Add new supporter successfully" << endl;
