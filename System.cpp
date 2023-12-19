@@ -2,8 +2,11 @@
 #include <vector>
 #include <fstream>
 #include <string>
+#include <sstream>
 
 #include "Member.cpp"
+#include "Supporter.cpp"
+#include "Time.cpp"
 
 using std::cout;
 using std::cin;
@@ -17,6 +20,7 @@ class System{
 private:
     std::vector<Member*> member_list; 
     Member* logged_in_member;//This pointer of member to store the information of the member who has logged in successfully
+    Supporter* logged_in_supporter;
 public:
     //CONSTRUCTOR
     System(std::vector<Member*> member_list = {}) : member_list(member_list){}
@@ -139,7 +143,211 @@ public:
         return false;
     }
 
-    // bool saveToFile(){
+    //method to check phone number
+    bool isValidPhone(const string& str) {
+        
+        // check if all characters in the string are digits
+        for (char ch : str) {
+            if (!std::isdigit(ch)) {
+                cout << "You can not type character!" << endl;
+                return false;
+            }
+        }
+        // check if the string length is exactly 10
+        if (str.length() != 10) {
+            cout << "Your phone number must have 10 numbers" << endl;
+            return false;
+        }
+        
+        
+        // if both conditions are satisfied, return true
+        return true;
+    }
+
+    void displayMemberList(){
+        cout << "****Member list****" << endl;
+        loop(this->member_list.size()){
+            //Go to each member to print the information
+            cout << "Member " << i + 1 << ": " << endl;
+            cout << "username: " << member_list[i]->getUsername() 
+                 << ", password: "<< member_list[i]->getPassword()
+                 << ", member id: " << member_list[i]->getMemberId()
+                 << ", credit point: " << member_list[i]->getCreditPoint()
+                 << ", fullname: " << member_list[i]->getFullName()
+                 << ", address: " << member_list[i]->getAddress()
+                 << ", city: " << member_list[i]->getCity()
+                 << ", about me: " << member_list[i]->getAboutMe() << endl;
+            
+        }
+    }
+
+    bool addInformation(){ //THIS IS SET ABOUT ME
+        cout << "In this section you can introduce yourself, so that the another member can know about you and your skills!" << endl;
+
+        string input_from_user;
+        getline(cin >> std::ws, input_from_user);
+        
+        if(checkNonEmpty(input_from_user)){
+            logged_in_member->setAboutMe(input_from_user);
+            cout << "Modify information sucessfully!" << endl;
+            return true;
+        }
+
+        return false;
+    }
+
+    bool upgradeToSupporter(){
+        if(dynamic_cast<Supporter*>(logged_in_member)){//CHECK THE MEMBER IS ALREADY SUPPORTER OR NOT?
+            cout << "You are aldready supporter!" << endl;
+            return false;
+        }
+        //----------------------THIS FOR GETTING SKILL LIST---------------------
+
+        string skill_input;//declare variable store the input of the users
+        cout << "Thank you for becomming the supporter. Your choice helps our community alot!" << endl;
+        cout << "First, you need to add some skills that you have" << endl;
+        bool check = true;
+        std::vector<string> skill_list_input;
+        while(check){
+            cout << ">Your skill:";
+            getline(cin >> std::ws, skill_input);
+            skill_list_input.push_back(skill_input);
+            cout << "Do you want to continue: [Y/N]";
+            char choice; cin >> choice;
+            if(choice != 'Y' && choice != 'y'){
+                check = false;
+            }
+        }
+        cout << "Your skills are added successfully" << endl;
+        
+            //----------------------THIS FOR GETTING AVAILABILIITY PERIOD---------------------
+        string start_time_input, end_time_input;
+        int start_time_hour, start_time_minute, end_time_hour, end_time_minute;
+        cout << "What is your free time (ex: 8:00 to 10:00, or 20:30 to 22:00)" << endl;
+        //----------------------THIS FOR GETTING START TIME---------------------
+        cout << "Start time: ";
+        getline(cin >> std::ws, start_time_input);
+      
+        std::stringstream ss1;
+        ss1 << start_time_input;//Get the startime to the ss1
+
+        ss1 >> start_time_hour;
+        ss1.ignore();//ignore the colon
+        ss1 >> start_time_minute;
+        
+        //----------------------THIS FOR GETTING END TIME---------------------
+        cout << "End time: ";
+        getline(cin >> std::ws, end_time_input);
+        
+        std::stringstream ss2;
+        ss2 << end_time_input;//Get the startime to the ss2
+        ss2 >> end_time_hour;
+        ss2.ignore();
+        ss2 >> end_time_minute;
+        //----------------------THIS FOR GETTING COST PER HOUR---------------------
+        int cost_input; 
+        cout << "What is the hourly rate you would like to charge: ";
+        cin >> cost_input;
+        //----------------------ADD ALL IT IN SUPPORTER---------------------
+        //first change the id of logged_in_member from M to S
+        string supporter_id = logged_in_member->getMemberId();
+        supporter_id[0] ='S';//Change the first cahracter of id from M to S
+        //create new pointer supporter
+        Supporter* new_supporter = new Supporter(*logged_in_member, Time(start_time_hour, start_time_minute), 
+                                                 Time(end_time_hour, end_time_minute), skill_list_input, cost_input);
+
+        loop(member_list.size()){
+            if(member_list[i] == logged_in_member){
+                member_list.erase(member_list.begin() + i);
+                delete logged_in_member;//If the users become the supporter, we do not need the logged_in_member anymore, we use logged_in_supporter instead;
+                break;
+            }
+        }
+        
+        logged_in_supporter = new_supporter;//make the logged_in_supporter = new_supporter
+
+        //Add the new_supporter to the list
+        member_list.push_back(new_supporter);
+        cout << "Add new supporter successfully" << endl;
+        
+        return true;
+    }
+
+    std::vector<Member*>& getMemberList(){
+        return this->member_list;
+    }
+    void setMemberList(std::vector<Member*>& new_member_list){
+        this->member_list = new_member_list;
+    }
+
+    Member* getLoggedInMember(){
+        return this->logged_in_member;
+    }
+
+    Supporter* getLoggedInSupporter(){
+        return this->logged_in_supporter;
+    }
+
+    ~System() {//Clear the member to advoid memory leak
+        for (Member* member : member_list) {
+            delete member;
+        }
+    }
+
+};
+
+// int main(){
+    // System system;
+    // // if(!system.loadData()){//If the loadData() function return false
+    // //     cout << "Fail to load data" << endl;
+    // // }
+    // system.registerMember();
+    // system.loginMember();
+    // system.upgradeToSupporter();
+    // int user_choice = 0;
+    // bool check = true;
+    // while (check){
+    //     cout << "1. register\n" 
+    //          << "2. Login\n"
+    //          << "3. show member\n"
+    //          << "4. EXIT! \n";
+    //     cin >> user_choice;
+    //     switch (user_choice){
+    //     case 1:
+    //         system.registerMember();
+    //         break;
+    //     case 2:
+    //         system.loginMember();
+    //         char user_choice;
+    //         cout << "Do you want to add more information about you?" << endl;
+    //         cout << "[Y/N]: ";
+    //         cin >> user_choice;
+
+    //         if(user_choice == 'Y'){
+    //             system.addInformation();
+    //         }
+    //         break;
+    //     case 3:
+    //         system.displayMemberList();
+    //         break;
+    //     case 4:
+    //         check = false;
+    //         break;  
+    //     default:
+    //         check = false;
+    //         break;
+    //     }
+    // }
+
+    // if(!system.saveToFile()){
+    //     cout << "Can not save to file" << endl;
+    // }
+
+    // cout << "Have a nice day bro" << endl;
+//     return 0;
+// }
+
+   // bool saveToFile(){
     //     std::fstream my_file;
     //     my_file.open(FILENAME, std::ios::out);//use trunc to remove all the old content
     //     if (!my_file.is_open()) {
@@ -203,126 +411,3 @@ public:
         
     //     return true;
     // }
-
-    //method to check phone number
-    bool isValidPhone(const string& str) {
-        
-        // check if all characters in the string are digits
-        for (char ch : str) {
-            if (!std::isdigit(ch)) {
-                cout << "You can not type character!" << endl;
-                return false;
-            }
-        }
-        // check if the string length is exactly 10
-        if (str.length() != 10) {
-            cout << "Your phone number must have 10 numbers" << endl;
-            return false;
-        }
-        
-        
-        // if both conditions are satisfied, return true
-        return true;
-    }
-
-    void displayMemberList(){
-        cout << "****Member list****" << endl;
-        loop(this->member_list.size()){
-            //Go to each member to print the information
-            cout << "Member " << i + 1 << ": " << endl;
-            cout << "username: " << member_list[i]->getUsername() 
-                 << ", password: "<< member_list[i]->getPassword()
-                 << ", member id: " << member_list[i]->getMemberId()
-                 << ", credit point: " << member_list[i]->getCreditPoint()
-                 << ", fullname: " << member_list[i]->getFullName()
-                 << ", address: " << member_list[i]->getAddress()
-                 << ", city: " << member_list[i]->getCity()
-                 << ", about me: " << member_list[i]->getAboutMe() << endl;
-            
-        }
-    }
-
-    bool addInformation(){ //THIS IS SET ABOUT ME
-        cout << "In this section you can introduce yourself, so that the another member can know about you and your skills!" << endl;
-
-        string input_from_user;
-        getline(cin >> std::ws, input_from_user);
-        
-        if(checkNonEmpty(input_from_user)){
-            logged_in_member->setAboutMe(input_from_user);
-            cout << "Modify information sucessfully!" << endl;
-            return true;
-        }
-
-        return false;
-    }
-
-
-    ~System() {//Clear the member to advoid memory leak
-        for (Member* member : member_list) {
-            delete member;
-        }
-    }
-
-    std::vector<Member*>& getMemberList(){
-        return this->member_list;
-    }
-
-    void setMemberList(std::vector<Member*>& new_member_list){
-        this->member_list = new_member_list;
-    }
-
-    Member* getLoggedInMember(){
-        return this->logged_in_member;
-    }
-
-};
-
-// int main(){
-//     System system;
-//     if(!system.loadData()){//If the loadData() function return false
-//         cout << "Fail to load data" << endl;
-//     }
-
-//     int user_choice = 0;
-//     bool check = true;
-//     while (check){
-//         cout << "1. register\n" 
-//              << "2. Login\n"
-//              << "3. show member\n"
-//              << "4. EXIT! \n";
-//         cin >> user_choice;
-//         switch (user_choice){
-//         case 1:
-//             system.registerMember();
-//             break;
-//         case 2:
-//             system.loginMember();
-//             char user_choice;
-//             cout << "Do you want to add more information about you?" << endl;
-//             cout << "[Y/N]: ";
-//             cin >> user_choice;
-
-//             if(user_choice == 'Y'){
-//                 system.addInformation();
-//             }
-//             break;
-//         case 3:
-//             system.displayMemberList();
-//             break;
-//         case 4:
-//             check = false;
-//             break;  
-//         default:
-//             check = false;
-//             break;
-//         }
-//     }
-
-//     if(!system.saveToFile()){
-//         cout << "Can not save to file" << endl;
-//     }
-
-//     cout << "Have a nice day bro" << endl;
-
-// }

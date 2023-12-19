@@ -65,7 +65,19 @@ int main(){
                 if(system.loginMember()){
                     cout << "HI " << system.getLoggedInMember()->getFullName() << endl;
                 }
-                
+
+                if(dynamic_cast<Supporter*>(system.getLoggedInMember())){//CHECK THE MEMBER IS ALREADY SUPPORTER OR NOT?
+                    cout << "You are aldready supporter!" << endl;
+                    break;
+                }
+
+                cout << "You are not the supporter yes. Do you want to become a supporter. [Y/N]";
+                char choice; cin >> choice;
+                if(choice == 'Y' || choice == 'y'){
+                    system.upgradeToSupporter();
+                    cout << "Your cost: " << (system.getLoggedInSupporter())->getCost() << endl;
+                    cout << "Time period: " << (system.getLoggedInSupporter())->getAvailabilityPeriod();
+                }
                 break;
             case 3:
                 //TEST, THIS ADMIN TO SHOW ALL THE MEMBERS IN THE LIST

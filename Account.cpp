@@ -1,3 +1,6 @@
+#ifndef ACCOUNT_H
+#define ACCOUNT_H
+
 #include <iostream>
 #include <vector>
 
@@ -27,3 +30,4 @@ public:
         this->pass_word = pass_word;
     }
 };
+#endif // ACCOUNT_H
