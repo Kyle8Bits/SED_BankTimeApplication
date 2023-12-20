@@ -23,6 +23,9 @@ private:
     Member* loged_in_member;
 
 public:
+    Member* getLoggedInMember() const {
+    return loged_in_member;
+    }
 
     //CONSTRUCTOR
     System(std::vector<Member*> member_list = {}) : member_list(member_list){}
@@ -364,12 +367,68 @@ public:
    }
 
     void displayBookingList(Member* member){
-        std::vector <string> book_invite;
-        loop(booking_list.size()){
-            if(member->getMemberId() == booking_list[i]->getSupportId()){
-                
+        string spID = member->getMemberId();
+        int count = 1;
+        cout << spID << "\n\n";
+        for(int i = 0; i < booking_list.size(); i++){
+            if ( spID == booking_list[i]->getSupportId()){
+                for (int a = 0; a < member_list.size(); a++){
+                    if (booking_list[i]->getHostId() == member_list[a]->getMemberId()){
+                        cout <<"\nBooking " + std::to_string(count) <<
+                            "\nBooking ID: " + booking_list[i]->getBookingId() <<
+                            "\nHost name: " + member_list[a]->getFullName() <<
+                            "\nRating score: Will update" <<
+                            "\nAddress: " + member_list[a]->getAddress() <<
+                            "\nStatus: " + booking_list[i]->getStatus() << endl;
+
+                        cout << "==============================================\n" << endl;
+                    }
+                }
+                count++;
             }
-        } 
+        }
+    }
+
+    void decideInvite(){
+        string choice;
+        int decide;
+        bool check = true;
+       
+        cout <<"Type 'Quit' to exit\n" <<
+            "Enter booking invitation code: " ;
+        std::getline(cin >> std::ws, choice);
+
+        if(choice == "Quit"){
+           cout << "Returning to homepage\n" << endl;
+        }
+        else {
+        loop(booking_list.size()){
+            if(choice == booking_list[i]->getBookingId()){
+                cout <<"1. ACCEPTED\n"<<
+                        "2. REJECTED\n" <<
+                        "3. RETURN\n"<< endl;
+                cout <<"Enter your choice: ";
+                cin >> decide;
+                        switch (decide){
+                        case 1:
+                        booking_list[i]->setStatus("ACCEPTED");
+                        saveBookingFile();
+                            break;
+                        case 2:
+                        booking_list[i]->setStatus("REJECTED");
+                        saveBookingFile();
+                            break;
+                        case 3:
+                        displayBookingList(loged_in_member);
+                        decideInvite();
+                        }
+            }
+                else{
+                    cout << "Invalid Booking Code.\nPlease try again." << endl;
+                    decideInvite();
+                }
+            }
+        }
     }
 
     ~System() {//Clear the member to advoid memory leak
@@ -392,7 +451,8 @@ int main(){
              << "2. Login\n"
              << "3. show member\n"
              << "4. book a supporter\n"
-             << "5. EXIT! \n";
+             << "5. View booking\n"
+             << "6. EXIT! \n";
         cin >> user_choice;
         switch (user_choice){
         case 1:
@@ -408,6 +468,10 @@ int main(){
             system.createBooking();
             break;
         case 5:
+            system.displayBookingList(system.getLoggedInMember());
+            system.decideInvite();
+            break;
+        case 6:
             check = false;
             break;  
         default:
