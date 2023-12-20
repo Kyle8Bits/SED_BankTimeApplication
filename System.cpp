@@ -20,11 +20,9 @@ class System{
 private:
     std::vector<Member*> member_list;
     std::vector<BookingSupporter*> booking_list;
-    string currentUser;
+    Member* loged_in_member;
+
 public:
-    void setCurrentUser(string currentUser){
-        this->currentUser = currentUser;
-    }
 
     //CONSTRUCTOR
     System(std::vector<Member*> member_list = {}) : member_list(member_list){}
@@ -138,7 +136,7 @@ public:
         loop(member_list.size()){
             if(member_list[i]->getUsername() == user_name_input && member_list[i]->getPassword() == pass_word_input){
                 cout << "Login SUCCESSFULLY!" << endl;
-                setCurrentUser(member_list[i]->getMemberId());
+                loged_in_member = member_list[i];
                 return true;
             }
         }
@@ -356,7 +354,7 @@ public:
 
         loop(member_list.size()){
             if (isAvailable(member_list[i]->getMemberId(),choose)){
-                BookingSupporter* booking = new BookingSupporter(currentUser, member_list[i]->getMemberId());
+                BookingSupporter* booking = new BookingSupporter(loged_in_member->getMemberId(), member_list[i]->getMemberId());
                 booking_list.push_back(booking);
                 cout << "Your booking has been created!" << endl;
                 break;
@@ -364,6 +362,15 @@ public:
 
         }
    }
+
+    void displayBookingList(Member* member){
+        std::vector <string> book_invite;
+        loop(booking_list.size()){
+            if(member->getMemberId() == booking_list[i]->getSupportId()){
+                
+            }
+        } 
+    }
 
     ~System() {//Clear the member to advoid memory leak
         for (Member* member : member_list) {
