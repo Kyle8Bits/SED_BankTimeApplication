@@ -24,10 +24,13 @@ public:
         }
 
         loop(member_list.size()){
+            
             if(i == member_list.size() - 1){//If go to the last element
-                my_file << member_list[i]->getUsername() << "-" << member_list[i]->getPassword() << "-" << member_list[i]->getMemberId() << "-" << member_list[i]->getFullName() << "-" << member_list[i]->getPhoneNumber() << "-" <<member_list[i]->getAddress() << "-" << member_list[i]->getCity() << "-" << member_list[i]->getAboutMe();//save to file without endl
+                // my_file << member_list[i]->getUsername() << "-" << member_list[i]->getPassword() << "-" << member_list[i]->getMemberId() << "-" << member_list[i]->getFullName() << "-" << member_list[i]->getPhoneNumber() << "-" <<member_list[i]->getAddress() << "-" << member_list[i]->getCity() << "-" << member_list[i]->getAboutMe();//save to file without endl
+                my_file << member_list[i]->toString();
             }else{
-                my_file << member_list[i]->getUsername() << "-" << member_list[i]->getPassword() << "-" << member_list[i]->getMemberId() << "-" << member_list[i]->getFullName() << "-" << member_list[i]->getPhoneNumber() << "-" << member_list[i]->getAddress() << "-" << member_list[i]->getCity() << "-" << member_list[i]->getAboutMe() << endl ;
+                my_file << member_list[i]->toString() << endl;
+                // my_file << member_list[i]->getUsername() << "-" << member_list[i]->getPassword() << "-" << member_list[i]->getMemberId() << "-" << member_list[i]->getFullName() << "-" << member_list[i]->getPhoneNumber() << "-" << member_list[i]->getAddress() << "-" << member_list[i]->getCity() << "-" << member_list[i]->getAboutMe() << endl ;
             }
         }
 
@@ -48,15 +51,36 @@ public:
         
         
         string username_from_file, password_from_file, id_from_file, full_name_from_file, phonenumber_from_file, address_from_file, city_from_file, about_me_from_file; // varibles to store data from file and push into the list
-        
+        string start_time_hour, start_time_minute, end_time_hour, end_time_minute, cost_from_file, skill_rating_score_file, support_rating_score_file, support_count_file;
         while(getline(my_file, username_from_file, '-') &&  getline(my_file, password_from_file, '-') && getline(my_file, id_from_file, '-') && 
               getline(my_file, full_name_from_file, '-') && getline(my_file, phonenumber_from_file, '-') && getline(my_file, address_from_file, '-') && getline(my_file, city_from_file, '-')){
 
-            getline(my_file, about_me_from_file);// This to read about me from teh file, I can not but it in the while loop because it does neccessary for users
-            //to input the aboutme, so if the about me in the file is blank, the error will be occured
-            //add it into the list
-            Member* new_member = new Member(username_from_file, password_from_file, id_from_file, 20, full_name_from_file, phonenumber_from_file, address_from_file, city_from_file, about_me_from_file);
-            member_list.push_back(new_member);
+            char checkType = id_from_file[0];//this to check the id is M or S
+            
+            Member* new_member = nullptr;//declare the new member & ready to push to the list
+            if(checkType == 'M'){
+                getline(my_file, about_me_from_file);// This to read about me from teh file, I can not but it in the while loop because it does neccessary for users
+                new_member = new Member(username_from_file, password_from_file, id_from_file, 20, full_name_from_file, phonenumber_from_file, address_from_file, city_from_file, about_me_from_file);
+            } else if (checkType == 'S'){
+                getline(my_file, about_me_from_file, '-');
+                getline(my_file, start_time_hour, '-');
+                getline(my_file, start_time_minute, '-');
+                getline(my_file, end_time_hour, '-');
+                getline(my_file, end_time_minute, '-');
+                getline(my_file, cost_from_file, '-');
+                getline(my_file, skill_rating_score_file, '-');
+                getline(my_file, support_rating_score_file, '-');
+                getline(my_file, support_count_file);
+
+                new_member = new Supporter(username_from_file, password_from_file, id_from_file, 20, full_name_from_file, phonenumber_from_file, address_from_file, city_from_file, about_me_from_file,
+                                           0, 0, {}, Time(std::stoi(start_time_hour), std::stoi(start_time_minute)), Time(std::stoi(end_time_hour), std::stoi(end_time_minute)), {}, std::stoi(cost_from_file), 
+                                           std::stod(skill_rating_score_file), std::stod(support_rating_score_file), std::stoi(support_count_file));
+            }
+
+            if(new_member){
+                member_list.push_back(new_member);
+            }
+            
         }
         my_file.close();
 

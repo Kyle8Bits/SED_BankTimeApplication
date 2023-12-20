@@ -1,3 +1,6 @@
+#ifndef MEMBER_H
+#define MEMBER_H
+
 #include <iostream>
 #include <vector>
 
@@ -10,7 +13,7 @@ using std::string;
 using std::endl;
 
 class Member : public Account{
-private:
+protected:
     //INHERITANCE FROM ACCOUNT 
     // string user_name;
     // string pass_word;
@@ -24,23 +27,19 @@ private:
     string address;
     string city;
     string about_me;
-    double skill_rating_score;
-    double support_rating_score;
     double host_rating_score;
-    int support_count;
     int host_count;
-    std::vector<Category> category_list;//this is skill list of a member
     std::vector<string> block_list;
 
 public:
     //CONSTRUCTOR
     Member(string user_name = "", string pass_word = "", string member_id = "M", int credit_point = 20, string full_name = "", string phone_number = "", 
-    string address = "", string city = "", string about_me = "", double skill_rating_score = 0, double support_rating_score = 0, 
-    double host_rating_score = 0, int support_count = 0, int host_count = 0, std::vector<string> block_list = {})
+    string address = "", string city = "", string about_me = "",double host_rating_score = 0, 
+    int host_count = 0, std::vector<string> block_list = {})
     : Account(user_name, pass_word), 
       member_id(member_id), credit_point(credit_point), full_name(full_name), phone_number(phone_number), address(address),
-      city(city), about_me(about_me), skill_rating_score(skill_rating_score), support_rating_score(support_rating_score),
-      host_rating_score(host_rating_score), support_count(support_count), host_count(host_count), block_list(block_list)
+      city(city), about_me(about_me), host_rating_score(host_rating_score), 
+      host_count(host_count), block_list(block_list)
     {
         number_of_member++;//Increse the student by 1
 
@@ -50,7 +49,7 @@ public:
     }
 
     string getMemberId(){return this->member_id;}
-
+    void setMemberId(string member_id){this->member_id = member_id;}
 
     //Getter and setter
 
@@ -102,36 +101,12 @@ public:
         about_me = value;
     }
 
-    double getSkillRatingScore() const {
-        return skill_rating_score;
-    }
-
-    void setSkillRatingScore(double value) {
-        skill_rating_score = value;
-    }
-
-    double getSupportRatingScore() const {
-        return support_rating_score;
-    }
-
-    void setSupportRatingScore(double value) {
-        support_rating_score = value;
-    }
-
     double getHostRatingScore() const {
         return host_rating_score;
     }
 
     void setHostRatingScore(double value) {
         host_rating_score = value;
-    }
-
-    int getSupportCount() const {
-        return support_count;
-    }
-
-    void setSupportCount(int value) {
-        support_count = value;
     }
 
     int getHostCount() const {
@@ -149,8 +124,17 @@ public:
     void setBlockList(const std::vector<string>& value) {
         block_list = value;
     }
+
+    virtual ~Member() = default;
+
+    virtual string toString(){
+        return this->user_name + "-" + this->pass_word + "-" + this->member_id + "-" + this->full_name + "-" + this->phone_number + "-" + this->address + "-" + this->city + "-" + this->about_me;
+    }
+    
     friend class System;//Make system is friend of Member
     friend class FileProcess;
 };
 
 int Member::number_of_member = 0;
+
+#endif // MEMBER_H
