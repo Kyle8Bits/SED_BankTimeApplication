@@ -280,6 +280,7 @@ public:
         loop(member_list.size()){
             if(member_list[i] == logged_in_member){
                 member_list.erase(member_list.begin() + i);
+                logged_in_member = nullptr;
                 break;
             }
         }
