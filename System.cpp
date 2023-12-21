@@ -20,7 +20,7 @@ class System{
 private:
     std::vector<Member*> member_list; 
     Member* logged_in_member;//This pointer of member to store the information of the member who has logged in successfully
-    Supporter* logged_in_supporter;
+    Supporter* logged_in_supporter;//This pointer of member to store the information of the member who has logged in successfully
 public:
     //CONSTRUCTOR
     System(std::vector<Member*> member_list = {}) : member_list(member_list){}
@@ -135,11 +135,18 @@ public:
             if(member_list[i]->getUsername() == user_name_input && member_list[i]->getPassword() == pass_word_input){
                 cout << "Login SUCCESSFULLY!" << endl;
 
-                logged_in_member = member_list[i];//set the loggedinmember = the member_list at index i
+                if(Supporter* supporter = dynamic_cast<Supporter*>(member_list[i])){//check the memberlist at index i is supporter* type or not
+                    //if yes, modify the logged_in_supporter
+                    logged_in_supporter = supporter;
+                    logged_in_member = nullptr;
+                } else{
+                    //if no set vice versa
+                    logged_in_supporter = nullptr;
+                    logged_in_member = member_list[i];
+                }
                 return true;
             }
         }
-        cout << "Your username or password is incorrect!" << endl;
         return false;
     }
 
@@ -177,9 +184,19 @@ public:
                  << ", address: " << member_list[i]->getAddress()
                  << ", city: " << member_list[i]->getCity()
                  << ", about me: " << member_list[i]->getAboutMe() << endl;
+            //check if the member is a Supporter or a regular member
+            if(Supporter* supporter = dynamic_cast<Supporter*>(member_list[i])){
+                //If it is a supporter, we will print more information of supporter
+                cout << "Supporter Info:" 
+                     << " Availability time: " << supporter->getAvailabilityPeriod()
+                     << " Skill list: EMPTY" 
+                     << " cost: " << supporter->getCost()
+                     << " average skill rating score: " << supporter->getSkillRatingScore()
+                     << " average support rating score: " << supporter->getSupportRatingScore()
+                     << " support count: " << supporter->getSupportCount() << endl;
 
-            // cout << member_list[i]->toString() << endl;
-            
+                cout << "**SKILL** " << supporter->showSkillList() << endl; 
+            }
         }
     }
 
@@ -295,7 +312,6 @@ public:
             delete member;
         }
     }
-
 };
 
 // int main(){

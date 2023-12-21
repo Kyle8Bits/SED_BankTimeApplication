@@ -1,6 +1,6 @@
 #include <iostream>
 #include <fstream>
-
+#include <vector>
 using std::endl;
 using std::cout;
 using std::cin;
@@ -13,15 +13,15 @@ using std::string;
 class FileProcess{//THis class is use for loading the file and save to the file
 public:
     bool saveToFile(std::vector<Member*> member_list){
+        //***********************SAVE BASIC INFORMATION***********************
         std::fstream my_file;
-        my_file.open(FILENAME, std::ios::out);//use trunc to remove all the old content
+        my_file.open(FILENAME, std::ios::out);
         if (!my_file.is_open()) {
             cout << "Can not open the file" << endl;
             return false;
         }
 
         loop(member_list.size()){
-            
             if(i == member_list.size() - 1){//If go to the last element
                 // my_file << member_list[i]->getUsername() << "-" << member_list[i]->getPassword() << "-" << member_list[i]->getMemberId() << "-" << member_list[i]->getFullName() << "-" << member_list[i]->getPhoneNumber() << "-" <<member_list[i]->getAddress() << "-" << member_list[i]->getCity() << "-" << member_list[i]->getAboutMe();//save to file without endl
                 my_file << member_list[i]->toString();
@@ -32,23 +32,46 @@ public:
         }
 
         my_file.close();
+
+        //***********************SAVE SKILL LIST INFORMATION FOR SUPPORTER***********************
+        my_file.open("skills.dat", std::ios::out);
+        if (!my_file.is_open()) {
+            cout << "Can not open the file" << endl;
+            return false;
+        }
+
+        if(!member_list.empty()){//If the member is empty, we do not write to the file
+            loop(member_list.size()){
+                //check the memberlist at index i is the supporter or not
+                if (Supporter* supporter = dynamic_cast<Supporter*>(member_list[i])) {
+                    my_file << supporter->getMemberId() << "-" << supporter->skillListToString() << endl;
+                    //Print the skill list with format ID1-SKILL1-SKILL2 
+                    //                                 ID2-SKILL1-SKILL2
+                }
+            }
+        }
+        
+
+        my_file.close();
+
         cout << "Save to file SUCCESFULLY!" << endl;
         return true;
     }
 
+
+
     std::vector<Member*> loadData(std::vector<Member*>& member_list){//Pass the member_list by reference
         std::fstream my_file;
         my_file.open(FILENAME, std::ios::in);
-
         member_list.clear(); //clear the member list before load the data
         if (!my_file.is_open()) {
             cout << "Can not open the file" << endl;
             return member_list;
         }
         
-        
         string username_from_file, password_from_file, id_from_file, full_name_from_file, phonenumber_from_file, address_from_file, city_from_file, about_me_from_file; // varibles to store data from file and push into the list
         string start_time_hour, start_time_minute, end_time_hour, end_time_minute, cost_from_file, skill_rating_score_file, support_rating_score_file, support_count_file;
+        std::vector<string> skill_list = {};
         while(getline(my_file, username_from_file, '-') &&  getline(my_file, password_from_file, '-') && getline(my_file, id_from_file, '-') && 
               getline(my_file, full_name_from_file, '-') && getline(my_file, phonenumber_from_file, '-') && getline(my_file, address_from_file, '-') && getline(my_file, city_from_file, '-')){
 
@@ -68,18 +91,20 @@ public:
                 getline(my_file, skill_rating_score_file, '-');
                 getline(my_file, support_rating_score_file, '-');
                 getline(my_file, support_count_file);
+                
+                skill_list = readSkillSupporter(id_from_file);
 
                 new_member = new Supporter(username_from_file, password_from_file, id_from_file, 20, full_name_from_file, phonenumber_from_file, address_from_file, city_from_file, about_me_from_file,
-                                           0, 0, {}, Time(std::stoi(start_time_hour), std::stoi(start_time_minute)), Time(std::stoi(end_time_hour), std::stoi(end_time_minute)), {}, std::stoi(cost_from_file), 
+                                           0, 0, {}, Time(std::stoi(start_time_hour), std::stoi(start_time_minute)), Time(std::stoi(end_time_hour), std::stoi(end_time_minute)), skill_list, std::stoi(cost_from_file), 
                                            std::stod(skill_rating_score_file), std::stod(support_rating_score_file), std::stoi(support_count_file));
+                
             }
-
             if(new_member){
                 member_list.push_back(new_member);
             }
-            
         }
         my_file.close();
+        
 
         if(!member_list.empty()){//if the list is not empty, run teh code below
             string max_id = member_list[0]->getMemberId();
@@ -103,5 +128,31 @@ public:
         
         return member_list;
     }
+
+    std::vector<string> readSkillSupporter(string id_skill){
+        std::vector<string> skill_list;
+        std::fstream my_file;
+        my_file.open("skills.dat", std::ios::in);
+        if (!my_file.is_open()) {
+            cout << "Can not open the file" << endl;
+            return skill_list;
+        }
+        string skill, id;
+        while(getline(my_file, id, '-')){
+            if(id == id_skill){
+                while(getline(my_file, skill, '-') && skill[0] != '\n'){
+                    //This skill[0] != '\n to stop the function when the skill at index 0 is newline
+                    skill_list.push_back(skill);
+                }
+                break;
+            }
+            //if the id is not match, skip the rest of the file
+            getline(my_file,skill);
+        }
+        my_file.close();
+
+        return skill_list;
+    }
+
 
 };

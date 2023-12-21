@@ -75,30 +75,37 @@ public:
         }
     }
 
-    void addSkill(){
+    bool addSkill(){
         bool check = true;
+        
         while(check){
-            string user_input;
-
+            string user_input = "";
             cout << "> Your skill: ";
             getline(cin >> std::ws, user_input);
             if(user_input.empty()){
                 cout << "Please input the non-empty value" << endl;
+                return false;
             }else{
                 skill_list.push_back(user_input);//if the skill is not empty -> push it to the list
 
                 cout << "Do you want to continue adding" << endl;
-                cout << "[Y/N]: ";
-                char choice;
-                cin >> choice;
-                choice = toupper(choice);
-                if(choice != 'Y'){
-                    check = false;//If the choice of users is not 'Y', we will break the loop
+                cout << "1. Yes, 2. No: ";
+                int choice; cin >> choice;
+                switch(choice){
+                    case 1:
+                        break;
+                    case 2:
+                        check = false;
+                        break;
+                    default:
+                        check = false;
+                        break;
                 }
             }
         }
 
         cout << "Your skills are addedd" << endl;
+        return true;
     }
 
     int getCost(){
@@ -112,4 +119,32 @@ public:
     string toString() override{
         return Member::toString() + "-" + this->start_time.getHour() + "-" + this->start_time.getMinute() + "-" +this->end_time.getHour() + "-" + this->end_time.getMinute() + "-" + std::to_string(this->cost) + "-" + std::to_string(this->skill_rating_score) + "-" + std::to_string(this->support_rating_score) + "-" + std::to_string(this->support_count);
     }
+
+    string skillListToString(){
+        if(skill_list.empty()){
+            return "";//If the skill list have no elements, we return the blank
+        }
+        string skill_list_str = skill_list[0] + "-";
+        for(int i = 1; i < skill_list.size(); ++i){
+            skill_list_str += skill_list[i] + "-";
+        }
+        return skill_list_str;
+    }
+
+    string showSkillList(){
+        if(skill_list.empty()){
+            return "";//If the skill list have no elements, we return the blank
+        }
+        string skill_list_str;
+
+        for(auto skill : skill_list){
+            skill_list_str += skill + " + ";
+        }
+        return skill_list_str;
+    }
+    
+    
+    double getSkillRatingScore(){return this->skill_rating_score;}
+    double getSupportRatingScore(){return this->support_rating_score;}
+    int getSupportCount(){return support_count;}
 };

@@ -63,22 +63,41 @@ int main(){
                 break;
             case 2:
                 if(system.loginMember()){
-                    cout << "HI " << system.getLoggedInMember()->getFullName() << endl;
-                }
-
-                if(dynamic_cast<Supporter*>(system.getLoggedInMember())){//CHECK THE MEMBER IS ALREADY SUPPORTER OR NOT?
-                    cout << "You are aldready supporter!" << endl;
+                    //****************************THIS FOR MEMBER LOGIN****************************
+                    if(system.getLoggedInMember() != nullptr){
+                        cout << "HI " << system.getLoggedInMember()->getFullName() << endl;
+                        cout << "You are not the supporter yet. Do you want to become a supporter. [Y/N]";
+                        char choice; cin >> choice;
+                        if(choice == 'Y' || choice == 'y'){
+                            system.upgradeToSupporter();
+                            cout << "Your cost: " << (system.getLoggedInSupporter())->getCost() << endl;
+                            cout << "Time period: " << (system.getLoggedInSupporter())->getAvailabilityPeriod() << endl;
+                        }
+                    }
+                     //****************************THIS FOR SUPPPORTER LOGIN****************************
+                    else {
+                        cout << "HI " << system.getLoggedInSupporter()->getFullName() << endl;
+                        cout << "You are aldready supporter!" << endl;
+                        cout << "Do you want to add more skill: ";
+                        cout << "1. Yes 2. No: ";
+                        int choice; cin >> choice;
+                        switch(choice){
+                            case 1: 
+                                system.getLoggedInSupporter()->addSkill();
+                                break;
+                            case 2:
+                                cout << "OK YOU DO NOT WANT" << endl;
+                                break;
+                            default:
+                                cout << "Please input the valid choice" << endl;
+                                break;
+                        }
+                    }
+                }else{//USER INPUT WRONG USERNAME OR PASSWWORD
+                    cout << "Your username or password is incorrect!" << endl;
                     break;
                 }
-
-                cout << "You are not the supporter yes. Do you want to become a supporter. [Y/N]";
-                char choice; cin >> choice;
-                if(choice == 'Y' || choice == 'y'){
-                    system.upgradeToSupporter();
-                    cout << "Your cost: " << (system.getLoggedInSupporter())->getCost() << endl;
-                    cout << "Time period: " << (system.getLoggedInSupporter())->getAvailabilityPeriod() << endl;
-                }
-                break;
+                break;//BREAK THE SWICH CASE
             case 3:
                 //TEST, THIS ADMIN TO SHOW ALL THE MEMBERS IN THE LIST
                 system.displayMemberList();
@@ -87,6 +106,7 @@ int main(){
                 cout << "Please enter the valid input" << endl;
                 cout << "Program end!" << endl;
                 check = 0;
+                break;
         }
     }
 
@@ -96,3 +116,5 @@ int main(){
     
     return 0;
 }
+
+
