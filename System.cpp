@@ -366,19 +366,21 @@ public:
         }
    }
 
-    void displayBookingList(Member* member){
+    void displayBookingList(Member* member){//For supporter to view the request booking from host
         string spID = member->getMemberId();
         int count = 1;
         cout << spID << "\n\n";
+
+        cout <<"****THE AVAILABLE SUPPORTER LIST****\n";
         for(int i = 0; i < booking_list.size(); i++){
             if ( spID == booking_list[i]->getSupportId()){
                 for (int a = 0; a < member_list.size(); a++){
                     if (booking_list[i]->getHostId() == member_list[a]->getMemberId()){
-                        cout <<"\nBooking " + std::to_string(count) <<
+                        cout <<"Booking " + std::to_string(count) <<
                             "\nBooking ID: " + booking_list[i]->getBookingId() <<
                             "\nHost name: " + member_list[a]->getFullName() <<
                             "\nRating score: Will update" <<
-                            "\nAddress: " + member_list[a]->getAddress() <<
+                            "\nCity: " + member_list[a]->getCity() <<
                             "\nStatus: " + booking_list[i]->getStatus() << endl;
 
                         cout << "==============================================\n" << endl;
@@ -389,7 +391,7 @@ public:
         }
     }
 
-    void decideInvite(){
+    void decideBooking(){ //For supporter to answer the request booking from host. Either accept or reject or remain pending
         string choice;
         int decide;
         bool check = true;
@@ -420,13 +422,37 @@ public:
                             break;
                         case 3:
                         displayBookingList(loged_in_member);
-                        decideInvite();
+                        decideBooking();
                         }
             }
                 else{
                     cout << "Invalid Booking Code.\nPlease try again." << endl;
-                    decideInvite();
+                    decideBooking();
                 }
+            }
+        }
+    }
+
+    void displayInviteList(Member* member){//For host to view which supporter they have booked 
+        string hostID = member->getMemberId();
+        int count = 1;
+        cout << hostID << "\n\n";
+        cout << "****THE LIST OF SUPPOTER YOU HAVE BOOKED****\n";
+        for(int i = 0; i < booking_list.size(); i++){
+            if ( hostID == booking_list[i]->getHostId()){
+                for (int a = 0; a < member_list.size(); a++){
+                    if (booking_list[i]->getSupportId() == member_list[a]->getMemberId()){
+                        cout <<"Booking " + std::to_string(count) <<
+                            "\nBooking ID: " + booking_list[i]->getBookingId() <<
+                            "\nSupporter name: " + member_list[a]->getFullName() <<
+                            "\nRating score: Will update" <<
+                            "\nCity: " + member_list[a]->getCity() <<
+                            "\nStatus: " + booking_list[i]->getStatus() << endl;
+
+                        cout << "==============================================\n" << endl;
+                    }
+                }
+                count++;
             }
         }
     }
@@ -434,6 +460,9 @@ public:
     ~System() {//Clear the member to advoid memory leak
         for (Member* member : member_list) {
             delete member;
+        }
+        for (BookingSupporter* booking : booking_list){
+            delete booking;
         }
     }
 };
@@ -452,7 +481,8 @@ int main(){
              << "3. show member\n"
              << "4. book a supporter\n"
              << "5. View booking\n"
-             << "6. EXIT! \n";
+             << "6. View who your are booking\n"
+             << "7. EXIT! \n";
         cin >> user_choice;
         switch (user_choice){
         case 1:
@@ -469,9 +499,12 @@ int main(){
             break;
         case 5:
             system.displayBookingList(system.getLoggedInMember());
-            system.decideInvite();
+            system.decideBooking();
             break;
         case 6:
+            system.displayInviteList(system.getLoggedInMember());
+            break;
+        case 7:
             check = false;
             break;  
         default:
