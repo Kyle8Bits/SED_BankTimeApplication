@@ -17,6 +17,8 @@ int main(){
         << "S, Student Name\n"
         << "S, Student Name\n"
         << "S, Student Name\n";
+        //TESTTESTSETESTTS
+        cout << "HELLOWORLD";
     //---------------------------------------------START PROGRAM---------------------------------------------------------------------------
     System system;
     FileProcess file_process;
