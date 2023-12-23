@@ -11,8 +11,6 @@ using std::cout;
 using std::cin;
 using std::string;
 
-
-
 #define loop(n) for(int i = 0; i < n; ++i)
 #define FILENAME "members.dat"
 

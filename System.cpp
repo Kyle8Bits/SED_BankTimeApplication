@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <vector>
 #include <fstream>
@@ -21,6 +22,7 @@ private:
     std::vector<Member*> member_list; 
     Member* logged_in_member;//This pointer of member to store the information of the member who has logged in successfully
     Supporter* logged_in_supporter;//This pointer of member to store the information of the member who has logged in successfully
+    bool is_admin = false;
 public:
     //CONSTRUCTOR
     System(std::vector<Member*> member_list = {}) : member_list(member_list){}
@@ -124,12 +126,18 @@ public:
     bool loginMember(){
         string user_name_input;
         string pass_word_input;//these 2 variables to store the input of the users
-
+       
         cout << "****Login form****" << endl;
         cout << ">Username: ";
         getline(cin >> std::ws, user_name_input);
         cout << ">Password: ";
         getline(cin >> std::ws, pass_word_input);
+
+        if(user_name_input == "admin" && pass_word_input == "admin"){//If users is admin
+            is_admin = true;
+            cout << "You log in as a adminstrator" << endl;
+            return true;
+        }
 
         loop(member_list.size()){
             if(member_list[i]->getUsername() == user_name_input && member_list[i]->getPassword() == pass_word_input){
@@ -172,31 +180,35 @@ public:
     }
 
     void displayMemberList(){
-        cout << "****Member list****" << endl;
-        loop(this->member_list.size()){
-            //Go to each member to print the information
-            cout << "Member " << i + 1 << ": " << endl;
-            cout << "username: " << member_list[i]->getUsername() 
-                 << ", password: "<< member_list[i]->getPassword()
-                 << ", member id: " << member_list[i]->getMemberId()
-                 << ", credit point: " << member_list[i]->getCreditPoint()
-                 << ", fullname: " << member_list[i]->getFullName()
-                 << ", address: " << member_list[i]->getAddress()
-                 << ", city: " << member_list[i]->getCity()
-                 << ", about me: " << member_list[i]->getAboutMe() << endl;
-            //check if the member is a Supporter or a regular member
-            if(Supporter* supporter = dynamic_cast<Supporter*>(member_list[i])){
-                //If it is a supporter, we will print more information of supporter
-                cout << "Supporter Info:" 
-                     << " Availability time: " << supporter->getAvailabilityPeriod()
-                     << " Skill list: EMPTY" 
-                     << " cost: " << supporter->getCost()
-                     << " average skill rating score: " << supporter->getSkillRatingScore()
-                     << " average support rating score: " << supporter->getSupportRatingScore()
-                     << " support count: " << supporter->getSupportCount() << endl;
+        if(is_admin){
+            cout << "****Member list****" << endl;
+            loop(this->member_list.size()){
+                //Go to each member to print the information
+                cout << "Member " << i + 1 << ": " << endl;
+                cout << "username: " << member_list[i]->getUsername() 
+                    << ", password: "<< member_list[i]->getPassword()
+                    << ", member id: " << member_list[i]->getMemberId()
+                    << ", credit point: " << member_list[i]->getCreditPoint()
+                    << ", fullname: " << member_list[i]->getFullName()
+                    << ", address: " << member_list[i]->getAddress()
+                    << ", city: " << member_list[i]->getCity()
+                    << ", about me: " << member_list[i]->getAboutMe() << endl;
+                //check if the member is a Supporter or a regular member
+                if(Supporter* supporter = dynamic_cast<Supporter*>(member_list[i])){
+                    //If it is a supporter, we will print more information of supporter
+                    cout << "Supporter Info:" 
+                        << " Availability time: " << supporter->getAvailabilityPeriod()
+                        << " Skill list: EMPTY" 
+                        << " cost: " << supporter->getCost()
+                        << " average skill rating score: " << supporter->getSkillRatingScore()
+                        << " average support rating score: " << supporter->getSupportRatingScore()
+                        << " support count: " << supporter->getSupportCount() << endl;
 
-                cout << "**SKILL** " << supporter->showSkillList() << endl; 
+                    cout << "**SKILL** " << supporter->showSkillList() << endl; 
+                }
             }
+        }else{
+            cout << "You do not have permisson to do that" << endl;
         }
     }
 
@@ -279,7 +291,7 @@ public:
 
         loop(member_list.size()){
             if(member_list[i] == logged_in_member){
-                member_list.erase(member_list.begin() + i);
+                member_list.erase(member_list.begin() + i); 
                 logged_in_member = nullptr;
                 break;
             }
@@ -291,6 +303,30 @@ public:
         cout << "Add new supporter successfully" << endl;
         
         return true;
+    }
+
+    void resetMemberPassword() {
+        if(is_admin){
+            string username_input, password_input;
+            cout << "Please enter the User's username that you want to reset password" << endl;
+            getline(cin >> std::ws, username_input);
+
+            for (Member* member : member_list) {
+                if (member->getUsername() == username_input) {
+                    
+                    cout << "Enter the new password: ";
+                    getline(cin >> std::ws, password_input);
+
+                    member->setPassword(password_input);
+                    cout << "Reset password sucessfully!" << endl;
+                    return;
+                }
+            }
+            cout << "Member not found.\n";
+        } else{
+            cout << "Only admin can do that" << endl;
+        }
+        
     }
 
     std::vector<Member*>& getMemberList(){

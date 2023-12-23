@@ -1,3 +1,6 @@
+#ifndef SUPPORTER_H
+#define SUPPORTER_H
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -11,15 +14,16 @@ using std::cin;
 using std::string;
 using std::endl;
 
-enum class Day{
-    Monday,
-    Tuesday,
-    Wednesday,
-    Thursday,
-    Friday,
-    Saturday,
-    Sunday
-};
+
+// enum class Day{
+//     Monday,
+//     Tuesday,
+//     Wednesday,
+//     Thursday,
+//     Friday,
+//     Saturday,
+//     Sunday
+// };
 
 class Supporter : public Member{
 private:
@@ -148,3 +152,5 @@ public:
     double getSupportRatingScore(){return this->support_rating_score;}
     int getSupportCount(){return support_count;}
 };
+
+#endif

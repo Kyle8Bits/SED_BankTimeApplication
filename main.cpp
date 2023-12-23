@@ -100,7 +100,21 @@ int main(){
                 break;//BREAK THE SWICH CASE
             case 3:
                 //TEST, THIS ADMIN TO SHOW ALL THE MEMBERS IN THE LIST
-                system.displayMemberList();
+                cout << "1. Display member list" << endl;
+                cout << "2. Reset member's password" << endl;
+                int choice; cin >> choice;
+                switch(choice){
+                    case 1: 
+                        system.displayMemberList();
+                        break;
+                    case 2:
+                        system.resetMemberPassword();
+                        break;
+                    default:
+                        cout << "Invalid choice!" << endl;
+                        break;
+                }
+
                 break;
             default:
                 cout << "Please enter the valid input" << endl;
