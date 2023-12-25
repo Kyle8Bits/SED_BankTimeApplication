@@ -135,18 +135,18 @@ public:
         return skill_list_str;
     }
 
-    string showSkillList(){
+    string displaySkillList(){
         if(skill_list.empty()){
             return "";//If the skill list have no elements, we return the blank
         }
-        string skill_list_str;
+        string skill_list_str = skill_list[0] + "+";
 
-        for(auto skill : skill_list){
-            skill_list_str += skill + " + ";
+        for(int i = 1; i < skill_list.size(); i ++){
+            skill_list_str += skill_list[i] + "+";
         }
+        
         return skill_list_str;
     }
-    
     
     double getSkillRatingScore(){return this->skill_rating_score;}
     double getSupportRatingScore(){return this->support_rating_score;}

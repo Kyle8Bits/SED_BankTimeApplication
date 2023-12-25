@@ -8,6 +8,9 @@ using std::cout;
 using std::string;
 using std::vector;
 
+#define clearScreen() cout << "\x1B[2J\x1B[H";
+
+
 int main(){
     cout << "EEET2482/COSC2082 ASSIGNMENT\n"
         << "'TIME BANK' APPLICATION\n"
@@ -25,9 +28,18 @@ int main(){
     //The function loadData will return a vector of <Member*>. Copy it to the member_list_from_file. After that 
     //We paste the member_list_from_file to the setMemberList, to set the private attribute member_list of the class System
     system.setMemberList(member_list_from_file);
+
+    std::vector<BookingSupporter*> booking_list_from_file = file_process.loadBookingFile(system.getBookingList());
+    system.setBookingList(booking_list_from_file);
+
+    bool request = true; // this boolean for the while loop below
+    bool request_guest = true;
+    bool request_member = false;
+    bool request_admin = false;
+    bool request_supporter = false;
+
     
-    bool check = true;//this boolean for the while loop below
-    while(check){
+    while(request){
         cout << "\t\t____________________________________\n"
              << "\t\t|        WELCOME TO TIME BANK       |\n"
              << "\t\t|                                   |\n"
@@ -35,98 +47,216 @@ int main(){
              << "\t\t|                                   |\n"
              << "\t\t|          1. Guest                 |\n"
              << "\t\t|                                   |\n"
-             << "\t\t|          2. Member                |\n"
+             << "\t\t|          2. Login                 |\n"
              << "\t\t|                                   |\n"
-             << "\t\t|          3. Admin                 |\n"
-             << "\t\t|                                   |\n"
+             << "\t\t|          3. Quit                  |\n"
              << "\t\t-------------------------------------\n"
              << ">Your choice: ";
 
-        int user_choice; cin >> user_choice; //Get the input of the user's ipnut
-        switch(user_choice){
-            case 1:
-                cout << "Do you want to register the new account" << endl;
-                cout << "[Y/N]:";
-                char user_choice_char;
-                cin >> user_choice_char;
-                user_choice_char = std::toupper(user_choice_char);//to ensure that users type 'Y' and 'y' are the same
+        char user_choice = ' ';  
+        cin >> user_choice;
+        //Get the input of the user's ipnut
+            switch(user_choice){
+            case '1'://==================GUEST MENU=================
+                while(request_guest){
+                    cout << "\t\t____________________________________\n"
+                         << "\t\t|           WELCOME                 |\n"
+                         << "\t\t|                                   |\n"
+                         << "\t\t|       YOU ARE USING AS GUEST      |\n"
+                         << "\t\t|                                   |\n"
+                         << "\t\t|1. View supporters's information   |\n"
+                         << "\t\t|                                   |\n"
+                         << "\t\t|2. Register                        |\n"
+                         << "\t\t|                                   |\n"
+                         << "\t\t|3. Return                          |\n"
+                         << "\t\t|                                   |\n"
+                         << "\t\t-------------------------------------\n"
+                         << ">Your choice: ";
 
-                switch(user_choice_char){
-                    case 'Y':
-                        system.registerMember();
-                        break;
-                    case 'N':
-                        break;
-                    default:
-                        break;
+                    char guest_choice; cin >> guest_choice;
+                    switch(guest_choice){
+                        case '1':
+                            //SHOW INFORMATION ABOUT ALL SUPPORTER
+                            break;
+                        case '2':
+                            system.registerMember();
+                            request_guest = false;
+                            cout << "Go to login page" << endl;
+                            break;
+                        case '3':
+                            request_guest = false;
+                            cout << "Returning to the home page" << endl;
+                            clearScreen();
+                            break;
+                        default:
+                            cout << "Invalid input, please choose again!" << endl;
+                            clearScreen();
+                    }
                 }
                 break;
-            case 2:
+            case '2':
                 if(system.loginMember()){
-                    //****************************THIS FOR MEMBER LOGIN****************************
-                    if(system.getLoggedInMember() != nullptr){
-                        cout << "HI " << system.getLoggedInMember()->getFullName() << endl;
-                        cout << "You are not the supporter yet. Do you want to become a supporter. [Y/N]";
-                        char choice; cin >> choice;
-                        if(choice == 'Y' || choice == 'y'){
-                            system.upgradeToSupporter();
-                            cout << "Your cost: " << (system.getLoggedInSupporter())->getCost() << endl;
-                            cout << "Time period: " << (system.getLoggedInSupporter())->getAvailabilityPeriod() << endl;
+                    //LOGIN AS ADMINSTRATOR
+                    if(system.getIsAdmin() == true){
+                        request_admin = true;
+                        while(request_admin){
+                            cout << "\t\t____________________________________________________________\n";
+                            cout << "\t\t|                   ADMIN DASHBOARD                         |\n"
+                                << "\t\t|                                                           |\n"
+                                << "\t\t|              1. Display Member List                       |\n"
+                                << "\t\t|                                                           |\n"
+                                << "\t\t|              2. Reset Member's Password                   |\n"
+                                << "\t\t|                                                           |\n"
+                                << "\t\t|              3. Exit                                      |\n"
+                                << "\t\t-------------------------------------------------------------\n";
+                            char admin_choice = ' '; cin >> admin_choice;
+                            switch(admin_choice){
+                                case '1':
+                                    system.displayMemberList();
+                                    break;
+                                case '2':
+                                    system.resetMemberPassword();
+                                    break;
+                                case '3':
+                                    request_admin = false;
+                                    cout << "Exit to main page" << endl;
+                                    break;
+                                default:
+                                    cout << "Please enter the valid choice" << endl;
+                                    break;
+                            }  
                         }
-                    }
-                     //****************************THIS FOR SUPPPORTER LOGIN****************************
-                    else {
-                        cout << "HI " << system.getLoggedInSupporter()->getFullName() << endl;
-                        cout << "You are aldready supporter!" << endl;
-                        cout << "Do you want to add more skill: ";
-                        cout << "1. Yes 2. No: ";
-                        int choice; cin >> choice;
-                        switch(choice){
-                            case 1: 
-                                system.getLoggedInSupporter()->addSkill();
-                                break;
-                            case 2:
-                                cout << "OK YOU DO NOT WANT" << endl;
-                                break;
-                            default:
-                                cout << "Please input the valid choice" << endl;
-                                break;
+                        system.setIsAdmin(false);
+                    }else if(system.getLoggedInSupporter() == nullptr){
+                        request_member = true;
+                        while(request_member){
+                            cout << "\t\t____________________________________________________________\n"
+                                << "\t\t|                   WELCOME BACK  + (NAME)                  |\n"
+                                << "\t\t|                                                           |\n"
+                                << "\t\t|1. Buy credit point                                        |\n"
+                                << "\t\t|                                                           |\n"
+                                << "\t\t|2. View supporter list                                     |\n"
+                                << "\t\t|                                                           |\n"
+                                << "\t\t|3. Book a supporter                                        |\n"
+                                << "\t\t|                                                           |\n"
+                                << "\t\t|4. View history booking                                    |\n"
+                                << "\t\t|                                                           |\n"
+                                << "\t\t|5. Become supporter                                        |\n"
+                                << "\t\t|                                                           |\n"
+                                << "\t\t|6. Manage account                                          |\n"
+                                << "\t\t|                                                           |\n"
+                                << "\t\t|7. View my information                                     |\n"
+                                << "\t\t|                                                           |\n"
+                                << "\t\t|8. Sign out                                                |\n"
+                                << "\t\t-------------------------------------------------------------\n"
+                                << ">Your choice: ";
+                            char member_choice; cin >> member_choice;
+                            switch (member_choice){
+                                case '1':
+                                    cout << "(Buy credit point here)" << std::endl;
+                                    break;
+                                case '2':
+                                    //VIEW SUPPORTER LIST
+                                    system.displayAvailableSupporter();
+                                    break;
+                                case '3':
+                                    //Book a supporter
+                                    system.createBooking();
+                                    break;
+                                case '4':
+                                    system.viewHistory();
+                                    break;
+                                case '5':
+                                    system.upgradeToSupporter();
+                                    break;
+                                case '6':
+                                    //SHOW BASIC INFORMATION
+                                    break;
+                                case '7':
+                                    system.viewPersonalInformationMember();
+                                    break;
+                                case '8':
+                                    request_member = false;
+                                    cout << "Returning to main dashboard" << endl;
+                                default:
+                                    break;
+                            }
                         }
-                    }
-                }else{//USER INPUT WRONG USERNAME OR PASSWWORD
-                    cout << "Your username or password is incorrect!" << endl;
-                    break;
-                }
-                break;//BREAK THE SWICH CASE
-            case 3:
-                //TEST, THIS ADMIN TO SHOW ALL THE MEMBERS IN THE LIST
-                cout << "1. Display member list" << endl;
-                cout << "2. Reset member's password" << endl;
-                int choice; cin >> choice;
-                switch(choice){
-                    case 1: 
-                        system.displayMemberList();
-                        break;
-                    case 2:
-                        system.resetMemberPassword();
-                        break;
-                    default:
-                        cout << "Invalid choice!" << endl;
-                        break;
-                }
+                    } else{
+                        request_supporter = true;
+                        while(request_supporter){
+                            cout << "\t\t____________________________________________________________\n"
+                                << "\t\t|                   WELCOME BACK  + (NAME)                  |\n"
+                                << "\t\t|                                                           |\n"
+                                << "\t\t|1. Buy credit point                                        |\n"
+                                << "\t\t|                                                           |\n"
+                                << "\t\t|2. View supporter list                                     |\n"
+                                << "\t\t|                                                           |\n"
+                                << "\t\t|3. Book a supporter                                        |\n"
+                                << "\t\t|                                                           |\n"
+                                << "\t\t|4. View history booking                                    |\n"
+                                << "\t\t|                                                           |\n"
+                                << "\t\t|5. View current job requests                               |\n"
+                                << "\t\t|                                                           |\n"
+                                << "\t\t|6. Manage account                                          |\n"
+                                << "\t\t|                                                           |\n"
+                                << "\t\t|7. View my information                                     |\n"
+                                << "\t\t|                                                           |\n"
+                                << "\t\t|8. Sign out                                                |\n"
+                                << "\t\t-------------------------------------------------------------\n"
+                                << ">Your choice: ";
+                                char supporter_choice; cin >> supporter_choice;
 
+                                switch(supporter_choice){
+                                    case '1':
+                                        break;
+                                    case '2':
+                                        system.displayAvailableSupporter();
+                                        break;
+                                    case '3':
+                                        system.createBooking();
+                                        break;
+                                    case '4':
+                                        system.viewHistory();
+                                        break;
+                                    case '5':
+                                        system.decideJob();
+                                        break;
+                                    case '6':
+                                        break;
+                                    default:
+                                        request_supporter = false;
+                                        cout << "Return to main dashboard" << endl;
+                                        break;
+                                }
+                        } 
+                    }
+                } 
+                else{
+                    cout << "Incorrect username or password" << endl;
+                }
+                break;
+            case '3':
+                cout << "Thank you for using our app" << endl;
+                cout << "Exit successfully!" << endl;
+                request = false;
+                clearScreen();
                 break;
             default:
-                cout << "Please enter the valid input" << endl;
-                cout << "Program end!" << endl;
-                check = 0;
+                clearScreen();
+                cout << "****Please enter the valid input****" << endl;
                 break;
-        }
+            }
     }
 
     if( !file_process.saveToFile(system.getMemberList()) ){
         cout << "Can not save to the file!" << endl;
     }
+
+    file_process.saveBookingFile(system.getBookingList());
+    // if( !file_process.saveBookingFile(system.getBookingList()) ){
+    //     cout << "Can not save booking list " << endl;
+    // }
     
     return 0;
 }

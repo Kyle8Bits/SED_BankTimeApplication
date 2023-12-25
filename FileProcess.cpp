@@ -5,6 +5,7 @@
 #include "Supporter.cpp"
 #include "Member.cpp"
 #include "Time.cpp"
+#include "BookingSupporter.cpp"
 
 using std::endl;
 using std::cout;
@@ -12,7 +13,9 @@ using std::cin;
 using std::string;
 
 #define loop(n) for(int i = 0; i < n; ++i)
-#define FILENAME "members.dat"
+#define MEMBERFILE "SourceFile/members.dat"
+#define SKILLFILE "SourceFile/skills.dat"
+#define BOOKINGFILE "SourceFile/booking.dat"
 
 
 class FileProcess{//THis class is use for loading the file and save to the file
@@ -20,7 +23,7 @@ public:
     bool saveToFile(std::vector<Member*> member_list){
         //***********************SAVE BASIC INFORMATION***********************
         std::fstream my_file;
-        my_file.open(FILENAME, std::ios::out);
+        my_file.open(MEMBERFILE, std::ios::out);
         if (!my_file.is_open()) {
             cout << "Can not open the file" << endl;
             return false;
@@ -39,7 +42,7 @@ public:
         my_file.close();
 
         //***********************SAVE SKILL LIST INFORMATION FOR SUPPORTER***********************
-        my_file.open("skills.dat", std::ios::out);
+        my_file.open(SKILLFILE, std::ios::out);
         if (!my_file.is_open()) {
             cout << "Can not open the file" << endl;
             return false;
@@ -63,11 +66,9 @@ public:
         return true;
     }
 
-
-
     std::vector<Member*> loadData(std::vector<Member*>& member_list){//Pass the member_list by reference
         std::fstream my_file;
-        my_file.open(FILENAME, std::ios::in);
+        my_file.open(MEMBERFILE, std::ios::in);
         member_list.clear(); //clear the member list before load the data
         if (!my_file.is_open()) {
             cout << "Can not open the file" << endl;
@@ -137,7 +138,7 @@ public:
     std::vector<string> readSkillSupporter(string id_skill){
         std::vector<string> skill_list;
         std::fstream my_file;
-        my_file.open("skills.dat", std::ios::in);
+        my_file.open(SKILLFILE, std::ios::in);
         if (!my_file.is_open()) {
             cout << "Can not open the file" << endl;
             return skill_list;
@@ -159,5 +160,66 @@ public:
         return skill_list;
     }
 
+    bool saveBookingFile(std::vector<BookingSupporter*>& booking_list){
+        std::fstream my_file;
+        my_file.open(BOOKINGFILE, std::ios::out);
+        if(!my_file.is_open()){
+            cout << "Can not open the booking file"<< endl;
+            return false;
+        }
 
+        loop(booking_list.size()){
+            if(i == booking_list.size() - 1){//If go to the last element
+                my_file << booking_list[i]->getBookingId() << "-" << booking_list[i]->getHostId() << "-" << booking_list[i]->getSupportId() << "-" <<  booking_list[i]->getStatus();//save to file without endl
+            }else{
+                my_file << booking_list[i]->getBookingId() << "-" << booking_list[i]->getHostId() << "-" << booking_list[i]->getSupportId() << "-" <<  booking_list[i]->getStatus() << endl;
+            }
+        }
+        my_file.close();
+        cout << "SAVE BOOKING SUCCESSFULLY" << endl;
+        return true;
+    }
+
+    std::vector<BookingSupporter*> loadBookingFile(std::vector<BookingSupporter*>& booking_list){
+        std::fstream my_file;
+        my_file.open(BOOKINGFILE, std::ios::in);
+
+        if (!my_file.is_open()){
+            std::cerr << "Cannot read the booking file" << endl;
+            return booking_list;
+        }
+
+        booking_list.clear(); //clear the list before reload data
+
+        string bookingid_from_file, hostid_from_file, supportid_from_file, status_from_file;
+
+        while (getline(my_file, bookingid_from_file, '-') && getline(my_file, hostid_from_file, '-') && getline(my_file, supportid_from_file, '-') && getline(my_file,status_from_file)){
+            BookingSupporter *booking  = new BookingSupporter(hostid_from_file, supportid_from_file, status_from_file, bookingid_from_file);
+            booking_list.push_back(booking);
+        }
+        my_file.close();
+
+        if (!booking_list.empty()) {
+            string max_id = booking_list[0]->getBookingId();
+            string number_part = max_id.substr(2);  // Skip the first two characters (prefix "BK")
+            int max_id_numeric;
+            max_id_numeric = std::stoi(number_part);
+           
+
+        for (int i = 1; i < booking_list.size(); i++) {
+            string id_string = booking_list[i]->getBookingId();
+            string part_id = id_string.substr(2);  // Skip the first two characters (prefix "BK")
+            int id_numeric;
+            id_numeric =  std::stoi(part_id);
+
+            if (max_id_numeric < id_numeric) {
+                max_id_numeric = id_numeric;
+            }
+        }
+        
+            //Assign new start value for booking in BookingSupporter class
+            BookingSupporter::number_of_booking = max_id_numeric;
+        }
+        return booking_list;
+    }
 };
