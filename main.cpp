@@ -153,7 +153,7 @@ int main(){
                             char member_choice; cin >> member_choice;
                             switch (member_choice){
                                 case '1':
-                                    cout << "(Buy credit point here)" << std::endl;
+                                    system.buyCredit();
                                     break;
                                 case '2':
                                     //VIEW SUPPORTER LIST
@@ -209,6 +209,8 @@ int main(){
 
                                 switch(supporter_choice){
                                     case '1':
+                                        cout <<"hi";
+                                        system.buyCredit();
                                         break;
                                     case '2':
                                         system.displayAvailableSupporter();

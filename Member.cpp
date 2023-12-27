@@ -128,7 +128,7 @@ public:
     virtual ~Member() = default;
 
     virtual string toString(){
-        return this->user_name + "-" + this->pass_word + "-" + this->member_id + "-" + this->full_name + "-" + this->phone_number + "-" + this->address + "-" + this->city + "-" + this->about_me;
+        return this->user_name + "-" + this->pass_word + "-" + this->member_id + "-" + this->full_name + "-" + this->phone_number + "-" + this->address + "-" + this->city +"-"+ std::to_string(this->credit_point) + "-" + this->about_me;
     }
     
     friend class System;//Make system is friend of Member
