@@ -76,7 +76,7 @@ int main(){
                     char guest_choice; cin >> guest_choice;
                     switch(guest_choice){
                         case '1':
-                            //SHOW INFORMATION ABOUT ALL SUPPORTER
+                            system.displaySupporter();
                             break;
                         case '2':
                             system.registerMember();

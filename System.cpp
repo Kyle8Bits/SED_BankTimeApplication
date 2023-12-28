@@ -619,6 +619,23 @@ public:
             }
     }
 
+     void displaySupporter(){
+        cout << "****Supporter List****" << endl;
+        cout << "================================================================\n";
+        loop(this->member_list.size()){
+            if(Supporter* supporter = dynamic_cast<Supporter*>(member_list[i])){
+                    cout << "Supporter " << i + 1 << ": " << endl;
+                    cout << "Member id: " << supporter->getMemberId() <<endl;
+                    cout << "Fullname: " << supporter->getFullName() << endl;
+                    cout << "City: " << supporter->getCity() << endl;
+                    cout << "Skill: " << supporter->displaySkillList() << endl;
+                    cout << "Cost Per Hour: " << supporter->getCost() << endl;
+                    cout << "Introduction: " << supporter->getAboutMe() << endl;
+                    cout << "================================================================\n";
+            }
+        }
+    }
+
     std::vector<Member*>& getMemberList(){
         return this->member_list;
     }
