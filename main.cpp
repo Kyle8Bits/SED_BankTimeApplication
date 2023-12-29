@@ -129,7 +129,8 @@ int main(){
                             }  
                         }
                         system.setIsAdmin(false);
-                    }else if(system.getLoggedInSupporter() == nullptr){
+//===========================================================MEMBER MENU HOMEPAGE========================================================
+                    }else if(system.getLoggedInSupporter() == nullptr){ 
                         request_member = true;
                         while(request_member){
                             cout << "\t\t____________________________________________________________\n"
@@ -191,6 +192,7 @@ int main(){
                                     break;
                             }
                         }
+//===========================================================SUPPORTER MENU HOMEPAGE========================================================
                     } else{
                         request_supporter = true;
                         while(request_supporter){
@@ -245,6 +247,7 @@ int main(){
                                         break;
                                     case '7':
                                         clearScreen();
+                                        system.viewPersonalInformationSupporter();
                                         break;
                                     case '8':
                                         clearScreen();

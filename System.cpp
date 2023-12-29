@@ -361,6 +361,22 @@ public:
         cout << "Block List:  HAVEN'T DONE YET" << endl;
     }
 
+    void viewPersonalInformationSupporter(){
+        cout << "***MY INFORMATION***" << endl;
+        cout << "ID: " << logged_in_supporter->getMemberId() << endl;
+        cout << "Username: " << logged_in_supporter->getUsername() << endl;
+        cout << "Password: " << logged_in_supporter->getPassword() << endl;
+        cout << "Credit Point: " << logged_in_supporter->getCreditPoint() << endl;
+        cout << "Full Name: " << logged_in_supporter->getFullName() << endl;
+        cout << "Phone Number: " << logged_in_supporter->getPhoneNumber() << endl;
+        cout << "Address: " << logged_in_supporter->getAddress() << endl;
+        cout << "City: " << logged_in_supporter->getCity() << endl;
+        cout << "About Me: " << logged_in_supporter->getAboutMe() << endl;
+        cout << "Host Rating Score: " << logged_in_supporter->getHostRatingScore() << endl;
+        cout << "Host Count: " << logged_in_supporter->getHostCount() << endl;
+        cout << "Block List:  HAVEN'T DONE YET" << endl;
+    }
+
     void displayAvailableSupporter(){
         string current_user;
         cout << "****Available Supporter List****" << endl;
