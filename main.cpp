@@ -211,7 +211,10 @@ int main(){
                                 << "\t\t|                                                           |\n"
                                 << "\t\t|7. View my information                                     |\n"
                                 << "\t\t|                                                           |\n"
-                                << "\t\t|8. Sign out                                                |\n"
+                                << "\t\t|8. Change my status.                                       |\n"
+                                << "\t\t*** Current status: "<<system.getCurrentStatus()<<"***\n"
+                                << "\t\t|                                                           |\n"
+                                << "\t\t|9. Sign out                                                |\n"
                                 << "\t\t-------------------------------------------------------------\n"
                                 << ">Your choice: ";
                                 char supporter_choice; cin >> supporter_choice;
@@ -238,6 +241,14 @@ int main(){
                                         system.decideJob();
                                         break;
                                     case '6':
+                                        clearScreen();
+                                        break;
+                                    case '7':
+                                        clearScreen();
+                                        break;
+                                    case '8':
+                                        clearScreen();
+                                        system.statusSetting();
                                         break;
                                     default:
                                         request_supporter = false;

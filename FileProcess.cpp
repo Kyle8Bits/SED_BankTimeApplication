@@ -66,6 +66,19 @@ public:
         return true;
     }
 
+    Status statusEnum(string status){
+        if (status == "OFFLINE"){
+            return Status::OFFLINE;
+        }
+        else if (status == "ONLINE") {
+            return Status::ONLINE;
+        }
+        else {
+            cout <<"Cannot found the status";
+            return Status::OFFLINE;  
+        }
+    }
+
     std::vector<Member*> loadData(std::vector<Member*>& member_list){//Pass the member_list by reference
         std::fstream my_file;
         my_file.open(MEMBERFILE, std::ios::in);
@@ -76,7 +89,7 @@ public:
         }
         
         string username_from_file, password_from_file, id_from_file, full_name_from_file, phonenumber_from_file, address_from_file, city_from_file,crepoint_from_file, about_me_from_file; // varibles to store data from file and push into the list
-        string start_time_hour, start_time_minute, end_time_hour, end_time_minute, cost_from_file, skill_rating_score_file, support_rating_score_file, support_count_file;
+        string start_time_hour, start_time_minute, end_time_hour, end_time_minute, cost_from_file, skill_rating_score_file, support_rating_score_file, support_count_file,status_from_file;
         std::vector<string> skill_list = {};
         while(getline(my_file, username_from_file, '-') &&  getline(my_file, password_from_file, '-') && getline(my_file, id_from_file, '-') && 
               getline(my_file, full_name_from_file, '-') && getline(my_file, phonenumber_from_file, '-') && getline(my_file, address_from_file, '-') && getline(my_file, city_from_file, '-') && getline(my_file, crepoint_from_file, '-')){
@@ -96,13 +109,14 @@ public:
                 getline(my_file, cost_from_file, '-');
                 getline(my_file, skill_rating_score_file, '-');
                 getline(my_file, support_rating_score_file, '-');
-                getline(my_file, support_count_file);
+                getline(my_file, support_count_file,'-');
+                getline(my_file, status_from_file);
                 
                 skill_list = readSkillSupporter(id_from_file);
 
                 new_member = new Supporter(username_from_file, password_from_file, id_from_file, 20, full_name_from_file, phonenumber_from_file, address_from_file, city_from_file, about_me_from_file,
                                            0, 0, {}, Time(std::stoi(start_time_hour), std::stoi(start_time_minute)), Time(std::stoi(end_time_hour), std::stoi(end_time_minute)), skill_list, std::stoi(cost_from_file), 
-                                           std::stod(skill_rating_score_file), std::stod(support_rating_score_file), std::stoi(support_count_file));
+                                           std::stod(skill_rating_score_file), std::stod(support_rating_score_file), std::stoi(support_count_file), statusEnum(status_from_file));
                 
             }
             if(new_member){

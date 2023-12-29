@@ -25,6 +25,11 @@ using std::endl;
 //     Sunday
 // };
 
+enum class Status{
+    OFFLINE,
+    ONLINE
+};
+
 class Supporter : public Member{
 private:
     //SUPPORTER INHERITED THESE ATTRIBUTES FROM MEMBER CLASS
@@ -52,16 +57,17 @@ private:
     double skill_rating_score;
     double support_rating_score;
     int support_count;
+    Status status; 
 
 public:
     Supporter(string user_name = "", string pass_word = "", string member_id = "S", int credit_point = 20, string full_name = "", string phone_number = "", 
     string address = "", string city = "", string about_me = "",double host_rating_score = 0, 
     int host_count = 0, std::vector<string> block_list = {}, Time start_time = Time(0,0), Time end_time = Time(0,0), 
-    std::vector<string> skill_list = {}, int cost = 0, double skill_rating_score = 0, double support_rating_score = 0, int support_count = 0)
+    std::vector<string> skill_list = {}, int cost = 0, double skill_rating_score = 0, double support_rating_score = 0, int support_count = 0, Status status = Status::OFFLINE)
     : Member(user_name, pass_word, member_id, credit_point, full_name, phone_number, address, city, about_me,
             host_rating_score, host_count, block_list), 
             start_time(start_time), end_time(end_time), skill_list(skill_list), cost(cost), skill_rating_score(skill_rating_score),
-            support_rating_score(support_rating_score), support_count(support_count)
+            support_rating_score(support_rating_score), support_count(support_count), status(status)
     {
         if(member_id == "S"){//If the member id is S (Default value), we auto generate the id with the number of the number
             this->member_id = member_id + std::to_string(number_of_member);//AUTO GENERATE THE ID FOR MEMBER
@@ -72,7 +78,7 @@ public:
     Supporter(const Member& member, Time start_time = Time(0,0), Time end_time = Time(0,0),std::vector<string> skill_list = {}, int cost = 0,
               double skill_rating_score = 0, double support_rating_score = 0, int support_count = 0):
               Member(member), start_time(start_time), end_time(end_time), skill_list(skill_list), cost(cost), 
-              skill_rating_score(skill_rating_score), support_rating_score(support_rating_score), support_count(support_count)
+              skill_rating_score(skill_rating_score), support_rating_score(support_rating_score), support_count(support_count), status(status)
         {
             if(member_id == "S"){//If the member id is S (Default value), we auto generate the id with the number of the number
             this->member_id = member_id + std::to_string(number_of_member);//AUTO GENERATE THE ID FOR MEMBER
@@ -120,8 +126,16 @@ public:
         return "From: " + this->start_time.getTime() + " To: " + this->end_time.getTime();
     }
 
+    Status getStatus() const {
+        return status;
+    }
+
+    void setStatus(Status status){
+        this->status = status;
+    }
+
     string toString() override{
-        return Member::toString() + "-" + this->start_time.getHour() + "-" + this->start_time.getMinute() + "-" +this->end_time.getHour() + "-" + this->end_time.getMinute() + "-" + std::to_string(this->cost) + "-" + std::to_string(this->skill_rating_score) + "-" + std::to_string(this->support_rating_score) + "-" + std::to_string(this->support_count);
+        return Member::toString() + "-" + this->start_time.getHour() + "-" + this->start_time.getMinute() + "-" +this->end_time.getHour() + "-" + this->end_time.getMinute() + "-" + std::to_string(this->cost) + "-" + std::to_string(this->skill_rating_score) + "-" + std::to_string(this->support_rating_score) + "-" + std::to_string(this->support_count) + "-" + statusString(getStatus());
     }
 
     string skillListToString(){
@@ -151,6 +165,21 @@ public:
     double getSkillRatingScore(){return this->skill_rating_score;}
     double getSupportRatingScore(){return this->support_rating_score;}
     int getSupportCount(){return support_count;}
+
+
+    string statusString(Status status){
+        switch (status) {
+            case Status::OFFLINE:
+                return "OFFLINE";
+            case Status::ONLINE:
+                return "ONLINE";
+            default:
+                return "UNKNOWN";
+        }
+    }
+
 };
+
+
 
 #endif

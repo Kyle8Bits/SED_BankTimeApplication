@@ -27,6 +27,7 @@ private:
     Member* logged_in_member;//This pointer of member to store the information of the member who has logged in successfully
     Supporter* logged_in_supporter;//This pointer of member to store the information of the member who has logged in successfully
     bool is_admin = false;
+
 public:
     //CONSTRUCTOR
     System(std::vector<Member*> member_list = {}) : member_list(member_list){}
@@ -370,7 +371,7 @@ public:
                 if(logged_in_supporter != nullptr){
                     current_user = logged_in_supporter->getMemberId();
                 }
-                if(supporter->getMemberId() != current_user){//advoid display the current logged in supporter information
+                if(supporter->getMemberId() != current_user && supporter->getStatus() == Status::ONLINE){//advoid display the current logged in supporter information
                     cout << "Supporter " << i + 1 << ": " << endl;
                     cout << "Member id: " << supporter->getMemberId() <<endl;
                     cout << "Fullname: " << supporter->getFullName() << endl;
@@ -619,7 +620,7 @@ public:
             }
     }
 
-     void displaySupporter(){
+    void displaySupporter(){
         cout << "****Supporter List****" << endl;
         cout << "================================================================\n";
         loop(this->member_list.size()){
@@ -631,9 +632,56 @@ public:
                     cout << "Skill: " << supporter->displaySkillList() << endl;
                     cout << "Cost Per Hour: " << supporter->getCost() << endl;
                     cout << "Introduction: " << supporter->getAboutMe() << endl;
+                    cout << "Status: " <<  supporter->statusString(supporter->getStatus()) << endl;
                     cout << "================================================================\n";
             }
         }
+    }
+
+    void statusSetting(){
+        cout <<"****Status Setting Menu****" << endl;
+        cout <<"Your current status: " << logged_in_supporter->statusString(logged_in_supporter->getStatus()) << endl;
+
+        bool check = true;
+        char option;
+
+        if (logged_in_supporter->getStatus() == Status::OFFLINE){
+            while (check){
+                cout << "Do you want to change your status to ONLINE [Y/N]";
+                cin >> option;
+                switch(option){
+                    case 'Y':
+                        logged_in_supporter->setStatus(Status::ONLINE);
+                        break;
+                    case 'N':
+                        cout << "Your status remaining OFFLINE" << endl;
+                        break;
+                    default:
+                        cout << "Invalid input. Please input again" << endl;
+                }
+            }
+        }
+        else if (logged_in_supporter->getStatus() == Status::ONLINE){
+            while (check){
+                cout << "Do you want to change your status to OFFLINE [Y/N]";
+                cin >> option;
+                switch(option){
+                    case 'Y':
+                        logged_in_supporter->setStatus(Status::OFFLINE);
+                        break;
+                    case 'N':
+                        cout << "Your status remaining ONLINE" << endl;
+                        break;
+                    default:
+                        cout << "Invalid input. Please input again" << endl;
+                }
+            }
+        }
+                
+    }
+
+    string getCurrentStatus(){
+        return logged_in_supporter->statusString(logged_in_supporter->getStatus());
     }
 
     std::vector<Member*>& getMemberList(){
