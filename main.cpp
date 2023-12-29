@@ -112,9 +112,11 @@ int main(){
                             char admin_choice = ' '; cin >> admin_choice;
                             switch(admin_choice){
                                 case '1':
+                                    clearScreen();
                                     system.displayMemberList();
                                     break;
                                 case '2':
+                                    clearScreen();
                                     system.resetMemberPassword();
                                     break;
                                 case '3':
@@ -153,26 +155,33 @@ int main(){
                             char member_choice; cin >> member_choice;
                             switch (member_choice){
                                 case '1':
+                                    clearScreen();
                                     system.buyCredit();
                                     break;
                                 case '2':
                                     //VIEW SUPPORTER LIST
+                                    clearScreen();
                                     system.displayAvailableSupporter();
                                     break;
                                 case '3':
                                     //Book a supporter
+                                    clearScreen();
                                     system.createBooking();
                                     break;
                                 case '4':
+                                    clearScreen();
                                     system.viewHistory();
                                     break;
                                 case '5':
+                                    clearScreen();
                                     system.upgradeToSupporter();
                                     break;
                                 case '6':
+                                    clearScreen();
                                     //SHOW BASIC INFORMATION
                                     break;
                                 case '7':
+                                    clearScreen();
                                     system.viewPersonalInformationMember();
                                     break;
                                 case '8':
@@ -209,19 +218,23 @@ int main(){
 
                                 switch(supporter_choice){
                                     case '1':
-                                        cout <<"hi";
+                                        clearScreen();
                                         system.buyCredit();
                                         break;
                                     case '2':
+                                        clearScreen();
                                         system.displayAvailableSupporter();
                                         break;
                                     case '3':
+                                        clearScreen();
                                         system.createBooking();
                                         break;
                                     case '4':
+                                        clearScreen();
                                         system.viewHistory();
                                         break;
                                     case '5':
+                                        clearScreen();
                                         system.decideJob();
                                         break;
                                     case '6':
