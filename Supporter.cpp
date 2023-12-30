@@ -139,6 +139,7 @@ public:
         for(int i = 1; i < time_pair_list.size(); ++i){
             time_pair_str += time_pair_list[i].first.getTime()+"="+ time_pair_list[i].second.getTime()+"-"; 
         }
+        return time_pair_str;
     }
 
     string displaySkillList(){
