@@ -1,6 +1,9 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <sstream>
+#include <string>
+#include <utility>
 
 #include "Supporter.cpp"
 #include "Member.cpp"
@@ -16,6 +19,7 @@ using std::string;
 #define MEMBERFILE "SourceFile/members.dat"
 #define SKILLFILE "SourceFile/skills.dat"
 #define BOOKINGFILE "SourceFile/booking.dat"
+#define TIMEFILE "SourceFile/timepair.dat"
 
 
 class FileProcess{//THis class is use for loading the file and save to the file
@@ -23,6 +27,7 @@ public:
     bool saveToFile(std::vector<Member*> member_list){
         //***********************SAVE BASIC INFORMATION***********************
         std::fstream my_file;
+        std::fstream my_file2;
         my_file.open(MEMBERFILE, std::ios::out);
         if (!my_file.is_open()) {
             cout << "Can not open the file" << endl;
@@ -40,7 +45,7 @@ public:
         }
 
         my_file.close();
-
+        cout << "Save member SUCCESFULLY!" << endl;
         //***********************SAVE SKILL LIST INFORMATION FOR SUPPORTER***********************
         my_file.open(SKILLFILE, std::ios::out);
         if (!my_file.is_open()) {
@@ -58,8 +63,25 @@ public:
                 }
             }
         }
-        
+        my_file.close();
+        cout << "Save supporter SUCCESFULLY!" << endl;
+        //***********************SAVE TIME PAIR LIST INFORMATION FOR SUPPORTER***********************
+        my_file.open(TIMEFILE, std::ios::out);
+        if (!my_file.is_open()) {
+            cout << "Can not open the file" << endl;
+            return false;
+        }
 
+        if(!member_list.empty()){//If the member is empty, we do not write to the file
+            loop(member_list.size()){
+                //check the memberlist at index i is the supporter or not
+                if (Supporter* supporter = dynamic_cast<Supporter*>(member_list[i])) {
+                    my_file << supporter->getMemberId() << "-" << supporter->timePairToString() << endl;
+                    //Print the skill list with format ID1-STIME#ETIME1-STIME#ETIME2
+                    //                                 ID2-STIME#ETIME1-STIME#ETIME2
+                }
+            }
+        }
         my_file.close();
 
         cout << "Save to file SUCCESFULLY!" << endl;
@@ -91,6 +113,8 @@ public:
         string username_from_file, password_from_file, id_from_file, full_name_from_file, phonenumber_from_file, address_from_file, city_from_file,crepoint_from_file, about_me_from_file; // varibles to store data from file and push into the list
         string start_time_hour, start_time_minute, end_time_hour, end_time_minute, cost_from_file, skill_rating_score_file, support_rating_score_file, support_count_file,status_from_file;
         std::vector<string> skill_list = {};
+        std::vector<std::pair<Time, Time>> time_pair_list = {};
+        
         while(getline(my_file, username_from_file, '-') &&  getline(my_file, password_from_file, '-') && getline(my_file, id_from_file, '-') && 
               getline(my_file, full_name_from_file, '-') && getline(my_file, phonenumber_from_file, '-') && getline(my_file, address_from_file, '-') && getline(my_file, city_from_file, '-') && getline(my_file, crepoint_from_file, '-')){
 
@@ -102,10 +126,6 @@ public:
                 new_member = new Member(username_from_file, password_from_file, id_from_file, std::stoi(crepoint_from_file), full_name_from_file, phonenumber_from_file, address_from_file, city_from_file, about_me_from_file);
             } else if (checkType == 'S'){
                 getline(my_file, about_me_from_file, '-');
-                getline(my_file, start_time_hour, '-');
-                getline(my_file, start_time_minute, '-');
-                getline(my_file, end_time_hour, '-');
-                getline(my_file, end_time_minute, '-');
                 getline(my_file, cost_from_file, '-');
                 getline(my_file, skill_rating_score_file, '-');
                 getline(my_file, support_rating_score_file, '-');
@@ -113,9 +133,9 @@ public:
                 getline(my_file, status_from_file);
                 
                 skill_list = readSkillSupporter(id_from_file);
-
+                time_pair_list = readTimePairList(id_from_file);
                 new_member = new Supporter(username_from_file, password_from_file, id_from_file, 20, full_name_from_file, phonenumber_from_file, address_from_file, city_from_file, about_me_from_file,
-                                           0, 0, {}, Time(std::stoi(start_time_hour), std::stoi(start_time_minute)), Time(std::stoi(end_time_hour), std::stoi(end_time_minute)), skill_list, std::stoi(cost_from_file), 
+                                           0, 0, {}, time_pair_list, skill_list, std::stoi(cost_from_file), 
                                            std::stod(skill_rating_score_file), std::stod(support_rating_score_file), std::stoi(support_count_file), statusEnum(status_from_file));
                 
             }
@@ -172,6 +192,46 @@ public:
         my_file.close();
 
         return skill_list;
+    }
+
+    std::vector<std::pair<Time, Time>> readTimePairList(string id_time){
+        std::vector<std::pair<Time, Time>> time_pair_list;
+        std::fstream my_file;
+        my_file.open(TIMEFILE, std::ios::in);
+        if (!my_file.is_open()) {
+            cout << "Can not open the file" << endl;
+            return time_pair_list;
+        }
+       
+        string time_pair, id;
+        Time start_time, end_time;
+        while(getline(my_file, id, '-')){
+            if(id == id_time){
+                while(getline(my_file, time_pair, '-') && time_pair[0] != '\n'){
+                    //This skill[0] != '\n to stop the function when the skill at index 0 is newline
+                    std::stringstream iss;
+                    std::string start_hour, start_min, end_hour, end_min;
+                    
+                    iss << time_pair;
+                    
+                    iss >> start_hour;
+                    iss.ignore();
+                    iss >> start_min;
+                    iss.ignore();
+                    iss >> end_hour;
+                    iss.ignore();
+                    iss >> end_min;
+                    
+                time_pair_list.push_back(std::make_pair(Time(std::stoi(start_hour), std::stoi(start_min)), Time(std::stoi(end_hour), std::stoi(end_min))));
+                }
+                break;
+            }
+            //if the id is not match, skip the rest of the file
+            getline(my_file,time_pair);
+        }
+
+        my_file.close();
+        return time_pair_list;
     }
 
     bool saveBookingFile(std::vector<BookingSupporter*>& booking_list){

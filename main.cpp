@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <utility>
 
 #include "System.cpp"
 #include "FileProcess.cpp"
@@ -32,7 +33,7 @@ int main(){
     std::vector<BookingSupporter*> booking_list_from_file = file_process.loadBookingFile(system.getBookingList());
     system.setBookingList(booking_list_from_file);
 
-    bool request = true; // this boolean for the while loop below
+    bool request = true; // this boolean for the while loop belowcle
     bool request_guest = true;
     bool request_member = false;
     bool request_admin = false;
@@ -176,10 +177,11 @@ int main(){
                                 case '5':
                                     clearScreen();
                                     system.upgradeToSupporter();
+                                    request_member = false;
                                     break;
                                 case '6':
                                     clearScreen();
-                                    //SHOW BASIC INFORMATION
+                                    //Manage account
                                     break;
                                 case '7':
                                     clearScreen();
@@ -266,10 +268,10 @@ int main(){
                 }
                 break;
             case '3':
+                clearScreen();
                 cout << "Thank you for using our app" << endl;
                 cout << "Exit successfully!" << endl;
                 request = false;
-                clearScreen();
                 break;
             default:
                 clearScreen();
@@ -279,7 +281,7 @@ int main(){
     }
 
     if( !file_process.saveToFile(system.getMemberList()) ){
-        cout << "Can not save to the file!" << endl;
+        std::cerr << "Can not save to the file!" << endl;
     }
 
     file_process.saveBookingFile(system.getBookingList());

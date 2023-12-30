@@ -6,6 +6,7 @@
 #include <sstream>
 #include <cstdlib>
 #include <ctime>
+#include <utility>
 
 #include "Member.cpp"
 #include "Supporter.cpp"
@@ -246,6 +247,7 @@ public:
         cout << "First, you need to add some skills that you have" << endl;
         bool check = true;
         std::vector<string> skill_list_input;
+        std::vector<std::pair<Time,Time>> time_pair_list;
         while(check){
             cout << ">Your skill:";
             getline(cin >> std::ws, skill_input);
@@ -263,25 +265,37 @@ public:
         int start_time_hour, start_time_minute, end_time_hour, end_time_minute;
         cout << "What is your free time (ex: 8:00 to 10:00, or 20:30 to 22:00)" << endl;
         //----------------------THIS FOR GETTING START TIME---------------------
-        cout << "Start time: ";
-        getline(cin >> std::ws, start_time_input);
-      
-        std::stringstream ss1;
-        ss1 << start_time_input;//Get the startime to the ss1
+        bool check2 = true;
+        while(check2){
+            cout << "Start time: ";
+            getline(cin >> std::ws, start_time_input);
+        
+            std::stringstream ss1;
+            ss1 << start_time_input;//Get the startime to the ss1
 
-        ss1 >> start_time_hour;
-        ss1.ignore();//ignore the colon
-        ss1 >> start_time_minute;
-        
-        //----------------------THIS FOR GETTING END TIME---------------------
-        cout << "End time: ";
-        getline(cin >> std::ws, end_time_input);
-        
-        std::stringstream ss2;
-        ss2 << end_time_input;//Get the startime to the ss2
-        ss2 >> end_time_hour;
-        ss2.ignore();
-        ss2 >> end_time_minute;
+            ss1 >> start_time_hour;
+            ss1.ignore();//ignore the colon
+            ss1 >> start_time_minute;
+            
+            //----------------------THIS FOR GETTING END TIME---------------------
+            
+            cout << "End time: ";
+            getline(cin >> std::ws, end_time_input);
+            
+            std::stringstream ss2;
+            ss2 << end_time_input;//Get the startime to the ss2
+            ss2 >> end_time_hour;
+            ss2.ignore();
+            ss2 >> end_time_minute;
+            
+            time_pair_list.push_back(std::make_pair(Time(start_time_hour, start_time_minute), Time(end_time_hour, end_time_minute)));
+            
+            cout << "Do you want to continue: [Y/N]: ";
+                char choice; cin >> choice;
+                if(choice != 'Y' && choice != 'y'){
+                    check2 = false;
+                }
+        }
         //----------------------THIS FOR GETTING COST PER HOUR---------------------
         int cost_input; 
         cout << "What is the hourly rate you would like to charge: ";
@@ -301,8 +315,7 @@ public:
         logged_in_member->setAboutMe(about_me_input);
         //create new pointer supporter
         
-        Supporter* new_supporter = new Supporter(*logged_in_member, Time(start_time_hour, start_time_minute), 
-                                                 Time(end_time_hour, end_time_minute), skill_list_input, cost_input);
+        Supporter* new_supporter = new Supporter(*logged_in_member,time_pair_list, skill_list_input, cost_input);
 
         loop(member_list.size()){
             if(member_list[i] == logged_in_member){
@@ -375,6 +388,8 @@ public:
         cout << "Host Rating Score: " << logged_in_supporter->getHostRatingScore() << endl;
         cout << "Host Count: " << logged_in_supporter->getHostCount() << endl;
         cout << "Block List:  HAVEN'T DONE YET" << endl;
+
+        cout << "Time list: " << logged_in_supporter->getPairListToString();
     }
 
     void displayAvailableSupporter(){
