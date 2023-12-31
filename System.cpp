@@ -25,6 +25,7 @@ class System{
 private:
     std::vector<Member*> member_list; 
     std::vector<BookingSupporter*> booking_list;
+    std::vector<string> validSupporterIDs;//This to restrict for users only book the valid supporter id
     Member* logged_in_member;//This pointer of member to store the information of the member who has logged in successfully
     Supporter* logged_in_supporter;//This pointer of member to store the information of the member who has logged in successfully
     bool is_admin = false;
@@ -353,7 +354,6 @@ public:
         } else{
             cout << "Only admin can do that" << endl;
         }
-        
     }
 
     void viewPersonalInformationMember(){
@@ -409,8 +409,7 @@ public:
                     cout << "Cost Per Hour: " << supporter->getCost() << endl;
                     cout << "Introduction: " << supporter->getAboutMe() << endl;
                     cout << "================================================================\n";
-                }else{
-
+                    validSupporterIDs.push_back(supporter->getMemberId());
                 }
             }
         }
@@ -430,21 +429,25 @@ public:
         string input; cin >> input;
 
         bool isSupporter = (logged_in_member == nullptr);
+        bool isValidSupporter = false;//this to check the create bookign is successfully or not?
 
-        loop(member_list.size()){
-            if(toLower(input) == toLower(member_list[i]->getMemberId())){
+        loop(validSupporterIDs.size()){
+            if(toLower(input) == toLower(validSupporterIDs[i])){
                 if(isSupporter){
                     logged_in_member = logged_in_supporter;//use this to prevent segment fault when the current users is supporter
                 }
                 BookingSupporter* booking = new BookingSupporter(logged_in_member->getMemberId(), member_list[i]->getMemberId());
                 booking_list.push_back(booking);
                 cout << "Your booking has been created" << endl;
+                isValidSupporter = true;
                 break;
             }
         }
-
         if(isSupporter){
             logged_in_member = nullptr;
+        }
+        if(!isValidSupporter){
+            cout << "Please enter the valid supporter's id" << endl;
         }
     }
 

@@ -50,7 +50,7 @@ private:
     // int host_count;
     // std::vector<Category> category_list;//this is skill list of a member
     // std::vector<string> block_list;
-
+    
     Time start_time; // (start time, end time, day)
     Time end_time;
     std::vector<string> skill_list;
