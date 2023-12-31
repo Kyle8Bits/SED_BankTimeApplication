@@ -11,7 +11,6 @@ using std::vector;
 
 #define clearScreen() cout << "\x1B[2J\x1B[H";
 
-
 int main(){
     cout << "EEET2482/COSC2082 ASSIGNMENT\n"
         << "'TIME BANK' APPLICATION\n"
@@ -176,8 +175,10 @@ int main(){
                                     break;
                                 case '5':
                                     clearScreen();
-                                    system.upgradeToSupporter();
-                                    request_member = false;
+                                    if(system.upgradeToSupporter()){
+                                        cout << "Sucessfully become supporter " << endl;
+                                        request_member = false;
+                                    }
                                     break;
                                 case '6':
                                     clearScreen();

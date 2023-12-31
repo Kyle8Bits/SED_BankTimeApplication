@@ -329,8 +329,6 @@ public:
         //Add the new_supporter to the list
         member_list.push_back(new_supporter);
         
-        cout << "Add new supporter successfully" << endl;
-        
         return true;
     }
 
@@ -683,9 +681,11 @@ public:
                 switch(option){
                     case 'Y':
                         logged_in_supporter->setStatus(Status::ONLINE);
+                        check = false;
                         break;
                     case 'N':
                         cout << "Your status remaining OFFLINE" << endl;
+                        check = false;
                         break;
                     default:
                         cout << "Invalid input. Please input again" << endl;
@@ -699,9 +699,11 @@ public:
                 switch(option){
                     case 'Y':
                         logged_in_supporter->setStatus(Status::OFFLINE);
+                        check = false;
                         break;
                     case 'N':
                         cout << "Your status remaining ONLINE" << endl;
+                        check = false;
                         break;
                     default:
                         cout << "Invalid input. Please input again" << endl;
