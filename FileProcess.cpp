@@ -210,7 +210,7 @@ public:
                 while(getline(my_file, time_pair, '-') && time_pair[0] != '\n'){
                     //This skill[0] != '\n to stop the function when the skill at index 0 is newline
                     std::stringstream iss;
-                    std::string start_hour, start_min, end_hour, end_min;
+                    int start_hour, start_min, end_hour, end_min;
                     
                     iss << time_pair;
                     
@@ -222,7 +222,7 @@ public:
                     iss.ignore();
                     iss >> end_min;
                     
-                time_pair_list.push_back(std::make_pair(Time(std::stoi(start_hour), std::stoi(start_min)), Time(std::stoi(end_hour), std::stoi(end_min))));
+                time_pair_list.push_back(std::make_pair(Time(start_hour, start_min), Time(end_hour, end_min)));
                 }
                 break;
             }

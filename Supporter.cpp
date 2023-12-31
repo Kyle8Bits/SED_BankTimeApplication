@@ -196,7 +196,7 @@ public:
 
     string getPairListToString(){
         string result = "";
-        for (int i = 1; i < time_pair_list.size(); i++){
+        for (int i = 0; i < time_pair_list.size(); i++){
             result += std::to_string(i + 1) + " " +
                   time_pair_list[i].first.getTime() +
                   "->" +
