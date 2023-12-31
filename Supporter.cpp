@@ -50,7 +50,7 @@ private:
     // int host_count;
     // std::vector<Category> category_list;//this is skill list of a member
     // std::vector<string> block_list;
-    
+
     Time start_time; // (start time, end time, day)
     Time end_time;
     std::vector<string> skill_list;
@@ -133,7 +133,7 @@ public:
 
     string timePairToString(){
         if(time_pair_list.empty()){
-            return "Empty";
+            return "";
         }
         string time_pair_str = time_pair_list[0].first.getTime()+"="+ time_pair_list[0].second.getTime()+"-";
         for(int i = 1; i < time_pair_list.size(); ++i){
@@ -197,11 +197,7 @@ public:
     string getPairListToString(){
         string result = "";
         for (int i = 0; i < time_pair_list.size(); i++){
-            result += 
-                  time_pair_list[i].first.getTime() +
-                  "->" +
-                  time_pair_list[i].second.getTime() +
-                  "\n";
+            result += "From: " + time_pair_list[i].first.getTime() + " To: " + time_pair_list[i].second.getTime() + "\n"; 
         }
         return result;
     }

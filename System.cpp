@@ -25,7 +25,7 @@ class System{
 private:
     std::vector<Member*> member_list; 
     std::vector<BookingSupporter*> booking_list;
-    std::vector<string> validSupporterIDs;//This to restrict for users only book the valid supporter id
+    std::vector<Supporter*> availableSupporter;//This to restrict for users only book the valid supporter id
     Member* logged_in_member;//This pointer of member to store the information of the member who has logged in successfully
     Supporter* logged_in_supporter;//This pointer of member to store the information of the member who has logged in successfully
     bool is_admin = false;
@@ -406,10 +406,11 @@ public:
                     cout << "Fullname: " << supporter->getFullName() << endl;
                     cout << "City: " << supporter->getCity() << endl;
                     cout << "Skill: " << supporter->displaySkillList() << endl;
+                    cout << "Available Periods: " << supporter->getPairListToString();
                     cout << "Cost Per Hour: " << supporter->getCost() << endl;
                     cout << "Introduction: " << supporter->getAboutMe() << endl;
                     cout << "================================================================\n";
-                    validSupporterIDs.push_back(supporter->getMemberId());
+                    availableSupporter.push_back(supporter);
                 }
             }
         }
@@ -431,16 +432,22 @@ public:
         bool isSupporter = (logged_in_member == nullptr);
         bool isValidSupporter = false;//this to check the create bookign is successfully or not?
 
-        loop(validSupporterIDs.size()){
-            if(toLower(input) == toLower(validSupporterIDs[i])){
+        loop(availableSupporter.size()){
+            if(toLower(input) == toLower(availableSupporter[i]->getMemberId())){
                 if(isSupporter){
                     logged_in_member = logged_in_supporter;//use this to prevent segment fault when the current users is supporter
                 }
-                BookingSupporter* booking = new BookingSupporter(logged_in_member->getMemberId(), member_list[i]->getMemberId());
-                booking_list.push_back(booking);
-                cout << "Your booking has been created" << endl;
-                isValidSupporter = true;
-                break;
+                if(logged_in_member->getCreditPoint() >= availableSupporter[i]->getCost()){//check the credit point of the users and the cost per hour of the supporter
+                    BookingSupporter* booking = new BookingSupporter(logged_in_member->getMemberId(), availableSupporter[i]->getMemberId());
+                    booking_list.push_back(booking);
+                    cout << "Your booking has been created" << endl;
+                    isValidSupporter = true;
+                    break;          
+                }else{
+                    cout << "Insufficient credit points to book this supporter" << endl;
+                    isValidSupporter = true;
+                    break;
+                }
             }
         }
         if(isSupporter){
