@@ -702,7 +702,7 @@ public:
                 //==verify part===
                 cout << "Please enter your password to verify: ";
                 getline(cin >> std::ws, verify);
-                if (verify == logged_in_member->getPassword())
+                if (verify == logged_in_supporter->getPassword())
                 {
                     switch (option)
                     {
