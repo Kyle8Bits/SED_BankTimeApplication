@@ -244,9 +244,9 @@ public:
 
         loop(booking_list.size()){
             if(i == booking_list.size() - 1){//If go to the last element
-                my_file << booking_list[i]->getBookingId() << "-" << booking_list[i]->getHostId() << "-" << booking_list[i]->getSupportId() << "-" <<  booking_list[i]->getStatus();//save to file without endl
+                my_file << booking_list[i]->getBookingId() << "-" << booking_list[i]->getHostId() << "-" << booking_list[i]->getSupportId() << "-" <<  booking_list[i]->getStatus() << "-" << booking_list[i]->getProgress();//save to file without endl
             }else{
-                my_file << booking_list[i]->getBookingId() << "-" << booking_list[i]->getHostId() << "-" << booking_list[i]->getSupportId() << "-" <<  booking_list[i]->getStatus() << endl;
+                my_file << booking_list[i]->getBookingId() << "-" << booking_list[i]->getHostId() << "-" << booking_list[i]->getSupportId() << "-" <<  booking_list[i]->getStatus() << "-" << booking_list[i]->getProgress() << endl;
             }
         }
         my_file.close();
@@ -265,10 +265,10 @@ public:
 
         booking_list.clear(); //clear the list before reload data
 
-        string bookingid_from_file, hostid_from_file, supportid_from_file, status_from_file;
+        string bookingid_from_file, hostid_from_file, supportid_from_file, status_from_file, progress_from_file;
 
-        while (getline(my_file, bookingid_from_file, '-') && getline(my_file, hostid_from_file, '-') && getline(my_file, supportid_from_file, '-') && getline(my_file,status_from_file)){
-            BookingSupporter *booking  = new BookingSupporter(hostid_from_file, supportid_from_file, status_from_file, bookingid_from_file);
+        while (getline(my_file, bookingid_from_file, '-') && getline(my_file, hostid_from_file, '-') && getline(my_file, supportid_from_file, '-') && getline(my_file, status_from_file, '-') && getline(my_file, progress_from_file)){
+            BookingSupporter *booking  = new BookingSupporter(hostid_from_file, supportid_from_file, status_from_file, bookingid_from_file, progress_from_file);
             booking_list.push_back(booking);
         }
         my_file.close();

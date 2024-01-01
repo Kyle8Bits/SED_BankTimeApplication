@@ -13,12 +13,12 @@ using std::endl;
 
 class BookingSupporter{
     private:
-    string booking_id,host_id, support_id, status;
+    string booking_id,host_id, support_id, status, progress;//PROGRESS use for appter accepting the invitation
     static int number_of_booking; //the number of the booking
-    
     public:
         //CONSTRUCTOR
-        BookingSupporter(string host_id = "", string support_id = "", string status = "PENDING", string booking_id ="BK") : booking_id(booking_id),host_id(host_id), support_id(support_id), status(status){
+        BookingSupporter(string host_id = "", string support_id = "", string status = "PENDING", string booking_id ="BK", string progress = "NOT STARTED") 
+                        : booking_id(booking_id),host_id(host_id), support_id(support_id), status(status), progress(progress){
             number_of_booking++;//Increse the booking number by 1
 
             if(booking_id == "BK"){//If the booking id is BK (Default value), we auto generate the id with the number of the booking
@@ -42,6 +42,10 @@ class BookingSupporter{
     void setStatus(std::string new_status) {
         status = new_status;
     }
+    
+    void setProgress(string progress){
+        this->progress = progress;
+    }
 
     // Getter Functions
     std::string getBookingId() const { 
@@ -59,6 +63,8 @@ class BookingSupporter{
     std::string getStatus() const {
         return status;
     }
+
+    string getProgress(){return this->progress;}
 
     friend class FileProcess; // make friend with System
 

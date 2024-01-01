@@ -499,6 +499,24 @@ public:
         }
     }
 
+    string getStatusById(string id){
+        loop(booking_list.size()){
+            if(booking_list[i]->getBookingId() == id){
+                return booking_list[i]->getStatus();
+            }
+        }
+        return "";
+    }
+
+    void setProgressById(string id, string choice){
+        loop(booking_list.size()){
+            if(booking_list[i]->getBookingId() == id){
+                booking_list[i]->setProgress(choice);
+                break;
+            }
+        }
+    }
+
     void decideJob(){//For supporter to answer the request booking from host. Either accept or reject or remain pending
         int count = 1;
         std::vector<string> current_job = {};
@@ -516,6 +534,9 @@ public:
                             "\nRating score: Will update" <<
                             "\nCity: " + member_list[a]->getCity() <<
                             "\nStatus: " + booking_list[i]->getStatus() << endl;
+                        if(booking_list[i]->getStatus() == "ACCEPTED"){
+                            cout << "Progress: " << booking_list[i]->getProgress() << endl;
+                        }
 
                         cout << "==============================================\n" << endl;
                     }
@@ -524,36 +545,64 @@ public:
             }
         }
 
-        string choice;
-        char decide = ' ';
-        bool check = true;
+        //If current job is empty. Notify that and return the function
+        if(current_job.empty()){
+            cout << "You do not have booking yet" << endl;
+        }else{
+            string choice;
+            char decide = ' ';
+            bool validChoice = false;
 
-        cout <<"Type 'Quit' to exit\n" <<
-             "Enter booking invitation code: " ;
-        std::getline(cin >> std::ws, choice);
+            cout <<"Type 'Quit' to exit\n" <<
+                "Enter booking invitation code: " ;
+            std::getline(cin >> std::ws, choice);
 
-        if(choice == "Quit" || choice == "quit"){
-            cout << "Returning home page" << endl;
-        } else{
-            loop(current_job.size()){
-                if(choice == current_job[i]){
-                    cout << "1. ACCEPTED\n"<<
-                            "2. REJECTED\n" <<
-                            "3. RETURN\n"<< endl;
-                    cout << ">Your choice: "; cin >> decide;
-                    switch(decide){
-                        case '1':
-                            setStatusById(current_job[i], "ACCEPTED");
-                            break;
-                        case '2':
-                            setStatusById(current_job[i], "REJECTED");
-                            break;
-                        case '3':
-                            break;
-                            break;
+            if(choice == "Quit" || choice == "quit"){
+                cout << "Returning home page" << endl;
+            } else{
+                loop(current_job.size()){
+                    if(choice == current_job[i]){
+                        validChoice = true;
+                        if(getStatusById(current_job[i]) == "ACCEPTED"){
+                            cout << "***Do you want to start the job***\n" << endl;
+                            cout << "1. Take the job\n" 
+                                 << "2. Return\n"
+                                 << ">Your choice: ";
+                            cin >> decide;
+                            switch (decide){
+                            case '1':
+                                cout << "YOU JUST TAKE THE JOB\n";
+                                setProgressById(current_job[i], "IN PROGRESS");
+                                break;
+                            case '2':
+                                cout << "RETURN\n";
+                                break;
+                            default:
+                                cout << "Invalid choice!" << endl;
+                                break;
+                            }
+                            
+                        }else{
+                            cout << "1. ACCEPTED\n"<<
+                                    "2. REJECTED\n" <<
+                                    "3. RETURN\n"<< endl;
+                            cout << ">Your choice: "; cin >> decide;
+                            switch(decide){
+                                case '1':
+                                    setStatusById(current_job[i], "ACCEPTED");
+                                    break;
+                                case '2':
+                                    setStatusById(current_job[i], "REJECTED");
+                                    break;
+                                case '3':
+                                    break;
+                                    break;
+                            }
                         }
-                }else{
-                    cout << "Invalid Booking Code.\nPlease try again." << endl;
+                    }
+                }
+                if(!validChoice){
+                    cout << "Please enter the valid choice!" << endl;
                 }
             }
         }
