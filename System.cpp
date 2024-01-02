@@ -694,10 +694,10 @@ public:
                      << "1. Price: $20 \n"
                      << "Total credit point: 20 CP \n"
                      << "====================================\n"
-                     << "2. 50 CP\n"
+                     << "2. Price: $50 \n"
                      << "Total credit point: 50 CP + 5 CP Bonus \n"
                      << "====================================\n"
-                     << "3. $100 \n"
+                     << "3. Price: $100 \n"
                      << "Total credit point: 100 CP + 20 CP Bonus\n"
                      << "====================================\n"
                      << endl;
@@ -713,17 +713,17 @@ public:
                     case 1:
                         logged_in_member->setCreditPoint(logged_in_member->getCreditPoint() + 20);
                         cout << "You have bought 20 CP\n";
-                        cout << "New balance: " << logged_in_member->getCreditPoint() + 20 << endl;
+                        cout << "New balance: " << logged_in_member->getCreditPoint() << endl;
                         break;
                     case 2:
                         logged_in_member->setCreditPoint(logged_in_member->getCreditPoint() + 55);
                         cout << "You have bought 55 CP\n";
-                        cout << "New balance: " << logged_in_member->getCreditPoint() + 5 << endl;
+                        cout << "New balance: " << logged_in_member->getCreditPoint() << endl;
                         break;
                     case 3:
                         logged_in_member->setCreditPoint(logged_in_member->getCreditPoint() + 120);
                         cout << "You have bought 120 CP\n";
-                        cout << "New balance: " << logged_in_member->getCreditPoint() + 120 << endl;
+                        cout << "New balance: " << logged_in_member->getCreditPoint()<< endl;
                         break;
                     case 4:
                         cout << " Returning to home page....." << endl;
@@ -757,10 +757,10 @@ public:
                      << "1. Price: $20 \n"
                      << "Total credit point: 20 CP \n"
                      << "====================================\n"
-                     << "2. 50 CP\n"
+                     << "2. Price: $50\n"
                      << "Total credit point: 50 CP + 5 CP Bonus \n"
                      << "====================================\n"
-                     << "3. $100 \n"
+                     << "3. Price: $100 \n"
                      << "Total credit point: 100 CP + 20 CP Bonus\n"
                      << "====================================\n"
                      << endl;
@@ -776,17 +776,17 @@ public:
                     case 1:
                         logged_in_supporter->setCreditPoint(logged_in_supporter->getCreditPoint() + 20);
                         cout << "You have bought 20 CP\n";
-                        cout << "New balance: " << logged_in_supporter->getCreditPoint() + 20 << endl;
+                        cout << "New balance: " << logged_in_supporter->getCreditPoint() << endl;
                         break;
                     case 2:
                         logged_in_supporter->setCreditPoint(logged_in_supporter->getCreditPoint() + 55);
                         cout << "You have bought 55 CP\n";
-                        cout << "New balance: " << logged_in_supporter->getCreditPoint() + 5 << endl;
+                        cout << "New balance: " << logged_in_supporter->getCreditPoint() << endl;
                         break;
                     case 3:
                         logged_in_supporter->setCreditPoint(logged_in_supporter->getCreditPoint() + 120);
                         cout << "You have bought 120 CP\n";
-                        cout << "New balance: " << logged_in_supporter->getCreditPoint() + 120 << endl;
+                        cout << "New balance: " << logged_in_supporter->getCreditPoint() << endl;
                         break;
                     case 4:
                         cout << " Returning to home page....." << endl;
