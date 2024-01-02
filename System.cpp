@@ -689,6 +689,42 @@ public:
         }
     }
 
+    void completeJob(){
+        int count = 1;
+        cout << "****YOUR CURRENT WORKING JOB****" << endl;
+
+        for(int i =0; i < booking_list.size(); i++){
+            if (logged_in_supporter->getMemberId() == booking_list[i]->getSupportId() && booking_list[i]->getProgress() == "IN PROGRESS"){ // if this booking is belong to this member and the booking is alredy IN PROGRESS 
+                for (int a = 0; a < member_list.size(); a++){
+                    if(member_list[a]->getMemberId() == booking_list[i]->getHostId()){
+                        cout <<"Booking: " << std::to_string(count) <<
+                            "\nBooking ID: " << booking_list[i]->getBookingId() <<
+                            "\nSupporter name: " << member_list[a]->getFullName() <<
+                            "\nRating score: Will update" <<
+                            "\nCity: " << member_list[a]->getCity() <<
+                            "\nStatus: " << booking_list[i]->getStatus() <<
+                            "\nProcess: " << booking_list[i]->getProgress() <<
+                            "\nTime: " << booking_list[i]->getTime() << endl;
+                    }
+                }   
+            }
+            count++;
+        }
+        cout <<"==========================================================\n" << endl;
+        
+        string choice;
+        cout << "Please enter booking ID: ";
+        getline(cin >> std::ws,choice);
+
+        cout << "Do you want to put this into COMPLETE stage? [Y/N]";
+
+        loop(booking_list.size()){
+            if(booking_list[i]->getBookingId() == choice){
+                booking_list[i].
+            }
+        }
+    }
+
     void buyCredit(){
         // int* otp = new int(rand() % (999999 - 100000 + 1) + 100000);
         bool check = true;

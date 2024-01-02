@@ -219,7 +219,9 @@ int main(){
                                 << "\t\t|8. Change my status.                                       |\n"
                                 << "\t\t*** Current status: "<<system.getCurrentStatus()<<"***\n"
                                 << "\t\t|                                                           |\n"
-                                << "\t\t|9. Sign out                                                |\n"
+                                << "\t\t|9. Check out job                                           |\n"
+                                << "\t\t|                                                           |\n"
+                                << "\t\t|10. Sign out                                                |\n"
                                 << "\t\t-------------------------------------------------------------\n"
                                 << ">Your choice: ";
                                 char supporter_choice; cin >> supporter_choice;
@@ -256,6 +258,9 @@ int main(){
                                         clearScreen();
                                         system.statusSetting();
                                         break;
+                                    case '9':
+                                        clearScreen();
+                                        system.completeJob();
                                     default:
                                         request_supporter = false;
                                         cout << "Return to main dashboard" << endl;

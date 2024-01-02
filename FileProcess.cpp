@@ -244,9 +244,9 @@ public:
 
         loop(booking_list.size()){
             if(i == booking_list.size() - 1){//If go to the last element
-                my_file << booking_list[i]->getBookingId() << "-" << booking_list[i]->getHostId() << "-" << booking_list[i]->getSupportId() << "-" <<  booking_list[i]->getStatus() << "-" << booking_list[i]->getProgress() << "-" << booking_list[i]->getTimeToFile();//save to file without endl
+                my_file << booking_list[i]->getBookingId() << "-" << booking_list[i]->getHostId() << "-" << booking_list[i]->getSupportId() << "-" <<  booking_list[i]->getStatus() << "-" << booking_list[i]->getProgress() << "-" << booking_list[i]->getTimeToFile() << "-" << booking_list[i]->getHostComment() << "-" << booking_list[i]->getHostRatingScore() << "-" << booking_list[i]->getSupporterComment()<< "-" << booking_list[i]->getSupporterRatingScore();//save to file without endl
             }else{
-                my_file << booking_list[i]->getBookingId() << "-" << booking_list[i]->getHostId() << "-" << booking_list[i]->getSupportId() << "-" <<  booking_list[i]->getStatus() << "-" << booking_list[i]->getProgress() << "-" << booking_list[i]->getTimeToFile() << endl;
+                my_file << booking_list[i]->getBookingId() << "-" << booking_list[i]->getHostId() << "-" << booking_list[i]->getSupportId() << "-" <<  booking_list[i]->getStatus() << "-" << booking_list[i]->getProgress() << "-" << booking_list[i]->getTimeToFile() << "-" << booking_list[i]->getHostComment() << "-" << booking_list[i]->getHostRatingScore() << "-" << booking_list[i]->getSupporterComment()<< "-" << booking_list[i]->getSupporterRatingScore() << endl;
             }
         }
         my_file.close();
@@ -267,13 +267,14 @@ public:
 
         string bookingid_from_file, hostid_from_file, supportid_from_file, status_from_file, progress_from_file;
         string start_hour_file, start_minute_file, end_hour_file, end_minute_file;
+        string host_cmt_file, sp_cmt_file, host_rating_file, sp_rating_file;
 
         while (getline(my_file, bookingid_from_file, '-') && getline(my_file, hostid_from_file, '-') && getline(my_file, supportid_from_file, '-') && getline(my_file, status_from_file, '-') && getline(my_file, progress_from_file, '-')
-               && getline(my_file, start_hour_file, '-') && getline(my_file, start_minute_file, '-') && getline(my_file, end_hour_file, '-') && getline(my_file, end_minute_file)){
+               && getline(my_file, start_hour_file, '-') && getline(my_file, start_minute_file, '-') && getline(my_file, end_hour_file, '-') && getline(my_file, end_minute_file) && getline(my_file, host_cmt_file) && getline(my_file, host_rating_file) && getline(my_file, sp_cmt_file) && getline(my_file, sp_rating_file)){
             
             Time start_time(std::stoi(start_hour_file), std::stoi(start_minute_file));
             Time end_time(std::stoi(end_hour_file), std::stoi(end_minute_file));
-            BookingSupporter *booking  = new BookingSupporter(hostid_from_file, supportid_from_file, status_from_file, bookingid_from_file, progress_from_file, start_time, end_time);
+            BookingSupporter *booking  = new BookingSupporter(hostid_from_file, supportid_from_file, status_from_file, bookingid_from_file, progress_from_file, start_time, end_time,host_cmt_file, sp_cmt_file, std::stof(host_rating_file), std::stof(sp_rating_file));
             booking_list.push_back(booking);
         }
         my_file.close();
