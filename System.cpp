@@ -310,7 +310,21 @@ public:
         cout << "Please introduce some basic things about yourself (Academic Level, Hobby, ...)" << endl;
         getline(cin >> std::ws, about_me_input);
 
+        //------------MODIFY THE PREVIOUS ID IN BOOKING.DAT FILE---------------
         
+        loop(booking_list.size()){
+            if(booking_list[i]->getHostId() == logged_in_member->getMemberId()){
+                string inital_id = booking_list[i]->getHostId();
+                inital_id[0] = 'S';
+                booking_list[i]->setHostId(inital_id);
+            }
+            else if ( booking_list[i]->getSupportId() == logged_in_member->getMemberId()){
+                string inital_id = booking_list[i]->getSupportId();
+                inital_id[0] = 'S';
+                booking_list[i]->setHostId(inital_id);
+            }
+            }
+
         //----------------------ADD ALL IT IN SUPPORTER---------------------
         //first change the id of logged_in_member from M to S
         string supporter_id = logged_in_member->getMemberId(); supporter_id[0] ='S';//Change the first cahracter of id from M to S
