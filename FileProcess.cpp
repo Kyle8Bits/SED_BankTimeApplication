@@ -134,7 +134,7 @@ public:
                 
                 skill_list = readSkillSupporter(id_from_file);
                 time_pair_list = readTimePairList(id_from_file);
-                new_member = new Supporter(username_from_file, password_from_file, id_from_file, 20, full_name_from_file, phonenumber_from_file, address_from_file, city_from_file, about_me_from_file,
+                new_member = new Supporter(username_from_file, password_from_file, id_from_file, std::stoi(crepoint_from_file), full_name_from_file, phonenumber_from_file, address_from_file, city_from_file, about_me_from_file,
                                            0, 0, {}, time_pair_list, skill_list, std::stoi(cost_from_file), 
                                            std::stod(skill_rating_score_file), std::stod(support_rating_score_file), std::stoi(support_count_file), statusEnum(status_from_file));
                 
