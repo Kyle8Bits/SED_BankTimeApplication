@@ -212,47 +212,56 @@ int main(){
                                 << "\t\t|                                                           |\n"
                                 << "\t\t|5. View current job requests                               |\n"
                                 << "\t\t|                                                           |\n"
-                                << "\t\t|6. Manage account                                          |\n"
+                                << "\t\t|6. View history job                                        |\n"
                                 << "\t\t|                                                           |\n"
-                                << "\t\t|7. View my information                                     |\n"
+                                << "\t\t|7. Manage account                                          |\n"
                                 << "\t\t|                                                           |\n"
-                                << "\t\t|8. Change my status.                                       |\n"
+                                << "\t\t|8. View completed task                                     |\n"
+                                << "\t\t|You currently have " << system.getNotification() << " complete booking task\n"
+                                << "\t\t|                                                           |\n"
+                                << "\t\t|9. View my information                                     |\n"
+                                << "\t\t|                                                           |\n"
+                                << "\t\t|10. Change my status.                                      |\n"
                                 << "\t\t*** Current status: "<<system.getCurrentStatus()<<"***\n"
                                 << "\t\t|                                                           |\n"
-                                << "\t\t|9. Sign out                                                |\n"
+                                << "\t\t|11. Sign out                                               |\n"
                                 << "\t\t-------------------------------------------------------------\n"
                                 << ">Your choice: ";
-                                char supporter_choice; cin >> supporter_choice;
+                                int supporter_choice; cin >> supporter_choice;
 
                                 switch(supporter_choice){
-                                    case '1':
+                                    case 1:
                                         clearScreen();
                                         system.buyCredit();
                                         break;
-                                    case '2':
+                                    case 2:
                                         clearScreen();
                                         system.displayAvailableSupporter();
                                         break;
-                                    case '3':
+                                    case 3:
                                         clearScreen();
                                         system.createBooking();
                                         break;
-                                    case '4':
+                                    case 4:
                                         clearScreen();
                                         system.viewHistory();
                                         break;
-                                    case '5':
+                                    case 5:
                                         clearScreen();
                                         system.decideJob();
                                         break;
-                                    case '6':
+                                    case 6:
+                                        clearScreen();
+                                        system.viewHistoryJob();
+                                        break;
+                                    case 7:
                                         clearScreen();
                                         break;
-                                    case '7':
+                                    case 8:
                                         clearScreen();
                                         system.viewPersonalInformationSupporter();
                                         break;
-                                    case '8':
+                                    case 9:
                                         clearScreen();
                                         system.statusSetting();
                                         break;

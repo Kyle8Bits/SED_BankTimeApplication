@@ -5,6 +5,7 @@
 #include <vector>
 #include <fstream>
 #include <string>
+#include "Time.cpp"
 
 using std::cout;
 using std::cin;
@@ -18,15 +19,15 @@ class BookingSupporter{
     Time start_time; 
     Time end_time;
     int host_rating;//THIS IS FOR HOST
-    int skill_rating_score;//THIS IS FOR SUPPORTER
-    int supporter_rating_score;//THIS IS FOR SUPPORTER
+    int skill_rating_score;//THIS IS FOR SUPPORTER - skill
+    int supporter_rating_score;//THIS IS FOR SUPPORTER - character
     string host_comment;
-    string supporter_comment;
+    string supporter_comment; // supporter to host
     static int number_of_booking; //the number of the booking
     public:
         //CONSTRUCTOR
         BookingSupporter(string host_id = "", string support_id = "", string status = "PENDING", string booking_id ="BK", string progress = "NOT STARTED", Time start_time = Time(0,0), Time end_time = Time(0,0),
-                        int host_rating = 0, int skill_rating_score = 0, int supporter_rating_score = 0, string host_comment = " ", string supporter_comment = " ") 
+                        int host_rating = 11, int skill_rating_score = 11, int supporter_rating_score = 11, string host_comment = " ", string supporter_comment = " ") 
                         : booking_id(booking_id),host_id(host_id), support_id(support_id), status(status), progress(progress), start_time(start_time), end_time(end_time)
                         , host_rating(host_rating), skill_rating_score(skill_rating_score), supporter_rating_score(supporter_rating_score), host_comment(host_comment), supporter_comment(supporter_comment){
             number_of_booking++;//Increse the booking number by 1
@@ -100,6 +101,34 @@ class BookingSupporter{
     
     void setHostComment(string comment){
         this->host_comment = comment;
+    }
+
+    string getHostComment(){
+        return host_comment;
+    }
+
+    int getSkillRatingScore(){
+        return skill_rating_score;
+    }
+
+    void setSkillRatingScore(int score) {
+        skill_rating_score = score;
+    }
+
+    int getSupporterRatingScore(){
+        return supporter_rating_score;
+    }
+
+    void setSupporterRatingScore(int score){
+        supporter_rating_score = score;
+    }
+
+    string getSupporterComment(){
+        return supporter_comment;
+    }
+
+    void setSupporterComment(string comment) {
+        supporter_comment = comment;
     }
 
     string toString(){

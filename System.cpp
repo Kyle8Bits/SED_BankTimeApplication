@@ -609,12 +609,14 @@ public:
             }
         }
     }
+
     void decideJob(){//For supporter to answer the request booking from host. Either accept or reject or remain pending
+        cout << "****THE LIST OF REQUEST BOOKING****\n";
         int count = 1;
         std::vector<string> current_job = {};
         
         for(int i = 0; i < booking_list.size(); i++){
-            if ( logged_in_supporter->getMemberId() == booking_list[i]->getSupportId()){//Check if current user is = host id 
+            if ( logged_in_supporter->getMemberId() == booking_list[i]->getSupportId() && booking_list[i]->getProgress() != "COMPLETED"){//Check if current user is = host id 
                 for (int a = 0; a < member_list.size(); a++){
                     if (booking_list[i]->getHostId() == member_list[a]->getMemberId()){//get the matchecd supporter id in booking list and in memberlist
                         //push the id to the vector current_job
@@ -622,7 +624,7 @@ public:
                         //Print basic information
                         cout <<"Booking: " << std::to_string(count) <<
                             "\nBooking ID: " << booking_list[i]->getBookingId() <<
-                            "\nSupporter name: " << member_list[a]->getFullName() <<
+                            "\nHost name: " << member_list[a]->getFullName() <<
                             "\nRating score: Will update" <<
                             "\nCity: " << member_list[a]->getCity() <<
                             "\nStatus: " << booking_list[i]->getStatus() <<
@@ -963,8 +965,131 @@ public:
                 
     }
 
+    void viewHistoryJob(){
+
+        cout << "****THE LIST OF HISTORY JOB****\n";
+        int count = 1;
+        std::vector<string> current_job = {};
+        
+        for(int i = 0; i < booking_list.size(); i++){
+            if ( logged_in_supporter->getMemberId() == booking_list[i]->getSupportId()){//Check if current user is = host id 
+                for (int a = 0; a < member_list.size(); a++){
+                    if (booking_list[i]->getHostId() == member_list[a]->getMemberId()){//get the matchecd supporter id in booking list and in memberlist
+                        //push the id to the vector current_job
+                        current_job.push_back(booking_list[i]->getBookingId());
+                        //Print basic information
+                        cout <<"Booking: " << std::to_string(count) <<
+                            "\nBooking ID: " << booking_list[i]->getBookingId() <<
+                            "\nHost name: " << member_list[a]->getFullName() <<
+                            "\nRating score: Will update" <<
+                            "\nCity: " << member_list[a]->getCity() <<
+                            "\nTime: " << booking_list[i]->getTime() << 
+                            "\nHost comment: will update" <<
+                            "\nHost rated you: will update" << endl;
+                            
+                        cout << "==============================================\n" << endl;
+                    }
+                }
+                count++;
+            }
+        }
+
+        //If current job is empty. Notify that and return the function
+        if(current_job.empty()){
+            cout << "You do not have any history booking yet" << endl;
+        }
+    }
+
+    void checkCompleteTask(){
+        cout <<"****YOUR BOOKING HAVE BEEN FINISHED****\n";
+
+        int count = 1;
+        std::vector<string> current_job = {};
+        
+        for(int i = 0; i < booking_list.size(); i++){
+            if ((logged_in_member->getMemberId() == booking_list[i]->getHostId() || logged_in_supporter->getMemberId() == booking_list[i]->getHostId()) && (booking_list[i]->getProgress() == "COMPLETED")){//Check if current user is = host id 
+                for (int a = 0; a < member_list.size(); a++){
+                    if (booking_list[i]->getSupportId() == member_list[a]->getMemberId()){//get the matchecd supporter id in booking list and in memberlist
+                        cout <<"Booking: " << std::to_string(count) <<
+                            "\nBooking ID: " << booking_list[i]->getBookingId() <<
+                            "\nSupporter name: " << member_list[a]->getFullName() <<
+                            "\nRating score: Will update" <<
+                            "\nCity: " << member_list[a]->getCity() <<
+                            "\nTime: " << booking_list[i]->getTime() << 
+                            "\nHost comment: will update" <<
+                            "\nHost rated you: will update" << endl;
+                            
+                        cout << "==============================================\n" << endl;
+                    }
+                }
+                count++;
+            }
+        }
+
+        cout << "==============================================\n" << endl;
+
+        string choice;
+        cout <<"Please enter a booking id: ";
+        cin >>choice;
+        bool rate_check = true;
+        loop (booking_list.size()){
+            if(booking_list[i]->getBookingId() == choice && booking_list[i]->getProgress() == "COMPLETED"){
+                bool check = true;
+                int option;
+                string comment = " ";
+                int rating = 11;
+                int skill = 11;
+
+            while(true){
+                cout <<"Do you want to give a feedback to this supporter?"<< endl;
+                cout << "1. Yes"<<
+                        "\n2. No" << endl;
+                cin >> option;
+
+                switch(option){
+                    case 1:
+                        while(rate_check){
+                            cout << "What would you rate this supporter's skill [0/10]: ";
+                            cin >> rating;
+                            cout << "How would you like this supporter [0/10]: ";
+                            cin >> skill;
+                            if (rating <= 10){
+                                rate_check = false;
+                            }
+                            else{
+                                cout << "Invalid. The rating must less than 10" << endl;
+                            }
+                        }
+                        cout << "Give some comment (Put blank if you do not want to comment): ";
+                        getline(cin >> std::ws, comment);
+
+                        booking_list[i]->setSkillRatingScore(skill);
+                        booking_list[i]->setSupporterComment(comment);
+                        booking_list[i]->setSupporterRatingScore(rating);
+
+                        cout << "Thank you for giving feedback" << endl;
+                    break;
+                    case 2:
+                        check = false;
+                    break;
+                }
+            }
+            }
+        }
+    }
+
     string getCurrentStatus(){
         return logged_in_supporter->statusString(logged_in_supporter->getStatus());
+    }
+
+    int getNotification(){
+        int count = 0;
+        for(int i =0; i < booking_list.size(); i++){
+            if (booking_list[i]->getProgress() == "COMPLETED" && booking_list[i]->getHostComment() == " "){
+                count++;
+            }
+        }
+        return count;
     }
 
     std::vector<Member*>& getMemberList(){

@@ -2,6 +2,7 @@
 #define TIME
 #include <iostream>
 #include <string> 
+using std::string;
 
 class Time{
 private:
