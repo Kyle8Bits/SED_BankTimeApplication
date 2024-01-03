@@ -10,17 +10,25 @@ using std::cout;
 using std::cin;
 using std::string;
 using std::endl;
+using std::to_string;
 
 class BookingSupporter{
     private:
     string booking_id,host_id, support_id, status, progress;//PROGRESS use for appter accepting the invitation
     Time start_time; 
     Time end_time;
+    int host_rating;//THIS IS FOR HOST
+    int skill_rating_score;//THIS IS FOR SUPPORTER
+    int supporter_rating_score;//THIS IS FOR SUPPORTER
+    string host_comment;
+    string supporter_comment;
     static int number_of_booking; //the number of the booking
     public:
         //CONSTRUCTOR
-        BookingSupporter(string host_id = "", string support_id = "", string status = "PENDING", string booking_id ="BK", string progress = "NOT STARTED", Time start_time = Time(0,0), Time end_time = Time(0,0)) 
-                        : booking_id(booking_id),host_id(host_id), support_id(support_id), status(status), progress(progress), start_time(start_time), end_time(end_time){
+        BookingSupporter(string host_id = "", string support_id = "", string status = "PENDING", string booking_id ="BK", string progress = "NOT STARTED", Time start_time = Time(0,0), Time end_time = Time(0,0),
+                        int host_rating = 0, int skill_rating_score = 0, int supporter_rating_score = 0, string host_comment = " ", string supporter_comment = " ") 
+                        : booking_id(booking_id),host_id(host_id), support_id(support_id), status(status), progress(progress), start_time(start_time), end_time(end_time)
+                        , host_rating(host_rating), skill_rating_score(skill_rating_score), supporter_rating_score(supporter_rating_score), host_comment(host_comment), supporter_comment(supporter_comment){
             number_of_booking++;//Increse the booking number by 1
 
             if(booking_id == "BK"){//If the booking id is BK (Default value), we auto generate the id with the number of the booking
@@ -84,6 +92,18 @@ class BookingSupporter{
     
     string getTime(){
         return start_time.getTime() + " To " + end_time.getTime();
+    }
+
+    void setHostRating(int host_rating){
+        this->host_rating = host_rating;
+    }
+    
+    void setHostComment(string comment){
+        this->host_comment = comment;
+    }
+
+    string toString(){
+        return this->booking_id + "-" + this->host_id + "-" + this->support_id + "-" + this->status + "-" + this->progress + "-" + this->getTimeToFile() + "-" + to_string(this->host_rating) + "-" + to_string(this->skill_rating_score) + "-" + to_string(this->supporter_rating_score) + "-" + this->host_comment + "-" + this->supporter_comment;
     }
 
 };

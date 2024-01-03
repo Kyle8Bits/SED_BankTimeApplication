@@ -583,6 +583,32 @@ public:
         }
     }
 
+    void setHostCommentById(string id, string comment){
+        loop(booking_list.size()){
+            if(booking_list[i]->getBookingId() == id){
+                booking_list[i]->setHostComment(comment);
+                break;
+            }
+        }
+    }
+
+    string getProgressById(string id){
+        loop(booking_list.size()){
+            if(booking_list[i]->getBookingId() == id){
+                return booking_list[i]->getProgress();
+            }
+        }
+        return "";
+    }
+
+    void setHostRatingById(string id, int rating){
+        loop(booking_list.size()){
+            if(booking_list[i]->getBookingId() == id){
+                booking_list[i]->setHostRating(rating);
+                break;
+            }
+        }
+    }
     void decideJob(){//For supporter to answer the request booking from host. Either accept or reject or remain pending
         int count = 1;
         std::vector<string> current_job = {};
@@ -630,7 +656,70 @@ public:
                 loop(current_job.size()){
                     if(choice == current_job[i]){
                         validChoice = true;
-                        if(getStatusById(current_job[i]) == "ACCEPTED"){
+                        if(getProgressById(current_job[i]) == "IN PROGRESS"){
+                            cout << "Do you complete the job?" << endl;
+                            cout << "1. Yes\n" 
+                                 << "2. No" << endl;
+                            cout << ">Your choice: "; cin >> decide;
+                            switch(decide){
+                                case '1':
+                                    //&***************UNCOMMENT IT WHEN DONE***************
+                                    setProgressById(current_job[i], "COMPLETED");
+                                    cout << "Congratulation! You just finished the job." << endl;
+                                    cout << "Do you want to leave feedback and rate your host\n";
+                                    cout << "1. Yes\n" << "2. No\n" << ">Your choice:";
+                                    cin >> decide;
+                                    if(decide == '1'){
+                                        bool check = true;
+                                        while(check){
+                                            cout << "Please rate your host (scale: 0 - 10)" << endl;
+                                            cout << ">Rating: ";
+                                            string input;  
+                                            cin >> input;
+
+                                            std::stringstream iss(input);
+                                            int rating;
+                                            if(iss >> rating){
+                                                //IF the conversion is successful
+                                                if(rating >= 0 && rating <= 10){
+                                                    if(rating < 5){
+                                                        cout << "Sorry about your bad experiance" << endl;
+                                                        cout << "Do you want to block this host (IMPROVE SOON)" << endl;
+                                                    }
+                                                    //modify rating
+                                                    setHostRatingById(current_job[i], rating);
+                                                    cout << "Leave comment about your host: " << endl;
+                                                    cout << ">Comment: "; 
+                                                    string user_comment; 
+                                                    getline(cin >> std::ws, user_comment);
+                                                    setHostCommentById(current_job[i], user_comment);
+                                                    cout << "Thank you for your feedback\n";
+                                                    check = false;
+                                                } else{
+                                                    cout << "****Please enter the valid rating****" << endl;
+                                                } 
+                                            }else{
+                                                cout << "Please enter the valid rating!" << endl;
+                                            }
+                                        }
+
+                                    } else{
+                                        cout << "Return main page!" << endl;
+                                        break;
+                                    }
+
+                                    break;
+                                case '2':
+                                    cout << "Return the main page" << endl;
+                                    break;
+                                default:
+                                    cout << "Return the main page" << endl;
+                                    break;
+                            }
+
+
+                        }   
+                        else if(getStatusById(current_job[i]) == "ACCEPTED"){
                             cout << "***Do you want to start the job***\n" << endl;
                             cout << "1. Take the job\n" 
                                  << "2. Return\n"
@@ -638,7 +727,7 @@ public:
                             cin >> decide;
                             switch (decide){
                             case '1':
-                                cout << "YOU JUST TAKE THE JOB\n";
+                                cout << "YOU ACCEPT TAKE THE JOB\n";
                                 setProgressById(current_job[i], "IN PROGRESS");
                                 break;
                             case '2':
