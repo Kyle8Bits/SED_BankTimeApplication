@@ -144,54 +144,61 @@ int main(){
                                 << "\t\t|                                                           |\n"
                                 << "\t\t|4. View history booking                                    |\n"
                                 << "\t\t|                                                           |\n"
-                                << "\t\t|5. Become supporter                                        |\n"
+                                << "\t\t|5. View complted taks                                      |\n"
                                 << "\t\t|                                                           |\n"
-                                << "\t\t|6. Manage account                                          |\n"
+                                << "\t\t|6. Become supporter                                        |\n"
                                 << "\t\t|                                                           |\n"
-                                << "\t\t|7. View my information                                     |\n"
+                                << "\t\t|7. Manage account                                          |\n"
                                 << "\t\t|                                                           |\n"
-                                << "\t\t|8. Sign out                                                |\n"
+                                << "\t\t|8. View my information                                     |\n"
+                                << "\t\t|                                                           |\n"
+                                << "\t\t|9. Sign out                                                |\n"
                                 << "\t\t-------------------------------------------------------------\n"
                                 << ">Your choice: ";
-                            char member_choice; cin >> member_choice;
+                            int member_choice; cin >> member_choice;
                             switch (member_choice){
-                                case '1':
+                                case 1:
                                     clearScreen();
                                     system.buyCredit();
                                     break;
-                                case '2':
+                                case 2:
                                     //VIEW SUPPORTER LIST
                                     clearScreen();
                                     system.displayAvailableSupporter();
                                     break;
-                                case '3':
+                                case 3:
                                     //Book a supporter
                                     clearScreen();
                                     system.createBooking();
                                     break;
-                                case '4':
+                                case 4:
                                     clearScreen();
                                     system.viewHistory();
                                     break;
-                                case '5':
+                                case 5:
+                                    clearScreen();
+                                    system.checkCompleteTask();
+                                    
+                                case 6:
                                     clearScreen();
                                     if(system.upgradeToSupporter()){
                                         cout << "Sucessfully become supporter " << endl;
                                         request_member = false;
                                     }
                                     break;
-                                case '6':
+                                case 7:
                                     clearScreen();
                                     //Manage account
                                     break;
-                                case '7':
+                                case 8:
                                     clearScreen();
                                     system.viewPersonalInformationMember();
                                     break;
-                                case '8':
+                                case 9:
                                     request_member = false;
                                     cout << "Returning to main dashboard" << endl;
                                 default:
+                                    request_member = false;
                                     break;
                             }
                         }
@@ -216,15 +223,12 @@ int main(){
                                 << "\t\t|                                                           |\n"
                                 << "\t\t|7. Manage account                                          |\n"
                                 << "\t\t|                                                           |\n"
-                                << "\t\t|8. View completed task                                     |\n"
-                                << "\t\t|You currently have " << system.getNotification() << " complete booking task\n"
+                                << "\t\t|8. View my information                                     |\n"
                                 << "\t\t|                                                           |\n"
-                                << "\t\t|9. View my information                                     |\n"
-                                << "\t\t|                                                           |\n"
-                                << "\t\t|10. Change my status.                                      |\n"
+                                << "\t\t|9. Change my status.                                      |\n"
                                 << "\t\t*** Current status: "<<system.getCurrentStatus()<<"***\n"
                                 << "\t\t|                                                           |\n"
-                                << "\t\t|11. Sign out                                               |\n"
+                                << "\t\t|10. Sign out                                               |\n"
                                 << "\t\t-------------------------------------------------------------\n"
                                 << ">Your choice: ";
                                 int supporter_choice; cin >> supporter_choice;

@@ -1001,13 +1001,20 @@ public:
     }
 
     void checkCompleteTask(){
+        Member* current;
+        if(logged_in_member == nullptr){
+            current = logged_in_supporter;
+        }
+        else{
+            current = logged_in_member;
+        }
         cout <<"****YOUR BOOKING HAVE BEEN FINISHED****\n";
-
+        cout << current->getMemberId();
         int count = 1;
         std::vector<string> current_job = {};
         
         for(int i = 0; i < booking_list.size(); i++){
-            if ((logged_in_member->getMemberId() == booking_list[i]->getHostId() || logged_in_supporter->getMemberId() == booking_list[i]->getHostId()) && (booking_list[i]->getProgress() == "COMPLETED")){//Check if current user is = host id 
+            if (current->getMemberId() == booking_list[i]->getHostId() && booking_list[i]->getProgress() == "COMPLETED" && booking_list[i]->getSkillRatingScore() == 0 ){//Check if current user is = host id 
                 for (int a = 0; a < member_list.size(); a++){
                     if (booking_list[i]->getSupportId() == member_list[a]->getMemberId()){//get the matchecd supporter id in booking list and in memberlist
                         cout <<"Booking: " << std::to_string(count) <<
@@ -1016,8 +1023,8 @@ public:
                             "\nRating score: Will update" <<
                             "\nCity: " << member_list[a]->getCity() <<
                             "\nTime: " << booking_list[i]->getTime() << 
-                            "\nHost comment: will update" <<
-                            "\nHost rated you: will update" << endl;
+                            "\nSupporter comment: " <<booking_list[i]->getHostComment() <<
+                            "\nSupporter rated you: " <<booking_list[i]->getHostRating() << endl;
                             
                         cout << "==============================================\n" << endl;
                     }
@@ -1030,17 +1037,19 @@ public:
 
         string choice;
         cout <<"Please enter a booking id: ";
-        cin >>choice;
+        getline(cin >> std::ws, choice);
         bool rate_check = true;
+        int exist = 0;
         loop (booking_list.size()){
             if(booking_list[i]->getBookingId() == choice && booking_list[i]->getProgress() == "COMPLETED"){
                 bool check = true;
                 int option;
                 string comment = " ";
-                int rating = 11;
-                int skill = 11;
+                int rating;
+                int skill;
+                exist++;
 
-            while(true){
+            while(check){
                 cout <<"Do you want to give a feedback to this supporter?"<< endl;
                 cout << "1. Yes"<<
                         "\n2. No" << endl;
@@ -1053,7 +1062,7 @@ public:
                             cin >> rating;
                             cout << "How would you like this supporter [0/10]: ";
                             cin >> skill;
-                            if (rating <= 10){
+                            if (rating <= 10 && rating >= 0 && skill <= 10 && skill >= 0){
                                 rate_check = false;
                             }
                             else{
@@ -1070,11 +1079,16 @@ public:
                         cout << "Thank you for giving feedback" << endl;
                     break;
                     case 2:
+                     booking_list[i]->setSupporterRatingScore(11);
+                     booking_list[i]->setSkillRatingScore(11);
                         check = false;
                     break;
                 }
             }
             }
+        }
+        if(exist == 0){
+            cout <<"Cannot file the complete task"<<endl;
         }
     }
 
