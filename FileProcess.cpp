@@ -276,8 +276,6 @@ public:
                && getline(my_file, start_hour_file, '-') && getline(my_file, start_minute_file, '-') && getline(my_file, end_hour_file, '-') && getline(my_file, end_minute_file, '-')
                && getline(my_file, host_rating_file, '-') && getline(my_file, skill_rating_file, '-') && getline(my_file, supporter_rating_file, '-') && getline(my_file, host_comment_file, '-') && getline(my_file, supporter_comment_file)){
             
-            cout << "Booking ID: " << bookingid_from_file << endl;
-            cout << "Host ID: " << hostid_from_file << endl;
             Time start_time(std::stoi(start_hour_file), std::stoi(start_minute_file));
             Time end_time(std::stoi(end_hour_file), std::stoi(end_minute_file));
             BookingSupporter *booking  = new BookingSupporter(hostid_from_file, supportid_from_file, status_from_file, bookingid_from_file, progress_from_file, start_time, end_time, stoi(host_rating_file), stoi(skill_rating_file), stoi(supporter_rating_file), host_comment_file, supporter_comment_file);
@@ -290,7 +288,6 @@ public:
             string number_part = max_id.substr(2);  // Skip the first two characters (prefix "BK")
             int max_id_numeric;
             max_id_numeric = std::stoi(number_part);
-           
 
         for (int i = 1; i < booking_list.size(); i++) {
             string id_string = booking_list[i]->getBookingId();
@@ -302,7 +299,6 @@ public:
                 max_id_numeric = id_numeric;
             }
         }
-        
             //Assign new start value for booking in BookingSupporter class
             BookingSupporter::number_of_booking = max_id_numeric;
         }

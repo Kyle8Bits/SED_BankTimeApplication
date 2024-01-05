@@ -1000,30 +1000,42 @@ public:
         }
     }
 
+    void setSupportRatingById(int skill_score, int support_score, string comment, string id){
+        loop(booking_list.size()){
+            if(booking_list[i]->getBookingId() == id){
+                booking_list[i]->setSkillRatingScore(skill_score);
+                booking_list[i]->setSupporterRatingScore(support_score);
+                booking_list[i]->setSupporterComment(comment);
+                break;
+            }
+        }
+    }
+
     void checkCompleteTask(){
-        Member* current;
-        if(logged_in_member == nullptr){
-            current = logged_in_supporter;
+        std::vector<string> complete_list_id;
+        bool isSupporter = (logged_in_member == nullptr);
+
+        if(isSupporter){
+            logged_in_member = logged_in_supporter;//use this to prevent segment fault when the current users is supporter
         }
-        else{
-            current = logged_in_member;
-        }
+
         cout <<"****YOUR BOOKING HAVE BEEN FINISHED****"<<endl;
         int count = 1;
         std::vector<string> current_job = {};
         
         for(int i = 0; i < booking_list.size(); i++){
-            if (current->getMemberId() == booking_list[i]->getHostId() && booking_list[i]->getProgress() == "COMPLETED" && booking_list[i]->getSkillRatingScore() == 0 ){//Check if current user is = host id 
+            if (logged_in_member->getMemberId() == booking_list[i]->getHostId() && booking_list[i]->getProgress() == "COMPLETED" && booking_list[i]->getSkillRatingScore() != 11 && booking_list[i]->getSupporterComment() == " " ){//Check if current user is = host id 
                 for (int a = 0; a < member_list.size(); a++){
                     if (booking_list[i]->getSupportId() == member_list[a]->getMemberId()){//get the matchecd supporter id in booking list and in memberlist
                         cout <<"Booking: " << std::to_string(count) <<
                             "\nBooking ID: " << booking_list[i]->getBookingId() <<
                             "\nSupporter name: " << member_list[a]->getFullName() <<
-                            "\nRating score: Will update" <<
                             "\nCity: " << member_list[a]->getCity() <<
                             "\nTime: " << booking_list[i]->getTime() << 
                             "\nSupporter comment: " <<booking_list[i]->getHostComment() <<
                             "\nSupporter rated you: " <<booking_list[i]->getHostRating() << endl;
+
+                            complete_list_id.push_back(booking_list[i]->getBookingId());
                             
                         cout << "==============================================\n" << endl;
                     }
@@ -1032,63 +1044,71 @@ public:
             }
         }
 
+        bool valid_choice = false;
+
         cout << "==============================================\n" << endl;
 
-        string choice;
+        string choice = "";
         cout <<"Please enter a booking id: ";
         getline(cin >> std::ws, choice);
         bool rate_check = true;
-        int exist = 0;
-        loop (booking_list.size()){
-            if(booking_list[i]->getBookingId() == choice && booking_list[i]->getProgress() == "COMPLETED"){
+
+        loop (complete_list_id.size()){
+            if(complete_list_id[i] == choice){
                 bool check = true;
                 int option;
                 string comment = " ";
                 int rating;
                 int skill;
-                exist++;
+                valid_choice = true;
 
-            while(check){
-                cout <<"Do you want to give a feedback to this supporter?"<< endl;
-                cout << "1. Yes"<<
-                        "\n2. No" << endl;
-                cin >> option;
+                while(check){
+                    cout <<"Do you want to give a feedback to this supporter?"<< endl;
+                    cout << "1. Yes"<<
+                            "\n2. No" << endl;
+                    cin >> option;
 
-                switch(option){
-                    case 1:
-                        while(rate_check){
-                            cout << "What would you rate this supporter's skill [0/10]: ";
-                            cin >> rating;
-                            cout << "How would you like this supporter [0/10]: ";
-                            cin >> skill;
-                            if (rating <= 10 && rating >= 0 && skill <= 10 && skill >= 0){
-                                rate_check = false;
+                    switch(option){
+                        case 1:
+                            while(rate_check){
+                                cout << "What would you rate this supporter's skill [0/10]: ";
+                                cin >> rating;
+                                cout << "How would you like this supporter [0/10]: ";
+                                cin >> skill;
+                                if (rating <= 10 && rating >= 0 && skill <= 10 && skill >= 0){
+                                    rate_check = false;
+                                }
+                                else{
+                                    cout << "Invalid. The rating must less than 10" << endl;
+                                }
                             }
-                            else{
-                                cout << "Invalid. The rating must less than 10" << endl;
-                            }
-                        }
-                        cout << "Give some comment (Put blank if you do not want to comment): ";
-                        getline(cin >> std::ws, comment);
+                            cout << "Give some comment (Put blank if you do not want to comment): ";
+                            getline(cin >> std::ws, comment);
 
-                        booking_list[i]->setSkillRatingScore(skill);
-                        booking_list[i]->setSupporterComment(comment);
-                        booking_list[i]->setSupporterRatingScore(rating);
+                            setSupportRatingById(skill, rating, comment, complete_list_id[i]);
 
-                        cout << "Thank you for giving feedback" << endl;
-                        check = false;
-                    break;
-                    case 2:
-                     booking_list[i]->setSupporterRatingScore(11);
-                     booking_list[i]->setSkillRatingScore(11);
-                        check = false;
-                    break;
+                            cout << "Thank you for giving feedback" << endl;
+                            check = false;
+                            break;
+                        case 2:
+                            setSupportRatingById(11, 11, " ", complete_list_id[i]);
+                            // booking_list[i]->setSupporterRatingScore(11);
+                            // booking_list[i]->setSkillRatingScore(11);
+                            check = false;
+                            break;
+                        default: 
+                            cout << "Please enter again!";
+                            break;
+                    }
                 }
             }
-            }
         }
-        if(exist == 0){
-            cout <<"Cannot file the complete task"<<endl;
+        if(!valid_choice){
+            cout <<"Please enter valid id"<<endl;
+        }
+
+        if(isSupporter){
+            logged_in_member = nullptr;
         }
     }
 
