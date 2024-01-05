@@ -178,6 +178,7 @@ int main(){
                                 case 5:
                                     clearScreen();
                                     system.checkCompleteTask();
+                                    break;
                                     
                                 case 6:
                                     clearScreen();

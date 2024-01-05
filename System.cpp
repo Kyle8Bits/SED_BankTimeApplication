@@ -1008,8 +1008,7 @@ public:
         else{
             current = logged_in_member;
         }
-        cout <<"****YOUR BOOKING HAVE BEEN FINISHED****\n";
-        cout << current->getMemberId();
+        cout <<"****YOUR BOOKING HAVE BEEN FINISHED****"<<endl;
         int count = 1;
         std::vector<string> current_job = {};
         
@@ -1077,6 +1076,7 @@ public:
                         booking_list[i]->setSupporterRatingScore(rating);
 
                         cout << "Thank you for giving feedback" << endl;
+                        check = false;
                     break;
                     case 2:
                      booking_list[i]->setSupporterRatingScore(11);
