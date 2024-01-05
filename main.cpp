@@ -152,56 +152,94 @@ int main(){
                                 << "\t\t|                                                           |\n"
                                 << "\t\t|8. View my information                                     |\n"
                                 << "\t\t|                                                           |\n"
-                                << "\t\t|9. Sign out                                                |\n"
+                                << "\t\t|9. Block a user                                           |\n"
+                                << "\t\t|                                                           |\n"
+                                << "\t\t|10. Sign out                                                |\n"
                                 << "\t\t-------------------------------------------------------------\n"
                                 << ">Your choice: ";
-                            int member_choice; cin >> member_choice;
-                            switch (member_choice){
-                                case 1:
-                                    clearScreen();
-                                    system.buyCredit();
-                                    break;
-                                case 2:
-                                    //VIEW SUPPORTER LIST
-                                    clearScreen();
-                                    system.displayAvailableSupporter();
-                                    break;
-                                case 3:
-                                    //Book a supporter
-                                    clearScreen();
-                                    system.createBooking();
-                                    break;
-                                case 4:
-                                    clearScreen();
-                                    system.viewHistory();
-                                    break;
-                                case 5:
-                                    clearScreen();
-                                    system.checkCompleteTask();
-                                    break;
-                                    
-                                case 6:
-                                    clearScreen();
-                                    if(system.upgradeToSupporter()){
-                                        cout << "Sucessfully become supporter " << endl;
-                                        request_member = false;
-                                    }
-                                    break;
-                                case 7:
-                                    clearScreen();
-                                    //Manage account
-                                    break;
-                                case 8:
-                                    clearScreen();
-                                    system.viewPersonalInformationMember();
-                                    break;
-                                case 9:
+                            string member_choice; cin >> member_choice;
+                            if(member_choice == "1"){
+                                clearScreen();
+                                system.buyCredit();
+                            } else if(member_choice == "2"){
+                                clearScreen();
+                                system.displayAvailableSupporter();
+                            } else if(member_choice == "3"){
+                                clearScreen();
+                                system.createBooking();
+                            } else if(member_choice == "4"){
+                                clearScreen();
+                                system.viewHistory();
+                            } else if(member_choice == "5"){
+                                clearScreen();
+                                system.checkCompleteTask();
+                            }else if(member_choice == "6"){
+                                clearScreen();
+                                if(system.upgradeToSupporter()){
+                                    cout << "Sucessfully become supporter " << endl;
                                     request_member = false;
-                                    cout << "Returning to main dashboard" << endl;
-                                default:
-                                    request_member = false;
-                                    break;
+                                }
+                            }else if(member_choice == "7"){
+                                clearScreen();
+                                //Manage account
+                            }else if(member_choice == "8"){
+                                clearScreen();
+                                system.viewPersonalInformationMember();
+                            }else if(member_choice == "9"){
+                                clearScreen();
+                                system.blockUser();
+                            }else if(member_choice == "10"){
+                                request_member = false;
+                                cout << "Returning to main dashboard" << endl;
+                            } else {
+                                cout << "Invalid choice" << endl;
                             }
+                            // switch (member_choice){
+                            //     case 1:
+                            //         clearScreen();
+                            //         system.buyCredit();
+                            //         break;
+                            //     case 2:
+                            //         //VIEW SUPPORTER LIST
+                            //         clearScreen();
+                            //         system.displayAvailableSupporter();
+                            //         break;
+                            //     case 3:
+                            //         //Book a supporter
+                            //         clearScreen();
+                            //         system.createBooking();
+                            //         break;
+                            //     case 4:
+                            //         clearScreen();
+                            //         system.viewHistory();
+                            //         break;
+                            //     case 5:
+                            //         clearScreen();
+                            //         system.checkCompleteTask();
+                            //         break;
+                                    
+                            //     case 6:
+                            //         clearScreen();
+                            //         if(system.upgradeToSupporter()){
+                            //             cout << "Sucessfully become supporter " << endl;
+                            //             request_member = false;
+                            //         }
+                            //         break;
+                            //     case 7:
+                            //         clearScreen();
+                            //         //Manage account
+                            //         break;
+                            //     case 8:
+                            //         clearScreen();
+                            //         system.viewPersonalInformationMember();
+                            //         break;
+                            //     case 9:
+                            //         request_member = false;
+                            //         cout << "Returning to main dashboard" << endl;
+                            //     default:
+                            //         request_member = false;
+                            //         break;
+                            // }
                         }
 //===========================================================SUPPORTER MENU HOMEPAGE========================================================
                     } else{

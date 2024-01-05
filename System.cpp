@@ -373,7 +373,7 @@ public:
         cout << "About Me: " << logged_in_member->getAboutMe() << endl;
         cout << "Host Rating Score: " << logged_in_member->getHostRatingScore() << endl;
         cout << "Host Count: " << logged_in_member->getHostCount() << endl;
-        cout << "Block List:  HAVEN'T DONE YET" << endl;
+        cout << "Block List: " << logged_in_member->blockListToString()<< endl;
     }
 
     void viewPersonalInformationSupporter(){
@@ -394,29 +394,46 @@ public:
         cout << "Time list: " << logged_in_supporter->getPairListToString();
     }
 
+    bool isInBlockList(std::vector<string> block_list, string block_id){
+        loop(block_list.size()){
+            if(block_list[i] == block_id){
+                return true;
+            }
+        }
+        return false;
+    }
+
     void displayAvailableSupporter(){
-        string current_user;
+        bool isSupporter = (logged_in_member == nullptr);
+        if(isSupporter){
+            logged_in_member = logged_in_supporter;
+        }
+        
         cout << "****Available Supporter List****" << endl;
         cout << "================================================================\n";
         loop(this->member_list.size()){
             if(Supporter* supporter = dynamic_cast<Supporter*>(member_list[i])){
                 //Go to each member to print the information
-                if(logged_in_supporter != nullptr){
-                    current_user = logged_in_supporter->getMemberId();
-                }
-                if(supporter->getMemberId() != current_user && supporter->getStatus() == Status::ONLINE){//advoid display the current logged in supporter information
-                    cout << "Supporter " << i + 1 << ": " << endl;
-                    cout << "Member id: " << supporter->getMemberId() <<endl;
-                    cout << "Fullname: " << supporter->getFullName() << endl;
-                    cout << "City: " << supporter->getCity() << endl;
-                    cout << "Skill: " << supporter->displaySkillList() << endl;
-                    cout << "Available Periods: " << supporter->getPairListToString();
-                    cout << "Cost Per Hour: " << supporter->getCost() << endl;
-                    cout << "Introduction: " << supporter->getAboutMe() << endl;
-                    cout << "================================================================\n";
-                    availableSupporter.push_back(supporter);
+                if(supporter->getMemberId() != logged_in_member->getMemberId() && supporter->getStatus() == Status::ONLINE){//advoid display the current logged in supporter information
+                    if(!isInBlockList(logged_in_member->block_list, supporter->getMemberId() )){
+                        //IF the current supporter is not in the block list, we wil print the information of supporter
+                        cout << "Supporter " << i + 1 << ": " << endl;
+                        cout << "Member id: " << supporter->getMemberId() <<endl;
+                        cout << "Fullname: " << supporter->getFullName() << endl;
+                        cout << "City: " << supporter->getCity() << endl;
+                        cout << "Skill: " << supporter->displaySkillList() << endl;
+                        cout << "Available Periods: " << supporter->getPairListToString();
+                        cout << "Cost Per Hour: " << supporter->getCost() << endl;
+                        cout << "Introduction: " << supporter->getAboutMe() << endl;
+                        cout << "================================================================\n";
+                        availableSupporter.push_back(supporter);
+                    }
+                    //still push that supporter, even if it in the block list of the current users
                 }
             }
+        }
+        if(isSupporter){
+            logged_in_member = nullptr;
         }
     }
 
@@ -1124,6 +1141,80 @@ public:
             }
         }
         return count;
+    }
+
+    bool blockUser(){
+        cout << "Enter the username of the user that you want to block:";
+        string input;
+        getline(cin >> std::ws, input);
+
+        bool isSupporter = (logged_in_member == nullptr);
+        if(isSupporter){
+            logged_in_member = logged_in_supporter;//use this to prevent segment fault when the current users is supporter
+        }
+        
+        bool valid_choice = false;
+        char choice; 
+        bool check = true;
+
+        loop(member_list.size()){
+            if(input == member_list[i]->getMemberId()){
+                valid_choice = true;
+                while(check){
+                    cout << "Do you want to block this person:" << endl;
+                    cout << "Id: " << member_list[i]->getMemberId();
+                    cout << " Name: " << member_list[i]->getFullName() << endl;
+                    cout << "1. Yes\n" 
+                        << "2. Return\n";
+                    cout << ">Your choice: ";
+                    cin >> choice;
+                    if(choice == '1'){
+                        logged_in_member->block_list.push_back(member_list[i]->getMemberId());
+                        cout << "Block this person successfully!" << endl;
+                        check = false;
+                    }else if(choice == '2'){
+                        cout << "Return to main dashboard!" << endl;
+                        check = false;
+                    }else{
+                        cout << "Please enter valid choice!" << endl;
+                    }
+                }
+            }
+        }
+
+        if(isSupporter){
+            logged_in_supporter->setBlockList(logged_in_member->block_list);
+            logged_in_member = nullptr;
+        }
+
+        if(!valid_choice){
+            cout << "Please enter valid input!" << endl;
+        }
+
+        return true;
+    }
+
+    string getFullNameFromId(string id){
+        loop(member_list.size()){
+            if(id == member_list[i]->getMemberId()){
+                return member_list[i]->getFullName();
+            }
+        }
+        return "Can not find!";
+    }
+
+    void showBlockList(){
+        //**************IT HASN'T DO WITH SUPPORTER*************
+
+        if(logged_in_member->block_list.size() == 0){
+            cout << "EMPTY Block list" << endl;
+            return;
+        }
+
+        for(int i = 0; i << logged_in_member->block_list.size(); ++i){
+            cout << "Your block list: " << endl;
+            cout << i + 1 << ": " << getFullNameFromId(logged_in_member->block_list[i]) << endl;
+        }
     }
 
     std::vector<Member*>& getMemberList(){

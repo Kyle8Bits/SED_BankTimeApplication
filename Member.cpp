@@ -117,6 +117,15 @@ public:
         host_count = value;
     }
 
+    string blockListToString(){
+        string block_id = "";
+        for(int i = 0; i < block_list.size(); ++i){
+            block_id += block_list[i] + " + ";
+        } 
+
+        return block_id;
+    }
+
     const std::vector<string>& getBlockList() const {
         return block_list;
     }
