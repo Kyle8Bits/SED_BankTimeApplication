@@ -29,17 +29,18 @@ protected:
     string about_me;
     double host_rating_score = 0;
     int host_count = 0;
+    int person_not_comment = 0;
     std::vector<string> block_list;
 
 public:
     //CONSTRUCTOR
     Member(string user_name = "", string pass_word = "", string member_id = "M", int credit_point = 20, string full_name = "", string phone_number = "", 
-    string address = "", string city = "", string about_me = "",double host_rating_score, 
-    int host_count, std::vector<string> block_list = {})
+    string address = "", string city = "", string about_me = "",double host_rating_score = 0, 
+    int host_count = 0, int person_not_comment = 0, std::vector<string> block_list = {})
     : Account(user_name, pass_word), 
       member_id(member_id), credit_point(credit_point), full_name(full_name), phone_number(phone_number), address(address),
       city(city), about_me(about_me), host_rating_score(host_rating_score), 
-      host_count(host_count), block_list(block_list)
+      host_count(host_count),person_not_comment(person_not_comment), block_list(block_list)
     {
         number_of_member++;//Increse the student by 1
 
@@ -49,13 +50,25 @@ public:
     }
 
     void collectScore(int score){
-        this->host_rating_score + score;
-        this->host_count ++ ;
+        int person_comment = this->host_count - this->person_not_comment; //8 - 6 - 2
+        if(score != 11){
+            if(person_comment == 0){
+                this->host_rating_score = score;
+                this->host_count ++;
+            }
+            else{
+                person_comment++; 
+                this->host_rating_score = static_cast<double>(this->host_rating_score*(person_comment-1) + score)/person_comment; 
+            }//                                                         
+        }
+        else{
+            this->person_not_comment++;
+        }
+
+        host_count = person_comment;
     }
 
-    double getAvgScore(){
-        return static_cast<double>(host_rating_score)/host_count;
-    }
+
 
     virtual void displayPersonalInformation(){
         cout << "***MY INFORMATION***" << endl;
@@ -126,11 +139,11 @@ public:
         about_me = value;
     }
 
-    double getHostRatingScore() const {
+    double getAverageRatingScore() const {
         return host_rating_score;
     }
 
-    void setHostRatingScore(double value) {
+    void setAverageRatingScore(double value) {
         host_rating_score = value;
     }
 
@@ -177,7 +190,7 @@ public:
     virtual ~Member() = default;
 
     virtual string toString(){
-        return this->user_name + "-" + this->pass_word + "-" + this->member_id + "-" + this->full_name + "-" + this->phone_number + "-" + this->address + "-" + this->city +"-"+ std::to_string(this->credit_point) + "-" + this->about_me;
+        return this->user_name + "-" + this->pass_word + "-" + this->member_id + "-" + this->full_name + "-" + this->phone_number + "-" + this->address + "-" + this->city +"-"+ std::to_string(this->credit_point) + "-" + std::to_string(this->host_rating_score)+ "-" + std::to_string(this->host_count)+ "-" + std::to_string(this->person_not_comment) + "-" + this->about_me ;
     }
     
     friend class System;//Make system is friend of Member

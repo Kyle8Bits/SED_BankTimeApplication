@@ -24,6 +24,7 @@ namespace colors {
 
 
 int main(){
+    clearScreen();
     cout << "EEET2482/COSC2082 ASSIGNMENT\n"
         << "'TIME BANK' APPLICATION\n"
         << "Instructor: Mr. Tran Duc Linh\n"
@@ -156,7 +157,8 @@ int main(){
                                 << "\t\t|                                                           |\n"
                                 << "\t\t|4. View history booking                                    |\n"
                                 << "\t\t|                                                           |\n"
-                                << "\t\t|5. View complted taks                                      |\n"
+                                << "\t\t|5. View complted tasks                                     |\n"
+                                << "\t\t|> Notice: You have " << system.getNotification() << " new completed task from supporter\n"                                                    
                                 << "\t\t|                                                           |\n"
                                 << "\t\t|6. Become supporter                                        |\n"
                                 << "\t\t|                                                           |\n"
@@ -164,7 +166,7 @@ int main(){
                                 << "\t\t|                                                           |\n"
                                 << "\t\t|8. View my information                                     |\n"
                                 << "\t\t|                                                           |\n"
-                                << "\t\t|9. Block a user                                           |\n"
+                                << "\t\t|9. Block a user                                            |\n"
                                 << "\t\t|                                                           |\n"
                                 << "\t\t|10. Sign out                                                |\n"
                                 << "\t\t-------------------------------------------------------------\n"
@@ -206,52 +208,6 @@ int main(){
                             } else {
                                 cout << "Invalid choice" << endl;
                             }
-                            // switch (member_choice){
-                            //     case 1:
-                            //         clearScreen();
-                            //         system.buyCredit();
-                            //         break;
-                            //     case 2:
-                            //         //VIEW SUPPORTER LIST
-                            //         clearScreen();
-                            //         system.displayAvailableSupporter();
-                            //         break;
-                            //     case 3:
-                            //         //Book a supporter
-                            //         clearScreen();
-                            //         system.createBooking();
-                            //         break;
-                            //     case 4:
-                            //         clearScreen();
-                            //         system.viewHistory();
-                            //         break;
-                            //     case 5:
-                            //         clearScreen();
-                            //         system.checkCompleteTask();
-                            //         break;
-                                    
-                            //     case 6:
-                            //         clearScreen();
-                            //         if(system.upgradeToSupporter()){
-                            //             cout << "Sucessfully become supporter " << endl;
-                            //             request_member = false;
-                            //         }
-                            //         break;
-                            //     case 7:
-                            //         clearScreen();
-                            //         //Manage account
-                            //         break;
-                            //     case 8:
-                            //         clearScreen();
-                            //         system.viewPersonalInformationMember();
-                            //         break;
-                            //     case 9:
-                            //         request_member = false;
-                            //         cout << "Returning to main dashboard" << endl;
-                            //     default:
-                            //         request_member = false;
-                            //         break;
-                            // }
                         }
 //===========================================================SUPPORTER MENU HOMEPAGE========================================================
                     } else{

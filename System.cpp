@@ -6,6 +6,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <utility>
+#include <iomanip>
 
 #include "Member.cpp"
 #include "Supporter.cpp"
@@ -432,7 +433,7 @@ public:
                         cout << "Fullname: " << supporter->getFullName() << endl;
                         cout << "City: " << supporter->getCity() << endl;
                         cout << "Skill: " << supporter->displaySkillList() << endl;
-                        cout << "Available Periods: " << supporter->displaySkillList();
+                        cout << "Available Periods: \n" << supporter->displayTimePairList() << endl;
                         cout << "Cost Per Hour: " << supporter->getCost() << endl;
                         cout << "Introduction: " << supporter->getAboutMe() << endl;
                         cout << "================================================================\n";
@@ -615,10 +616,19 @@ public:
         }
     }
 
-    void setHostingRatingByID(string id, int rating){
+    void addHostScoreByID(string id, int rating){
+        string curretnUser;
+        loop(booking_list.size()){
+            if(booking_list[i]->getBookingId() == id){
+                curretnUser = booking_list[i]->getHostId();
+                break;
+            }
+        }
+
         loop(member_list.size()){
-            if(member_list[i]->getMemberId() == id){
+            if(curretnUser == member_list[i]->getMemberId()){
                 member_list[i]->collectScore(rating);
+                break;
             }
         }
     }
@@ -665,11 +675,11 @@ public:
                         cout <<"Booking: " << std::to_string(count) <<
                             "\nBooking ID: " << booking_list[i]->getBookingId() <<
                             "\nHost name: " << member_list[a]->getFullName() <<
-                            "\nRating score: Will update" <<
                             "\nCity: " << member_list[a]->getCity() <<
                             "\nStatus: " << booking_list[i]->getStatus() <<
-                            "\nTime: " << booking_list[i]->getTime() << endl;
-                            
+                            "\nTime: " << booking_list[i]->getTime() << 
+                            "\n>Rating: " << std::fixed << std::setprecision(2) << member_list[a]->getAverageRatingScore() << endl;
+
                         if(booking_list[i]->getStatus() == "ACCEPTED"){
                             cout << "Progress: " << booking_list[i]->getProgress() << endl;
                         }
@@ -735,6 +745,9 @@ public:
                                                     string user_comment; 
                                                     getline(cin >> std::ws, user_comment);
                                                     setHostCommentById(current_job[i], user_comment);
+
+                                                    addHostScoreByID(current_job[i], rating);
+
                                                     cout << "Thank you for your feedback\n";
                                                     check = false;
                                                 } else{
@@ -1086,8 +1099,6 @@ public:
 
         bool valid_choice = false;
 
-        cout << "==============================================\n" << endl;
-
         string choice = "";
         cout <<"Please enter a booking id: ";
         getline(cin >> std::ws, choice);
@@ -1111,15 +1122,17 @@ public:
                     switch(option){
                         case 1:
                             while(rate_check){
-                                cout << "What would you rate this supporter's skill [0/10]: ";
+                                cout << "Please rate your supporter (scale: 0 - 10)";
+                                cout << ">Rating: ";
                                 cin >> rating;
-                                cout << "How would you like this supporter [0/10]: ";
+                                cout << "How would you like this supporter (scale 0 - 10): ";
+                                cout << ">Rating: ";
                                 cin >> skill;
                                 if (rating <= 10 && rating >= 0 && skill <= 10 && skill >= 0){
                                     rate_check = false;
                                 }
                                 else{
-                                    cout << "Invalid. The rating must less than 10" << endl;
+                                    cout << "Please enter the valid rating!" << endl;
                                 }
                             }
                             cout << "Give some comment (Put blank if you do not want to comment): ";
@@ -1156,13 +1169,24 @@ public:
         return logged_in_supporter->statusToString(logged_in_supporter->getStatus());
     }
 
-    int getNotification(){
+    int getNotification(){ 
+        bool isSupporter = (logged_in_member == nullptr);
+
+        if(isSupporter){
+            logged_in_member = logged_in_supporter;//use this to prevent segment fault when the current users is supporter
+        }
+        
         int count = 0;
         for(int i =0; i < booking_list.size(); i++){
-            if (booking_list[i]->getProgress() == "COMPLETED" && booking_list[i]->getHostComment() == " "){
+            if (logged_in_member->getMemberId() == booking_list[i]->getHostId() && booking_list[i]->getProgress() == "COMPLETED" && booking_list[i]->getHostComment() == " "){
                 count++;
             }
         }
+
+        if(isSupporter){
+            logged_in_member = nullptr;
+        }
+        
         return count;
     }
 
