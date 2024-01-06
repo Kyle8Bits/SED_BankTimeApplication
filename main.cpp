@@ -196,7 +196,7 @@ int main(){
                                 //Manage account
                             }else if(member_choice == "8"){
                                 clearScreen();
-                                system.viewPersonalInformationMember();
+                                system.viewPersonalInformation();
                             }else if(member_choice == "9"){
                                 clearScreen();
                                 system.blockUser();
@@ -314,15 +314,19 @@ int main(){
                                         break;
                                     case 8:
                                         clearScreen();
-                                        system.viewPersonalInformationSupporter();
+                                        system.viewPersonalInformation();
                                         break;
                                     case 9:
                                         clearScreen();
                                         system.statusSetting();
                                         break;
-                                    default:
+                                    case 10:
+                                        clearScreen();
                                         request_supporter = false;
                                         cout << "Return to main dashboard" << endl;
+                                        break;
+                                    default:
+                                        cout << "Please enter valid input" << endl;
                                         break;
                                 }
                         } 

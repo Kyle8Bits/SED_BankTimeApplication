@@ -48,6 +48,22 @@ public:
         }
     }
 
+    virtual void displayPersonalInformation(){
+        cout << "***MY INFORMATION***" << endl;
+        cout << "ID: " << this->member_id << endl;
+        cout << "Username: " << this->user_name << endl;
+        cout << "Password: " << this->pass_word << endl;
+        cout << "Credit Point: " << this->credit_point << endl;
+        cout << "Full Name: " << this->full_name << endl;
+        cout << "Phone Number: " << this->phone_number << endl;
+        cout << "Address: " << this->address << endl;
+        cout << "City: " << this->city << endl;
+        cout << "About Me: " << this->about_me << endl;
+        cout << "Host Rating Score: " << this->host_rating_score << endl;
+        cout << "Host Count: " << this->host_count << endl;
+        cout << "Block List: " << this->displayBlockList() << endl;
+    }
+
     string getMemberId(){return this->member_id;}
     void setMemberId(string member_id){this->member_id = member_id;}
 
@@ -117,13 +133,28 @@ public:
         host_count = value;
     }
 
-    string blockListToString(){
-        string block_id = "";
+    string displayBlockList(){//THIS USE FOR PRINTING OUT
+        if(block_list.empty()){
+            return "EMPTY";
+        }
+        string block_string;
         for(int i = 0; i < block_list.size(); ++i){
-            block_id += block_list[i] + " + ";
+            block_string += block_list[i] + ", ";
         } 
 
-        return block_id;
+        return block_string;
+    }
+
+    string blockListToString(){
+        if(block_list.empty()){
+            return "";
+        }
+        string block_string = block_list[0] + "-";
+        for(int i = 1; i < block_list.size(); ++i){
+            block_string += block_list[i] + "-";
+        } 
+
+        return block_string;
     }
 
     const std::vector<string>& getBlockList() const {

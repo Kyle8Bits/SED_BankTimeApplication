@@ -21,14 +21,13 @@ using std::stoi;
 #define SKILLFILE "SourceFile/skills.dat"
 #define BOOKINGFILE "SourceFile/booking.dat"
 #define TIMEFILE "SourceFile/timepair.dat"
-
+#define BLOCKFILE "SourceFile/blocklist.dat"
 
 class FileProcess{//THis class is use for loading the file and save to the file
 public:
     bool saveToFile(std::vector<Member*> member_list){
         //***********************SAVE BASIC INFORMATION***********************
         std::fstream my_file;
-        std::fstream my_file2;
         my_file.open(MEMBERFILE, std::ios::out);
         if (!my_file.is_open()) {
             cout << "Can not open the file" << endl;
@@ -47,6 +46,7 @@ public:
 
         my_file.close();
         cout << "Save member SUCCESFULLY!" << endl;
+
         //***********************SAVE SKILL LIST INFORMATION FOR SUPPORTER***********************
         my_file.open(SKILLFILE, std::ios::out);
         if (!my_file.is_open()) {
@@ -66,6 +66,7 @@ public:
         }
         my_file.close();
         cout << "Save supporter SUCCESFULLY!" << endl;
+
         //***********************SAVE TIME PAIR LIST INFORMATION FOR SUPPORTER***********************
         my_file.open(TIMEFILE, std::ios::out);
         if (!my_file.is_open()) {
@@ -84,8 +85,23 @@ public:
             }
         }
         my_file.close();
-
         cout << "Save to file SUCCESFULLY!" << endl;
+
+
+        //***********************SAVE BLOCK LIST FOR MEMBER & SUPPORTER***********************
+        my_file.open(BLOCKFILE, std::ios::out);
+        if (!my_file.is_open()) {
+            cout << "Can not open the file" << endl;
+            return false;
+        }
+
+        if(!member_list.empty()){
+            loop(member_list.size()){
+                my_file << member_list[i]->getMemberId() << "-" << member_list[i]->blockListToString() << endl;
+            }
+        }
+
+        my_file.close();
         return true;
     }
 
@@ -114,6 +130,7 @@ public:
         string username_from_file, password_from_file, id_from_file, full_name_from_file, phonenumber_from_file, address_from_file, city_from_file,crepoint_from_file, about_me_from_file; // varibles to store data from file and push into the list
         string start_time_hour, start_time_minute, end_time_hour, end_time_minute, cost_from_file, skill_rating_score_file, support_rating_score_file, support_count_file,status_from_file;
         std::vector<string> skill_list = {};
+        std::vector<string> block_list = {};
         std::vector<std::pair<Time, Time>> time_pair_list = {};
         
         while(getline(my_file, username_from_file, '-') &&  getline(my_file, password_from_file, '-') && getline(my_file, id_from_file, '-') && 
@@ -123,8 +140,10 @@ public:
             
             Member* new_member = nullptr;//declare the new member & ready to push to the list
             if(checkType == 'M'){
+                block_list = readBlockList(id_from_file);
+
                 getline(my_file, about_me_from_file);// This to read about me from teh file, I can not but it in the while loop because it does neccessary for users
-                new_member = new Member(username_from_file, password_from_file, id_from_file, std::stoi(crepoint_from_file), full_name_from_file, phonenumber_from_file, address_from_file, city_from_file, about_me_from_file);
+                new_member = new Member(username_from_file, password_from_file, id_from_file, std::stoi(crepoint_from_file), full_name_from_file, phonenumber_from_file, address_from_file, city_from_file, about_me_from_file, 0, 0, block_list);
             } else if (checkType == 'S'){
                 getline(my_file, about_me_from_file, '-');
                 getline(my_file, cost_from_file, '-');
@@ -135,8 +154,9 @@ public:
                 
                 skill_list = readSkillSupporter(id_from_file);
                 time_pair_list = readTimePairList(id_from_file);
+                block_list = readBlockList(id_from_file);
                 new_member = new Supporter(username_from_file, password_from_file, id_from_file, std::stoi(crepoint_from_file), full_name_from_file, phonenumber_from_file, address_from_file, city_from_file, about_me_from_file,
-                                           0, 0, {}, time_pair_list, skill_list, std::stoi(cost_from_file), 
+                                           0, 0, block_list, time_pair_list, skill_list, std::stoi(cost_from_file), 
                                            std::stod(skill_rating_score_file), std::stod(support_rating_score_file), std::stoi(support_count_file), statusEnum(status_from_file));
                 
             }
@@ -193,6 +213,33 @@ public:
         my_file.close();
 
         return skill_list;
+    }
+
+    std::vector<string> readBlockList(string id){
+        std::vector<string> block_list;
+        std::fstream my_file;
+        my_file.open(BLOCKFILE, std::ios::in);
+
+        if (!my_file.is_open()) {
+            cout << "Can not open the file" << endl;
+            return block_list;
+        }
+
+        string block_id, id_from_file;
+        while(getline(my_file, id_from_file, '-')){
+            if(id_from_file == id){
+                while(getline(my_file, block_id, '-') && block_id[0] != '\n'){
+                    //This skill[0] != '\n to stop the function when the skill at index 0 is newline
+                    block_list.push_back(block_id);
+                }
+                break;
+            }
+            //if the id is not match, skip the rest of the file
+            getline(my_file,block_id);
+        }
+        my_file.close();
+
+        return block_list;
     }
 
     std::vector<std::pair<Time, Time>> readTimePairList(string id_time){

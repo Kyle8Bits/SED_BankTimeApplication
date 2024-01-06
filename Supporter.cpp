@@ -120,7 +120,19 @@ public:
     //     return true;
     // }
 
-    string skillListToString(){
+    void displayPersonalInformation() override{
+        Member::displayPersonalInformation();
+        cout << "My Skill List: " << this->displaySkillList() << endl;
+        cout << "My cost: " << this->cost << endl;
+        cout << "My Skill Rating Score: " << this->skill_rating_score << endl;
+        cout << "My Support Rating Score: " << this->support_rating_score << endl;
+        cout << "My Support Count: " << this->support_count << endl;
+        cout << "My Current Status: " << statusToString(status) << endl;
+        cout << "My Availability Period: " << this->displayTimePairList() << endl;
+
+    }
+
+    string skillListToString(){//THIS USING FOR SAVE TO FILE
         if(skill_list.empty()){
             return "";//If the skill list have no elements, we return the blank
         }
@@ -142,20 +154,31 @@ public:
         return time_pair_str;
     }
 
-    string displaySkillList(){
-        if(skill_list.empty()){
-            return "";//If the skill list have no elements, we return the blank
+    string displayTimePairList(){
+        if(time_pair_list.empty()){
+            return "EMPTY";
         }
-        string skill_list_str = skill_list[0] + "+";
+        string time_pair_str = "";
+        for(int i = 0; i < time_pair_list.size(); ++i){
+            time_pair_str += "From: " + time_pair_list[i].first.getTime()+" To: " + time_pair_list[i].second.getTime() + "\n"; 
+        }
+        return time_pair_str;
+    }
 
-        for(int i = 1; i < skill_list.size(); i ++){
-            skill_list_str += skill_list[i] + "+";
+    string displaySkillList(){//THIS USING FOR DISPLAYING
+        if(skill_list.empty()){
+            return "EMPTY";//If the skill list have no elements, we return the blank
+        }
+        string skill_list_str;
+
+        for(int i = 0; i < skill_list.size(); i ++){
+            skill_list_str += skill_list[i] + ", ";
         }
         
         return skill_list_str;
     }
 
-    string statusString(Status status){
+    string statusToString(Status status){
         switch (status) {
             case Status::OFFLINE:
                 return "OFFLINE";
@@ -187,20 +210,20 @@ public:
     }
 
     string toString() override{
-        return Member::toString() + "-" + std::to_string(this->cost) + "-" + std::to_string(this->skill_rating_score) + "-" + std::to_string(this->support_rating_score) + "-" + std::to_string(this->support_count) + "-" + statusString(getStatus());
+        return Member::toString() + "-" + std::to_string(this->cost) + "-" + std::to_string(this->skill_rating_score) + "-" + std::to_string(this->support_rating_score) + "-" + std::to_string(this->support_count) + "-" + statusToString(getStatus());
     }
 
     std::vector<std::pair<Time, Time>> getPairList(){
         return this->time_pair_list;
     }
 
-    string getPairListToString(){
-        string result = "";
-        for (int i = 0; i < time_pair_list.size(); i++){
-            result += "From: " + time_pair_list[i].first.getTime() + " To: " + time_pair_list[i].second.getTime() + "\n"; 
-        }
-        return result;
-    }
+    // string getPairListToString(){
+    //     string result = "";
+    //     for (int i = 0; i < time_pair_list.size(); i++){
+    //         result += "From: " + time_pair_list[i].first.getTime() + " To: " + time_pair_list[i].second.getTime() + "\n"; 
+    //     }
+    //     return result;
+    // }
 
 };
 
