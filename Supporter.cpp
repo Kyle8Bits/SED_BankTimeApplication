@@ -6,7 +6,7 @@
 #include <vector>
 #include <cctype>
 #include <utility>
-
+#include <algorithm>
 #include "Member.cpp"
 #include "Time.cpp"
 
@@ -62,6 +62,20 @@ private:
     Status status; 
 
 public:
+    double getMinHostRating() const {
+        return std::min(3.0, host_rating_score);
+    }
+
+
+    double getSkillRatingScore() const {
+        return skill_rating_score;
+    }
+
+
+    double getSupporterRatingScore() const {
+        return support_rating_score;
+    }
+
     Supporter(string user_name = "", string pass_word = "", string member_id = "S", int credit_point = 20, string full_name = "", string phone_number = "", 
     string address = "", string city = "", string about_me = "",double host_rating_score = 0, 
     int host_count = 0, std::vector<string> block_list = {}, std::vector<std::pair<Time, Time>> time_pair_list = {}, 

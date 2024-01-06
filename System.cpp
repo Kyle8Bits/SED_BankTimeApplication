@@ -408,31 +408,78 @@ public:
         cout << "Time list: " << logged_in_supporter->getPairListToString();
     }
 
-    void displayAvailableSupporter(){
-        string current_user;
-        cout << "****Available Supporter List****" << endl;
-        cout << "================================================================\n";
-        loop(this->member_list.size()){
-            if(Supporter* supporter = dynamic_cast<Supporter*>(member_list[i])){
-                //Go to each member to print the information
-                if(logged_in_supporter != nullptr){
-                    current_user = logged_in_supporter->getMemberId();
-                }
-                if(supporter->getMemberId() != current_user && supporter->getStatus() == Status::ONLINE){//advoid display the current logged in supporter information
-                    cout << "Supporter " << i + 1 << ": " << endl;
-                    cout << "Member id: " << supporter->getMemberId() <<endl;
-                    cout << "Fullname: " << supporter->getFullName() << endl;
-                    cout << "City: " << supporter->getCity() << endl;
-                    cout << "Skill: " << supporter->displaySkillList() << endl;
-                    cout << "Available Periods: " << supporter->getPairListToString();
-                    cout << "Cost Per Hour: " << supporter->getCost() << endl;
-                    cout << "Introduction: " << supporter->getAboutMe() << endl;
-                    cout << "================================================================\n";
-                    availableSupporter.push_back(supporter);
+    // void displayAvailableSupporter(){
+    //     string current_user;
+    //     cout << "****Available Supporter List****" << endl;
+    //     cout << "================================================================\n";
+    //     loop(this->member_list.size()){
+    //         if(Supporter* supporter = dynamic_cast<Supporter*>(member_list[i])){
+    //             //Go to each member to print the information
+    //             if(logged_in_supporter != nullptr){
+    //                 current_user = logged_in_supporter->getMemberId();
+    //             }
+    //             if(supporter->getMemberId() != current_user && supporter->getStatus() == Status::ONLINE){//advoid display the current logged in supporter information
+    //                 cout << "Supporter " << i + 1 << ": " << endl;
+    //                 cout << "Member id: " << supporter->getMemberId() <<endl;
+    //                 cout << "Fullname: " << supporter->getFullName() << endl;
+    //                 cout << "City: " << supporter->getCity() << endl;
+    //                 cout << "Skill: " << supporter->displaySkillList() << endl;
+    //                 cout << "Available Periods: " << supporter->getPairListToString();
+    //                 cout << "Cost Per Hour: " << supporter->getCost() << endl;
+    //                 cout << "Introduction: " << supporter->getAboutMe() << endl;
+    //                 cout << "================================================================\n";
+    //                 availableSupporter.push_back(supporter);
+    //             }
+    //         }
+    //     }
+    // }
+
+    void displayAvailableSupporter() {
+            string current_user;
+    cout << "****Available Supporter List****" << endl;
+    cout << "================================================================\n";
+
+    for (size_t i = 0; i < member_list.size(); ++i) {
+        if (Supporter* supporter = dynamic_cast<Supporter*>(member_list[i])) {
+            // Go to each member to print the information
+            if (logged_in_supporter != nullptr) {
+                current_user = logged_in_supporter->getMemberId();
+            }
+
+            if (supporter->getMemberId() != current_user && supporter->getStatus() == Status::ONLINE) {
+                // Avoid displaying the current logged-in supporter information
+
+                // Check if the supporter matches the specified city, credit points, and rating score
+                if (supporter->getCity() == "Ha Noi" || supporter->getCity() == "Sai Gon") {
+                    if (logged_in_supporter != nullptr) {
+                        if (logged_in_supporter->getCreditPoint() >= supporter->getCost()) {
+                            if (logged_in_supporter->getHostRatingScore() >= supporter->getMinHostRating()) {
+                                cout << "Supporter " << i + 1 << ": " << endl;
+                                cout << "Member id: " << supporter->getMemberId() << endl;
+                                cout << "Fullname: " << supporter->getFullName() << endl;
+                                cout << "City: " << supporter->getCity() << endl;
+                                cout << "Skill: " << supporter->displaySkillList() << endl;
+                                cout << "Available Periods: " << supporter->getPairListToString();
+                                cout << "Cost Per Hour: " << supporter->getCost() << endl;
+                                cout << "Introduction: " << supporter->getAboutMe() << endl;
+                                cout << "Status: " << supporter->statusString(supporter->getStatus()) << endl;
+                                cout << "================================================================\n";
+
+                                // You may want to display rating scores here
+                                cout << "Skill Rating: " << supporter->getSkillRatingScore() << endl;
+                                cout << "Supporter Rating: " << supporter->getSupporterRatingScore() << endl;
+                            } else {
+                                cout << "Supporter " << supporter->getMemberId() << " does not meet minimum host-rating score.\n";
+                            }
+                        } else {
+                            cout << "Supporter " << supporter->getMemberId() << " requires more credit points.\n";
+                        }
+                    }
                 }
             }
         }
     }
+}
 
     string toLower(string str){
         loop(str.length()){
