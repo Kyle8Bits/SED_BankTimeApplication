@@ -841,7 +841,7 @@ public:
                     }
                     cout << "Do you want to continue buying credit [Y/N]: ";
                     std::getline(std::cin >> std::ws, choice);
-                    if (choice == "N")
+                    if (choice == "N" || choice == "N")
                     {
                         check = false;
                     }
