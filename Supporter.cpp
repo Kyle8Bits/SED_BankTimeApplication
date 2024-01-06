@@ -59,8 +59,13 @@ private:
     double skill_rating_score;
     double support_rating_score;
     int support_count;
+    //void rating(score){
+        // this->skill_rating_score;
+        //this->support_count++;
+        // this->skill_rating_score = (this->skill_raitng_score + score)/count)
+    // }
     Status status; 
-
+    
 public:
     Supporter(string user_name = "", string pass_word = "", string member_id = "S", int credit_point = 20, string full_name = "", string phone_number = "", 
     string address = "", string city = "", string about_me = "",double host_rating_score = 0, 

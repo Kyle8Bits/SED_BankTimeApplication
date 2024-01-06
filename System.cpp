@@ -299,12 +299,6 @@ public:
         while(check2){
             cout << "Start time: ";
             getline(cin >> std::ws, start_time_input);
-            //hh:mm
-            //h:m
-            //2:20, 2:3
-            //24hAMPM
-            //start time: 20:00
-            // end time: 18:00
             std::stringstream ss1;
             ss1 << start_time_input;//Get the startime to the ss1
 
@@ -1086,8 +1080,7 @@ public:
                         cout << "Invalid input. Please input again" << endl;
                 }
             }
-        }
-                
+        }         
     }
 
     void viewHistoryJob(){
