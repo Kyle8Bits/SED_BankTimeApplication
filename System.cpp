@@ -186,35 +186,38 @@ public:
 
     void displayMemberList(){
         if(is_admin){
-            cout << "****Member list****" << endl;
-            loop(this->member_list.size()){
-                //Go to each member to print the information
-                cout << "Member " << i + 1 << ": " << endl;
-                cout<< "User ID: " << member_list[i]->getMemberId()
-                    << ", Username: " << member_list[i]->getUsername() 
-                    << ", Password: "<< member_list[i]->getPassword()
-                    << ", Credit Point: " << member_list[i]->getCreditPoint()
-                    << ", Fullname: " << member_list[i]->getFullName()
-                    << ", Phone Number: " << member_list[i]->getPhoneNumber()
-                    << ", Address: " << member_list[i]->getAddress()
-                    << ", City: " << member_list[i]->getCity()
-                    << ", About Me: " << member_list[i]->getAboutMe()
-                    << ", Host Rating Score: " << member_list[i]->getHostRatingScore()
-                    << ", Host Count: " << member_list[i]->getHostCount()
-                    << ", Block List: HAVEN't DONE YET" << endl;
-                //check if the member is a Supporter or a regular member
-                if(Supporter* supporter = dynamic_cast<Supporter*>(member_list[i])){
-                    //If it is a supporter, we will print more information of supporter
-                    cout << "SUPPORTER:" 
-                        << ", Availability Time: " << supporter->getAvailabilityPeriod()
-                        << ", Skill List: " << supporter->displaySkillList()
-                        << ", Cost: " << supporter->getCost()
-                        << ", average skill rating score: " << supporter->getSkillRatingScore()
-                        << ", average support rating score: " << supporter->getSupportRatingScore()
-                        << ", support count: " << supporter->getSupportCount() << endl;
-
-                }
+            for(Member* member : member_list){
+                member->displayPersonalInformation();
             }
+            // cout << "****Member list****" << endl;
+            // loop(this->member_list.size()){
+            //     //Go to each member to print the information
+            //     cout << "Member " << i + 1 << ": " << endl;
+            //     cout<< "User ID: " << member_list[i]->getMemberId()
+            //         << ", Username: " << member_list[i]->getUsername() 
+            //         << ", Password: "<< member_list[i]->getPassword()
+            //         << ", Credit Point: " << member_list[i]->getCreditPoint()
+            //         << ", Fullname: " << member_list[i]->getFullName()
+            //         << ", Phone Number: " << member_list[i]->getPhoneNumber()
+            //         << ", Address: " << member_list[i]->getAddress()
+            //         << ", City: " << member_list[i]->getCity()
+            //         << ", About Me: " << member_list[i]->getAboutMe()
+            //         << ", Host Rating Score: " << member_list[i]->getHostRatingScore()
+            //         << ", Host Count: " << member_list[i]->getHostCount()
+            //         << ", Block List: HAVEN't DONE YET" << endl;
+            //     //check if the member is a Supporter or a regular member
+            //     if(Supporter* supporter = dynamic_cast<Supporter*>(member_list[i])){
+            //         //If it is a supporter, we will print more information of supporter
+            //         cout << "SUPPORTER:" 
+            //             << ", Availability Time: " << supporter->getAvailabilityPeriod()
+            //             << ", Skill List: " << supporter->displaySkillList()
+            //             << ", Cost: " << supporter->getCost()
+            //             << ", average skill rating score: " << supporter->getSkillRatingScore()
+            //             << ", average support rating score: " << supporter->getSupportRatingScore()
+            //             << ", support count: " << supporter->getSupportCount() << endl;
+
+            //     }
+            // }
         }else{
             cout << "You do not have permisson to do that" << endl;
         }
@@ -360,63 +363,87 @@ public:
         }
     }
 
-    void viewPersonalInformationMember(){
-        cout << "***MY INFORMATION***" << endl;
-        cout << "ID: " << logged_in_member->getMemberId() << endl;
-        cout << "Username: " << logged_in_member->getUsername() << endl;
-        cout << "Password: " << logged_in_member->getPassword() << endl;
-        cout << "Credit Point: " << logged_in_member->getCreditPoint() << endl;
-        cout << "Full Name: " << logged_in_member->getFullName() << endl;
-        cout << "Phone Number: " << logged_in_member->getPhoneNumber() << endl;
-        cout << "Address: " << logged_in_member->getAddress() << endl;
-        cout << "City: " << logged_in_member->getCity() << endl;
-        cout << "About Me: " << logged_in_member->getAboutMe() << endl;
-        cout << "Host Rating Score: " << logged_in_member->getHostRatingScore() << endl;
-        cout << "Host Count: " << logged_in_member->getHostCount() << endl;
-        cout << "Block List:  HAVEN'T DONE YET" << endl;
+    void viewPersonalInformation(){
+        if(logged_in_member != nullptr){
+            logged_in_member->displayPersonalInformation();
+            cout << endl;
+        } else{
+            logged_in_supporter->displayBlockList();
+        }
+
+        // cout << "***MY INFORMATION***" << endl;
+        // cout << "ID: " << logged_in_member->getMemberId() << endl;
+        // cout << "Username: " << logged_in_member->getUsername() << endl;
+        // cout << "Password: " << logged_in_member->getPassword() << endl;
+        // cout << "Credit Point: " << logged_in_member->getCreditPoint() << endl;
+        // cout << "Full Name: " << logged_in_member->getFullName() << endl;
+        // cout << "Phone Number: " << logged_in_member->getPhoneNumber() << endl;
+        // cout << "Address: " << logged_in_member->getAddress() << endl;
+        // cout << "City: " << logged_in_member->getCity() << endl;
+        // cout << "About Me: " << logged_in_member->getAboutMe() << endl;
+        // cout << "Host Rating Score: " << logged_in_member->getHostRatingScore() << endl;
+        // cout << "Host Count: " << logged_in_member->getHostCount() << endl;
+        // cout << "Block List: " << logged_in_member->blockListToString()<< endl;
     }
 
-    void viewPersonalInformationSupporter(){
-        cout << "***MY INFORMATION***" << endl;
-        cout << "ID: " << logged_in_supporter->getMemberId() << endl;
-        cout << "Username: " << logged_in_supporter->getUsername() << endl;
-        cout << "Password: " << logged_in_supporter->getPassword() << endl;
-        cout << "Credit Point: " << logged_in_supporter->getCreditPoint() << endl;
-        cout << "Full Name: " << logged_in_supporter->getFullName() << endl;
-        cout << "Phone Number: " << logged_in_supporter->getPhoneNumber() << endl;
-        cout << "Address: " << logged_in_supporter->getAddress() << endl;
-        cout << "City: " << logged_in_supporter->getCity() << endl;
-        cout << "About Me: " << logged_in_supporter->getAboutMe() << endl;
-        cout << "Host Rating Score: " << logged_in_supporter->getHostRatingScore() << endl;
-        cout << "Host Count: " << logged_in_supporter->getHostCount() << endl;
-        cout << "Block List:  HAVEN'T DONE YET" << endl;
+    // void viewPersonalInformationSupporter(){
+    //     cout << "***MY INFORMATION***" << endl;
+    //     cout << "ID: " << logged_in_supporter->getMemberId() << endl;
+    //     cout << "Username: " << logged_in_supporter->getUsername() << endl;
+    //     cout << "Password: " << logged_in_supporter->getPassword() << endl;
+    //     cout << "Credit Point: " << logged_in_supporter->getCreditPoint() << endl;
+    //     cout << "Full Name: " << logged_in_supporter->getFullName() << endl;
+    //     cout << "Phone Number: " << logged_in_supporter->getPhoneNumber() << endl;
+    //     cout << "Address: " << logged_in_supporter->getAddress() << endl;
+    //     cout << "City: " << logged_in_supporter->getCity() << endl;
+    //     cout << "About Me: " << logged_in_supporter->getAboutMe() << endl;
+    //     cout << "Host Rating Score: " << logged_in_supporter->getHostRatingScore() << endl;
+    //     cout << "Host Count: " << logged_in_supporter->getHostCount() << endl;
+    //     cout << "Block List:  HAVEN'T DONE YET" << endl;
 
-        cout << "Time list: " << logged_in_supporter->getPairListToString();
+    //     // cout << "Time list: " << logged_in_supporter->getPairListToString();
+    // }
+
+    bool isInBlockList(std::vector<string> block_list, string block_id){
+        loop(block_list.size()){
+            if(block_list[i] == block_id){
+                return true;
+            }
+        }
+        return false;
     }
 
     void displayAvailableSupporter(){
-        string current_user;
+        bool isSupporter = (logged_in_member == nullptr);
+        if(isSupporter){
+            logged_in_member = logged_in_supporter;
+        }
+        
         cout << "****Available Supporter List****" << endl;
         cout << "================================================================\n";
         loop(this->member_list.size()){
             if(Supporter* supporter = dynamic_cast<Supporter*>(member_list[i])){
                 //Go to each member to print the information
-                if(logged_in_supporter != nullptr){
-                    current_user = logged_in_supporter->getMemberId();
-                }
-                if(supporter->getMemberId() != current_user && supporter->getStatus() == Status::ONLINE){//advoid display the current logged in supporter information
-                    cout << "Supporter " << i + 1 << ": " << endl;
-                    cout << "Member id: " << supporter->getMemberId() <<endl;
-                    cout << "Fullname: " << supporter->getFullName() << endl;
-                    cout << "City: " << supporter->getCity() << endl;
-                    cout << "Skill: " << supporter->displaySkillList() << endl;
-                    cout << "Available Periods: " << supporter->getPairListToString();
-                    cout << "Cost Per Hour: " << supporter->getCost() << endl;
-                    cout << "Introduction: " << supporter->getAboutMe() << endl;
-                    cout << "================================================================\n";
-                    availableSupporter.push_back(supporter);
+                if(supporter->getMemberId() != logged_in_member->getMemberId() && supporter->getStatus() == Status::ONLINE){//advoid display the current logged in supporter information
+                    if(!isInBlockList(logged_in_member->block_list, supporter->getMemberId() )){
+                        //IF the current supporter is not in the block list, we wil print the information of supporter
+                        cout << "Supporter " << i + 1 << ": " << endl;
+                        cout << "Member id: " << supporter->getMemberId() <<endl;
+                        cout << "Fullname: " << supporter->getFullName() << endl;
+                        cout << "City: " << supporter->getCity() << endl;
+                        cout << "Skill: " << supporter->displaySkillList() << endl;
+                        cout << "Available Periods: " << supporter->displaySkillList();
+                        cout << "Cost Per Hour: " << supporter->getCost() << endl;
+                        cout << "Introduction: " << supporter->getAboutMe() << endl;
+                        cout << "================================================================\n";
+                        availableSupporter.push_back(supporter);
+                    }
+                    //still push that supporter, even if it in the block list of the current users
                 }
             }
+        }
+        if(isSupporter){
+            logged_in_member = nullptr;
         }
     }
 
@@ -466,48 +493,53 @@ public:
                     logged_in_member = logged_in_supporter;//use this to prevent segment fault when the current users is supporter
                 }
                 if(logged_in_member->getCreditPoint() >= availableSupporter[i]->getCost()){//check the credit point of the users and the cost per hour of the supporter
-                    cout << "Choose the time you want to book. Noitce that: the time you choose must match with the free time of the supporter!" << endl;
-                    int start_time_hour, start_time_minute, end_time_hour, end_time_minute;
-                    string start_time_input, end_time_input;
-                    cout << "Start Time: ";
-                    getline(cin >> std::ws, start_time_input);
-                    cout << "End Time: ";
-                    getline(cin >> std::ws, end_time_input);
+                    if(!isInBlockList(logged_in_member->getBlockList(), availableSupporter[i]->getMemberId())){
+                        cout << "Choose the time you want to book. Noitce that: the time you choose must match with the free time of the supporter!" << endl;
+                        int start_time_hour, start_time_minute, end_time_hour, end_time_minute;
+                        string start_time_input, end_time_input;
+                        cout << "Start Time: ";
+                        getline(cin >> std::ws, start_time_input);
+                        cout << "End Time: ";
+                        getline(cin >> std::ws, end_time_input);
 
-                    if(checkValidTime(start_time_input) && checkValidTime(end_time_input)){
-                        //use one string to 2 integer
-                        std::stringstream ss_start_time;
-                        ss_start_time << start_time_input;
+                        if(checkValidTime(start_time_input) && checkValidTime(end_time_input)){
+                            //use one string to 2 integer
+                            std::stringstream ss_start_time;
+                            ss_start_time << start_time_input;
 
-                        ss_start_time >> start_time_hour;
-                        ss_start_time.ignore();
-                        ss_start_time >> start_time_minute;
+                            ss_start_time >> start_time_hour;
+                            ss_start_time.ignore();
+                            ss_start_time >> start_time_minute;
 
-                        std::stringstream ss_end_time;
-                        ss_end_time << end_time_input;
+                            std::stringstream ss_end_time;
+                            ss_end_time << end_time_input;
 
-                        ss_end_time >> end_time_hour;
-                        ss_end_time.ignore();
-                        ss_end_time >> end_time_minute;
+                            ss_end_time >> end_time_hour;
+                            ss_end_time.ignore();
+                            ss_end_time >> end_time_minute;
 
-                        if(checkValidTime(start_time_hour, start_time_minute, end_time_hour, end_time_minute)){
-                            //PUSH NEW BOOKING TO THE BOOKING LIST
-                            BookingSupporter* booking = new BookingSupporter(logged_in_member->getMemberId(), availableSupporter[i]->getMemberId());
-                            //SET THE START AND END TIME OF THE NEW BOOKINg
-                            booking->setStartTime(Time(start_time_hour, start_time_minute));
-                            booking->setEndTime(Time(end_time_hour, end_time_minute));
-                            booking_list.push_back(booking);
-                            cout << "Your booking has been created" << endl;
-                            isValidSupporter = true;
-                            break; 
+                            if(checkValidTime(start_time_hour, start_time_minute, end_time_hour, end_time_minute)){
+                                //PUSH NEW BOOKING TO THE BOOKING LIST
+                                BookingSupporter* booking = new BookingSupporter(logged_in_member->getMemberId(), availableSupporter[i]->getMemberId());
+                                //SET THE START AND END TIME OF THE NEW BOOKINg
+                                booking->setStartTime(Time(start_time_hour, start_time_minute));
+                                booking->setEndTime(Time(end_time_hour, end_time_minute));
+                                booking_list.push_back(booking);
+                                cout << "Your booking has been created" << endl;
+                                isValidSupporter = true;
+                                break; 
+                            }else{
+                                //if the condition is wrong, we return the function
+                                return;
+                            }
                         }else{
-                            //if the condition is wrong, we return the function
+                            cout << "Please enter the valid input!" << endl;
                             return;
-                        }
+                        }            
                     }else{
-                        cout << "Please enter the valid input!" << endl;
+                        cout <<"You can not book a supporter in your block list" << endl;
                         return;
-                    }            
+                    }
                 }else{
                     cout << "Insufficient credit points to book this supporter" << endl;
                     isValidSupporter = true;
@@ -824,7 +856,7 @@ public:
                     }
                     cout << "Do you want to continue buying credit [Y/N]: ";
                     std::getline(std::cin >> std::ws, choice);
-                    if (choice == "N")
+                    if (choice == "N" || choice == "N")
                     {
                         check = false;
                     }
@@ -913,7 +945,7 @@ public:
                     cout << "Skill: " << supporter->displaySkillList() << endl;
                     cout << "Cost Per Hour: " << supporter->getCost() << endl;
                     cout << "Introduction: " << supporter->getAboutMe() << endl;
-                    cout << "Status: " <<  supporter->statusString(supporter->getStatus()) << endl;
+                    cout << "Status: " <<  supporter->statusToString(supporter->getStatus()) << endl;
                     cout << "================================================================\n";
             }
         }
@@ -921,7 +953,7 @@ public:
 
     void statusSetting(){
         cout <<"****Status Setting Menu****" << endl;
-        cout <<"Your current status: " << logged_in_supporter->statusString(logged_in_supporter->getStatus()) << endl;
+        cout <<"Your current status: " << logged_in_supporter->statusToString(logged_in_supporter->getStatus()) << endl;
 
         bool check = true;
         char option;
@@ -1000,31 +1032,42 @@ public:
         }
     }
 
+    void setSupportRatingById(int skill_score, int support_score, string comment, string id){
+        loop(booking_list.size()){
+            if(booking_list[i]->getBookingId() == id){
+                booking_list[i]->setSkillRatingScore(skill_score);
+                booking_list[i]->setSupporterRatingScore(support_score);
+                booking_list[i]->setSupporterComment(comment);
+                break;
+            }
+        }
+    }
+
     void checkCompleteTask(){
-        Member* current;
-        if(logged_in_member == nullptr){
-            current = logged_in_supporter;
+        std::vector<string> complete_list_id;
+        bool isSupporter = (logged_in_member == nullptr);
+
+        if(isSupporter){
+            logged_in_member = logged_in_supporter;//use this to prevent segment fault when the current users is supporter
         }
-        else{
-            current = logged_in_member;
-        }
-        cout <<"****YOUR BOOKING HAVE BEEN FINISHED****\n";
-        cout << current->getMemberId();
+
+        cout <<"****YOUR BOOKING HAVE BEEN FINISHED****"<<endl;
         int count = 1;
         std::vector<string> current_job = {};
         
         for(int i = 0; i < booking_list.size(); i++){
-            if (current->getMemberId() == booking_list[i]->getHostId() && booking_list[i]->getProgress() == "COMPLETED" && booking_list[i]->getSkillRatingScore() == 0 ){//Check if current user is = host id 
+            if (logged_in_member->getMemberId() == booking_list[i]->getHostId() && booking_list[i]->getProgress() == "COMPLETED" && booking_list[i]->getSkillRatingScore() != 11 && booking_list[i]->getSupporterComment() == " " ){//Check if current user is = host id 
                 for (int a = 0; a < member_list.size(); a++){
                     if (booking_list[i]->getSupportId() == member_list[a]->getMemberId()){//get the matchecd supporter id in booking list and in memberlist
                         cout <<"Booking: " << std::to_string(count) <<
                             "\nBooking ID: " << booking_list[i]->getBookingId() <<
                             "\nSupporter name: " << member_list[a]->getFullName() <<
-                            "\nRating score: Will update" <<
                             "\nCity: " << member_list[a]->getCity() <<
                             "\nTime: " << booking_list[i]->getTime() << 
                             "\nSupporter comment: " <<booking_list[i]->getHostComment() <<
                             "\nSupporter rated you: " <<booking_list[i]->getHostRating() << endl;
+
+                            complete_list_id.push_back(booking_list[i]->getBookingId());
                             
                         cout << "==============================================\n" << endl;
                     }
@@ -1033,67 +1076,76 @@ public:
             }
         }
 
+        bool valid_choice = false;
+
         cout << "==============================================\n" << endl;
 
-        string choice;
+        string choice = "";
         cout <<"Please enter a booking id: ";
         getline(cin >> std::ws, choice);
         bool rate_check = true;
-        int exist = 0;
-        loop (booking_list.size()){
-            if(booking_list[i]->getBookingId() == choice && booking_list[i]->getProgress() == "COMPLETED"){
+
+        loop (complete_list_id.size()){
+            if(complete_list_id[i] == choice){
                 bool check = true;
                 int option;
                 string comment = " ";
                 int rating;
                 int skill;
-                exist++;
+                valid_choice = true;
 
-            while(check){
-                cout <<"Do you want to give a feedback to this supporter?"<< endl;
-                cout << "1. Yes"<<
-                        "\n2. No" << endl;
-                cin >> option;
+                while(check){
+                    cout <<"Do you want to give a feedback to this supporter?"<< endl;
+                    cout << "1. Yes"<<
+                            "\n2. No" << endl;
+                    cin >> option;
 
-                switch(option){
-                    case 1:
-                        while(rate_check){
-                            cout << "What would you rate this supporter's skill [0/10]: ";
-                            cin >> rating;
-                            cout << "How would you like this supporter [0/10]: ";
-                            cin >> skill;
-                            if (rating <= 10 && rating >= 0 && skill <= 10 && skill >= 0){
-                                rate_check = false;
+                    switch(option){
+                        case 1:
+                            while(rate_check){
+                                cout << "What would you rate this supporter's skill [0/10]: ";
+                                cin >> rating;
+                                cout << "How would you like this supporter [0/10]: ";
+                                cin >> skill;
+                                if (rating <= 10 && rating >= 0 && skill <= 10 && skill >= 0){
+                                    rate_check = false;
+                                }
+                                else{
+                                    cout << "Invalid. The rating must less than 10" << endl;
+                                }
                             }
-                            else{
-                                cout << "Invalid. The rating must less than 10" << endl;
-                            }
-                        }
-                        cout << "Give some comment (Put blank if you do not want to comment): ";
-                        getline(cin >> std::ws, comment);
+                            cout << "Give some comment (Put blank if you do not want to comment): ";
+                            getline(cin >> std::ws, comment);
 
-                        booking_list[i]->setSkillRatingScore(skill);
-                        booking_list[i]->setSupporterComment(comment);
-                        booking_list[i]->setSupporterRatingScore(rating);
+                            setSupportRatingById(skill, rating, comment, complete_list_id[i]);
 
-                        cout << "Thank you for giving feedback" << endl;
-                    break;
-                    case 2:
-                     booking_list[i]->setSupporterRatingScore(11);
-                     booking_list[i]->setSkillRatingScore(11);
-                        check = false;
-                    break;
+                            cout << "Thank you for giving feedback" << endl;
+                            check = false;
+                            break;
+                        case 2:
+                            setSupportRatingById(11, 11, " ", complete_list_id[i]);
+                            // booking_list[i]->setSupporterRatingScore(11);
+                            // booking_list[i]->setSkillRatingScore(11);
+                            check = false;
+                            break;
+                        default: 
+                            cout << "Please enter again!";
+                            break;
+                    }
                 }
             }
-            }
         }
-        if(exist == 0){
-            cout <<"Cannot file the complete task"<<endl;
+        if(!valid_choice){
+            cout <<"Please enter valid id"<<endl;
+        }
+
+        if(isSupporter){
+            logged_in_member = nullptr;
         }
     }
 
     string getCurrentStatus(){
-        return logged_in_supporter->statusString(logged_in_supporter->getStatus());
+        return logged_in_supporter->statusToString(logged_in_supporter->getStatus());
     }
 
     int getNotification(){
@@ -1104,6 +1156,80 @@ public:
             }
         }
         return count;
+    }
+
+    bool blockUser(){
+        cout << "Enter the id of the user that you want to block:";
+        string input;
+        getline(cin >> std::ws, input);
+
+        bool isSupporter = (logged_in_member == nullptr);
+        if(isSupporter){
+            logged_in_member = logged_in_supporter;//use this to prevent segment fault when the current users is supporter
+        }
+        
+        bool valid_choice = false;
+        char choice; 
+        bool check = true;
+
+        loop(member_list.size()){
+            if(input == member_list[i]->getMemberId()){
+                valid_choice = true;
+                while(check){
+                    cout << "Do you want to block this person:" << endl;
+                    cout << "Id: " << member_list[i]->getMemberId();
+                    cout << " Name: " << member_list[i]->getFullName() << endl;
+                    cout << "1. Yes\n" 
+                        << "2. Return\n";
+                    cout << ">Your choice: ";
+                    cin >> choice;
+                    if(choice == '1'){
+                        logged_in_member->block_list.push_back(member_list[i]->getMemberId());
+                        cout << "Block this person successfully!" << endl;
+                        check = false;
+                    }else if(choice == '2'){
+                        cout << "Return to main dashboard!" << endl;
+                        check = false;
+                    }else{
+                        cout << "Please enter valid choice!" << endl;
+                    }
+                }
+            }
+        }
+
+        if(isSupporter){
+            logged_in_supporter->setBlockList(logged_in_member->block_list);
+            logged_in_member = nullptr;
+        }
+
+        if(!valid_choice){
+            cout << "Please enter valid input!" << endl;
+        }
+
+        return true;
+    }
+
+    string getFullNameFromId(string id){
+        loop(member_list.size()){
+            if(id == member_list[i]->getMemberId()){
+                return member_list[i]->getFullName();
+            }
+        }
+        return "Can not find!";
+    }
+
+    void showBlockList(){
+        //**************IT HASN'T DO WITH SUPPORTER*************
+
+        if(logged_in_member->block_list.size() == 0){
+            cout << "EMPTY Block list" << endl;
+            return;
+        }
+
+        for(int i = 0; i << logged_in_member->block_list.size(); ++i){
+            cout << "Your block list: " << endl;
+            cout << i + 1 << ": " << getFullNameFromId(logged_in_member->block_list[i]) << endl;
+        }
     }
 
     std::vector<Member*>& getMemberList(){
