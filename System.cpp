@@ -450,7 +450,7 @@ public:
                 // Avoid displaying the current logged-in supporter information
 
                 // Check if the supporter matches the specified city, credit points, and rating score
-                if (supporter->getCity() == "Ha Noi" || supporter->getCity() == "Sai Gon") {
+                if (supporter->getCity() == "Ha Noi" || supporter->getCity() == "Ho Chi Minh") {
                     if (logged_in_supporter != nullptr) {
                         if (logged_in_supporter->getCreditPoint() >= supporter->getCost()) {
                             if (logged_in_supporter->getHostRatingScore() >= supporter->getMinHostRating()) {
