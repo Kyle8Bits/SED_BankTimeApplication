@@ -6,6 +6,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <utility>
+#include <iomanip>
 
 #include "Member.cpp"
 #include "Supporter.cpp"
@@ -19,7 +20,7 @@ using std::endl;
 
 #define loop(n) for(int i = 0; i < n; ++i)
 #define FILENAME "members.dat"
-
+#define clearScreen() std::cout << "\x1B[2K\x1B[1G"
 class System{
 private:
     std::vector<Member*> member_list; 
@@ -237,7 +238,67 @@ public:
 
         return false;
     }
+    //----------------------THIS IS TO PRINT CALENDER---------------------
+    bool isLeapYear(int year) {
+        return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+    }
 
+    int getDaysInMonth(int month, int year) {
+        int daysInMonth[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+        if (month == 2 && isLeapYear(year)) {
+            return 29;
+        }
+        return daysInMonth[month - 1];
+    }
+
+    int calculateDayOfWeek(int day, int month, int year) {
+        if (month < 3) {
+            month += 12;
+            year -= 1;
+        }
+
+        int century = year / 100;
+        year %= 100;
+
+        int dayOfWeek = (day + ((13 * (month + 1)) / 5) + year + (year / 4) + (century / 4) - (2 * century)) % 7;
+        dayOfWeek = (dayOfWeek + 5) % 7;
+        if (dayOfWeek < 0) {
+            dayOfWeek += 7;
+        }
+
+        return dayOfWeek;
+    }
+
+    void printCalendar(int year, int month) {
+        clearScreen();
+        std::cout << "Calendar for " << month << "/" << year << ":\n";
+        std::cout << "  Mon  Tue  Wed  Thu  Fri  Sat  Sun" << std::endl;
+        int daysInMonth = getDaysInMonth(month, year);
+        int startDay = calculateDayOfWeek(1, month, year); // Calculate the starting day of the month
+
+        int day = 1;
+
+        // Print leading spaces until the starting day of the week
+        for (int i = 0; i < startDay; ++i) {
+            std::cout << std::setw(5) << " ";
+        }
+
+        // Print the days of the month
+        while (day <= daysInMonth) {
+            std::cout << std::setw(5) << day;
+
+            if ((day + startDay) % 7 == 0 || day == daysInMonth) {
+                std::cout << std::endl;
+            }
+            day++;
+        }
+    }
+    bool isValidDate(int day, int month, int year) {
+    if (year < 0 || month < 1 || month > 12 || day < 1 || day > getDaysInMonth(month, year)) {
+        return false;
+    }
+    return true;
+    }
     bool upgradeToSupporter(){
         if(dynamic_cast<Supporter*>(logged_in_member)){//CHECK THE MEMBER IS ALREADY SUPPORTER OR NOT?
             cout << "You are aldready supporter!" << endl;
@@ -262,14 +323,70 @@ public:
             }
         }
         cout << "Your skills are added successfully" << endl;
-        
+        //----------------------THIS IS TO CHOOSE A CALENDAR---------------------
+        int year = 2024; // Starting year
+        int month = 1;   // Starting month
+        int choice = 0;
+        while (choice != 4) {
+            printCalendar(year, month);
+            std::cout << "Choose an option:" << std::endl;
+            std::cout << "1. Previous Month" << std::endl;
+            std::cout << "2. Next Month" << std::endl;
+            std::cout << "3. Customize (Select Month/Day)" << std::endl;
+            std::cout << "4. Exit" << std::endl;
+            std::cout << "Enter choice: ";
+            std::cin >> choice;
+            switch (choice) {
+                case 1:
+                    if (month == 1) {
+                        month = 12;
+                        --year;
+                    } else {
+                        --month;
+                    }
+                    break;
+                case 2:
+                    if (month == 12) {
+                        month = 1;
+                        ++year;
+                    } else {
+                        ++month;
+                    }
+                    break;
+                case 3:
+                    std::cout << "Enter year: ";
+                    std::cin >> year;
+
+                    std::cout << "Enter month (1-12): ";
+                    std::cin >> month;
+
+                    if (year < 0 || month < 1 || month > 12) {
+                        std::cout << "Invalid year or month entered." << std::endl;
+                        break;
+                    }
+                    break;
+                case 4:
+                    std::cout << "Exiting..." << std::endl;
+                    break;
+                default:
+                    std::cout << "Invalid choice. Please select again." << std::endl;
+                    break;
+            }
+        }
             //----------------------THIS FOR GETTING AVAILABILIITY PERIOD---------------------
         string start_time_input, end_time_input;
         int start_time_hour, start_time_minute, end_time_hour, end_time_minute;
+        int day;
         cout << "What is your free time (ex: 8:00 to 10:00, or 20:30 to 22:00)" << endl;
         //----------------------THIS FOR GETTING START TIME---------------------
         bool check2 = true;
         while(check2){
+            std::cout << "Enter free day for the month (1-" << getDaysInMonth(month, year) << "): ";
+            std::cin >> day;
+            if (!isValidDate(day, month, year)) {
+                std::cout << "Invalid day entered. Please enter a valid day within the month." << std::endl;
+                continue;
+            }
             cout << "Start time: ";
             getline(cin >> std::ws, start_time_input);
             //hh:mm
@@ -477,6 +594,7 @@ public:
         
         return true;
     }
+    
 
     void createBooking(){
         cout << "****WELCOME TO BOOKING DASHBOARD****"<<endl;
@@ -494,6 +612,62 @@ public:
                 }
                 if(logged_in_member->getCreditPoint() >= availableSupporter[i]->getCost()){//check the credit point of the users and the cost per hour of the supporter
                     if(!isInBlockList(logged_in_member->getBlockList(), availableSupporter[i]->getMemberId())){
+                        int year = 2024; // Starting year
+                        int month = 1;   // Starting month
+                        int choice = 0;
+                        while (choice != 4) {
+                            printCalendar(year, month);
+                            std::cout << "Choose an option:" << std::endl;
+                            std::cout << "1. Previous Month" << std::endl;
+                            std::cout << "2. Next Month" << std::endl;
+                            std::cout << "3. Customize (Select Month/Day)" << std::endl;
+                            std::cout << "4. Exit" << std::endl;
+                            std::cout << "Enter choice: ";
+                            std::cin >> choice;
+                            switch (choice) {
+                                case 1:
+                                    if (month == 1) {
+                                        month = 12;
+                                        --year;
+                                    } else {
+                                        --month;
+                                    }
+                                    break;
+                                case 2:
+                                    if (month == 12) {
+                                        month = 1;
+                                        ++year;
+                                    } else {
+                                        ++month;
+                                    }
+                                    break;
+                                case 3:
+                                    std::cout << "Enter year: ";
+                                    std::cin >> year;
+
+                                    std::cout << "Enter month (1-12): ";
+                                    std::cin >> month;
+
+                                    if (year < 0 || month < 1 || month > 12) {
+                                        std::cout << "Invalid year or month entered." << std::endl;
+                                        break;
+                                    }
+                                    break;
+                                case 4:
+                                    std::cout << "Exiting..." << std::endl;
+                                    break;
+                                default:
+                                    std::cout << "Invalid choice. Please select again." << std::endl;
+                                    break;
+                            }
+                        }
+                        int day;
+                        std::cout << "Enter free day for the month (1-" << getDaysInMonth(month, year) << "): ";
+                        std::cin >> day;
+                        if (!isValidDate(day, month, year)) {
+                            std::cout << "Invalid day entered. Please enter a valid day within the month." << std::endl;
+                            continue;
+                        }
                         cout << "Choose the time you want to book. Noitce that: the time you choose must match with the free time of the supporter!" << endl;
                         int start_time_hour, start_time_minute, end_time_hour, end_time_minute;
                         string start_time_input, end_time_input;
