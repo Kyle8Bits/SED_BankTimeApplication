@@ -157,7 +157,7 @@ int main(){
                                 << "\t\t|                                                           |\n"
                                 << "\t\t|4. View history booking                                    |\n"
                                 << "\t\t|                                                           |\n"
-                                << "\t\t|5. View complted tasks                                     |\n"
+                                << "\t\t|5. View complted tasks by supporter                        |\n"
                                 << "\t\t|> Notice: You have " << system.getNotification() << " new completed task from supporter\n"                                                    
                                 << "\t\t|                                                           |\n"
                                 << "\t\t|6. Become supporter                                        |\n"
@@ -168,7 +168,7 @@ int main(){
                                 << "\t\t|                                                           |\n"
                                 << "\t\t|9. Block a user                                            |\n"
                                 << "\t\t|                                                           |\n"
-                                << "\t\t|10. Sign out                                                |\n"
+                                << "\t\t|10. Sign out                                               |\n"
                                 << "\t\t-------------------------------------------------------------\n"
                                 << ">Your choice: ";
                             string member_choice; cin >> member_choice;
@@ -225,17 +225,21 @@ int main(){
                                 << "\t\t|4. View history booking                                    |\n"
                                 << "\t\t|                                                           |\n"
                                 << "\t\t|5. View current job requests                               |\n"
+                                << "\t\t|Notice: You have "<< system.getRequestNotification() << " new request\n"                                             
                                 << "\t\t|                                                           |\n"
-                                << "\t\t|6. View history job                                        |\n"
+                                << "\t\t|6. Check completed task by supporter                       |\n"
+                                << "\t\t|> Notice: You have " << system.getNotification() << " new completed task from supporter\n"   
                                 << "\t\t|                                                           |\n"
-                                << "\t\t|7. Manage account                                          |\n"
+                                << "\t\t|7. View history job                                        |\n"
                                 << "\t\t|                                                           |\n"
-                                << "\t\t|8. View my information                                     |\n"
+                                << "\t\t|8. Manage account                                          |\n"
                                 << "\t\t|                                                           |\n"
-                                << "\t\t|9. Change my status.                                      |\n"
+                                << "\t\t|9. View my information                                     |\n"
+                                << "\t\t|                                                           |\n"
+                                << "\t\t|10. Change my status.                                       |\n"
                                 << "\t\t*** Current status: "<<system.getCurrentStatus()<<"***\n"
                                 << "\t\t|                                                           |\n"
-                                << "\t\t|10. Sign out                                               |\n"
+                                << "\t\t|11. Sign out                                               |\n"
                                 << "\t\t-------------------------------------------------------------\n"
                                 << ">Your choice: ";
                                 int supporter_choice; cin >> supporter_choice;
@@ -263,20 +267,24 @@ int main(){
                                         break;
                                     case 6:
                                         clearScreen();
-                                        system.viewHistoryJob();
+                                        system.checkCompleteTask();
                                         break;
                                     case 7:
                                         clearScreen();
+                                        system.viewHistoryJob();
                                         break;
                                     case 8:
                                         clearScreen();
-                                        system.viewPersonalInformation();
                                         break;
                                     case 9:
                                         clearScreen();
-                                        system.statusSetting();
+                                        system.viewPersonalInformation();
                                         break;
                                     case 10:
+                                        clearScreen();
+                                        system.statusSetting();
+                                        break;
+                                    case 11:
                                         clearScreen();
                                         request_supporter = false;
                                         cout << "Return to main dashboard" << endl;

@@ -820,10 +820,10 @@ public:
     }
 
     void buyCredit(){
-        // int* otp = new int(rand() % (999999 - 100000 + 1) + 100000);
-        bool check = true;
-        string choice;
-        int option;
+    // int* otp = new int(rand() % (999999 - 100000 + 1) + 100000);
+    bool check = true;
+    string choice;
+    int option;
         string verify;
 
         if (logged_in_supporter == nullptr)
@@ -1177,8 +1177,9 @@ public:
         }
         
         int count = 0;
+
         for(int i =0; i < booking_list.size(); i++){
-            if (logged_in_member->getMemberId() == booking_list[i]->getHostId() && booking_list[i]->getProgress() == "COMPLETED" && booking_list[i]->getHostComment() == " "){
+            if (logged_in_member->getMemberId() == booking_list[i]->getHostId() && booking_list[i]->getProgress() == "COMPLETED" && booking_list[i]->getSupporterComment() == " "){
                 count++;
             }
         }
@@ -1187,6 +1188,16 @@ public:
             logged_in_member = nullptr;
         }
         
+        return count;
+    }
+
+    int getRequestNotification(){
+        int count = 0;
+        loop (booking_list.size()){
+            if (logged_in_supporter->getMemberId() == booking_list[i]->getSupportId() && booking_list[i]->getStatus() == "PENDING"){
+                count++;
+            }
+        }
         return count;
     }
 
