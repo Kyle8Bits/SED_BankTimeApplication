@@ -27,15 +27,15 @@ protected:
     string address;
     string city;
     string about_me;
-    double host_rating_score;
-    int host_count;
+    double host_rating_score = 0;
+    int host_count = 0;
     std::vector<string> block_list;
 
 public:
     //CONSTRUCTOR
     Member(string user_name = "", string pass_word = "", string member_id = "M", int credit_point = 20, string full_name = "", string phone_number = "", 
-    string address = "", string city = "", string about_me = "",double host_rating_score = 0, 
-    int host_count = 0, std::vector<string> block_list = {})
+    string address = "", string city = "", string about_me = "",double host_rating_score, 
+    int host_count, std::vector<string> block_list = {})
     : Account(user_name, pass_word), 
       member_id(member_id), credit_point(credit_point), full_name(full_name), phone_number(phone_number), address(address),
       city(city), about_me(about_me), host_rating_score(host_rating_score), 
@@ -46,6 +46,15 @@ public:
         if(member_id == "M"){//If the member id is M (Default value), we auto generate the id with the number of the number
             this->member_id = member_id + std::to_string(number_of_member);//AUTO GENERATE THE ID FOR MEMBER
         }
+    }
+
+    void collectScore(int score){
+        this->host_rating_score + score;
+        this->host_count ++ ;
+    }
+
+    double getAvgScore(){
+        return static_cast<double>(host_rating_score)/host_count;
     }
 
     virtual void displayPersonalInformation(){

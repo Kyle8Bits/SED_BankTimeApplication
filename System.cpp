@@ -615,6 +615,14 @@ public:
         }
     }
 
+    void setHostingRatingByID(string id, int rating){
+        loop(member_list.size()){
+            if(member_list[i]->getMemberId() == id){
+                member_list[i]->collectScore(rating);
+            }
+        }
+    }
+
     void setHostCommentById(string id, string comment){
         loop(booking_list.size()){
             if(booking_list[i]->getBookingId() == id){
