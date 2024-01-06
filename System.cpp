@@ -17,6 +17,7 @@ using std::cout;
 using std::cin;
 using std::string;
 using std::endl;
+using std::find;
 
 #define loop(n) for(int i = 0; i < n; ++i)
 #define FILENAME "members.dat"
@@ -238,6 +239,30 @@ public:
 
         return false;
     }
+    
+    bool checkDuplicateDay(std::vector<string>list, string choose){
+        bool check = true;
+        loop(list.size()){
+            if (choose == list[i]){
+                check = false;
+                break;
+            }
+        }
+        return check;
+    }
+
+    std::string getDayString(int day) {
+        switch (day) {
+            case 1: return "Monday";
+            case 2: return "Tuesday";
+            case 3: return "Wednesday";
+            case 4: return "Thursday";
+            case 5: return "Friday";
+            case 6: return "Saturday";
+            case 7: return "Sunday";
+            default: return "Invalid Day";
+        }
+    }
 
     bool upgradeToSupporter(){
         if(dynamic_cast<Supporter*>(logged_in_member)){//CHECK THE MEMBER IS ALREADY SUPPORTER OR NOT?
@@ -251,7 +276,8 @@ public:
         cout << "First, you need to add some skills that you have" << endl;
         bool check = true;
         std::vector<string> skill_list_input;
-        std::vector<std::pair<Time,Time>> time_pair_list;
+        WorkSchedule workSchedule;
+        // std::vector<std::pair<Time,Time>> time_pair_list;
         while(check){
             cout << ">Your skill:";
             getline(cin >> std::ws, skill_input);
@@ -297,7 +323,7 @@ public:
             ss2.ignore();
             ss2 >> end_time_minute;
             
-            time_pair_list.push_back(std::make_pair(Time(start_time_hour, start_time_minute), Time(end_time_hour, end_time_minute)));
+            workSchedule.time.push_back(std::make_pair(Time(start_time_hour, start_time_minute), Time(end_time_hour, end_time_minute)));
             
             cout << "Do you want to continue: [Y/N]: ";
                 char choice; cin >> choice;
@@ -305,6 +331,47 @@ public:
                     check2 = false;
                 }
         }
+
+        //----------------------THIS FOR GETTING THE WEEKLY WORKDAY----------------
+            int day_choice;
+            bool check3 = true;
+            while(check3){
+                cout<<"Please enter which days of the week you work.\n";
+                cout << "1. Monday \n"
+                    << "2. Tuesday \n"
+                    << "3. Wednesday \n"
+                    << "4. Thursday \n"
+                    << "5. Friday \n"
+                    << "6. Saturday \n"
+                    << "7. Sunday \n";
+                cout <<"=============================================================" << endl;
+                cout << "Already in the list: ";
+                loop(workSchedule.weekday.size()){
+                    cout << workSchedule.weekday[i] << "-";
+                }
+                cout << "\n";
+                bool check_option = true;
+
+                while(check_option){ 
+                cout << "Your option(eg. 1 for Monday,8 for Sunday): "; cin >> day_choice;
+                    
+                    if(!checkDuplicateDay(workSchedule.weekday, getDayString(day_choice))){
+                        cout << "You already select this day, please choose another day" << endl;
+                    }
+                    else{
+                        workSchedule.weekday.push_back(getDayString(day_choice));
+                        check_option = false;
+                    }
+                }
+
+                char option_day;
+                cout << "Do you want to add more day[Y/N]: "; 
+                cin >> option_day;
+                if(option_day != 'Y' && option_day != 'y'){
+                    check3 = false;
+                }
+            }
+
         //----------------------THIS FOR GETTING COST PER HOUR---------------------
         int cost_input; 
         cout << "What is the hourly rate you would like to charge: ";
@@ -324,7 +391,11 @@ public:
         logged_in_member->setAboutMe(about_me_input);
         //create new pointer supporter
         
-        Supporter* new_supporter = new Supporter(*logged_in_member,time_pair_list, skill_list_input, cost_input);
+        Supporter* new_supporter = new Supporter(*logged_in_member,workSchedule, skill_list_input, cost_input);
+
+        // loop(workSchedule.weekday.size()){
+        //     cout << workSchedule.weekday[i] << " ";
+        // }
 
         loop(member_list.size()){
             if(member_list[i] == logged_in_member){
@@ -434,6 +505,7 @@ public:
                         cout << "City: " << supporter->getCity() << endl;
                         cout << "Skill: " << supporter->displaySkillList() << endl;
                         cout << "Available Periods: \n" << supporter->displayTimePairList() << endl;
+                        cout << "Work Day On: " << supporter->displayWeekday()<< endl;
                         cout << "Cost Per Hour: " << supporter->getCost() << endl;
                         cout << "Introduction: " << supporter->getAboutMe() << endl;
                         cout << "================================================================\n";

@@ -54,7 +54,7 @@ private:
     Time start_time; // (start time, end time, day)
     Time end_time;
     std::vector<string> skill_list;
-    std::vector<std::pair<Time, Time>> time_pair_list;
+    WorkSchedule workSchedule;
     int cost;//this use for the cost of the supportter per hour
     double skill_rating_score;
     double support_rating_score;
@@ -64,11 +64,11 @@ private:
 public:
     Supporter(string user_name = "", string pass_word = "", string member_id = "S", int credit_point = 20, string full_name = "", string phone_number = "", 
     string address = "", string city = "", string about_me = "",double host_rating_score = 0, 
-    int host_count = 0, int person_not_comment = 0, std::vector<string> block_list = {}, std::vector<std::pair<Time, Time>> time_pair_list = {}, 
+    int host_count = 0, int person_not_comment = 0, std::vector<string> block_list = {}, WorkSchedule workSchedule = {}, 
     std::vector<string> skill_list = {}, int cost = 0, double skill_rating_score = 0, double support_rating_score = 0, int support_count = 0, Status status = Status::OFFLINE)
     : Member(user_name, pass_word, member_id, credit_point, full_name, phone_number, address, city, about_me,
             host_rating_score, host_count, person_not_comment, block_list), 
-            time_pair_list(time_pair_list), skill_list(skill_list), cost(cost), skill_rating_score(skill_rating_score),
+            workSchedule(workSchedule), skill_list(skill_list), cost(cost), skill_rating_score(skill_rating_score),
             support_rating_score(support_rating_score), support_count(support_count), status(status)
     {
         if(member_id == "S"){//If the member id is S (Default value), we auto generate the id with the number of the number
@@ -77,9 +77,9 @@ public:
     }
     
     //paste the Member to the Supporet (It's like copy constructor)
-    Supporter(const Member& member,std::vector<std::pair<Time, Time>> time_pair_list = {},std::vector<string> skill_list = {}, int cost = 0,
+    Supporter(const Member& member,WorkSchedule workSchedule,std::vector<string> skill_list = {}, int cost = 0,
               double skill_rating_score = 0, double support_rating_score = 0, int support_count = 0):
-              Member(member), time_pair_list(time_pair_list), skill_list(skill_list), cost(cost), 
+              Member(member), workSchedule(workSchedule), skill_list(skill_list), cost(cost), 
               skill_rating_score(skill_rating_score), support_rating_score(support_rating_score), support_count(support_count), status(status)
         {
             if(member_id == "S"){//If the member id is S (Default value), we auto generate the id with the number of the number
@@ -144,25 +144,47 @@ public:
     }
 
     string timePairToString(){
-        if(time_pair_list.empty()){
+        if(workSchedule.time.empty()){
             return "";
         }
-        string time_pair_str = time_pair_list[0].first.getTime()+"="+ time_pair_list[0].second.getTime()+"-";
-        for(int i = 1; i < time_pair_list.size(); ++i){
-            time_pair_str += time_pair_list[i].first.getTime()+"="+ time_pair_list[i].second.getTime()+"-"; 
+        string time_pair_str = workSchedule.time[0].first.getTime()+"="+ (workSchedule.time[0]).second.getTime()+"-";
+        for(int i = 1; i < workSchedule.time.size(); ++i){
+            time_pair_str += workSchedule.time[i].first.getTime()+"="+ workSchedule.time[i].second.getTime()+"-"; 
         }
         return time_pair_str;
     }
 
+    string weekDayToString(){
+        if(workSchedule.weekday.empty()){
+            return "";
+        }
+        string weekday_str = "Day-" + workSchedule.weekday[0]+"-";
+        for(int i = 1; i < workSchedule.weekday.size(); ++i){
+            weekday_str += workSchedule.weekday[i] +"-"; 
+        }
+        return weekday_str;
+    }
+
     string displayTimePairList(){
-        if(time_pair_list.empty()){
+        if(workSchedule.time.empty()){
             return "EMPTY";
         }
         string time_pair_str = "";
-        for(int i = 0; i < time_pair_list.size(); ++i){
-            time_pair_str += "<> From: " + time_pair_list[i].first.getTime()+" To: " + time_pair_list[i].second.getTime() + "\n"; 
+        for(int i = 0; i < workSchedule.time.size(); ++i){
+            time_pair_str += "<> From: " + workSchedule.time[i].first.getTime()+" To: " + workSchedule.time[i].second.getTime() + (i != workSchedule.time.size() - 1 ?"\n" : ""); 
         }
         return time_pair_str;
+    }
+
+    string displayWeekday(){
+        if(workSchedule.weekday.empty()){
+            return "EMPTY";
+        }
+        string week_day = "";
+        for(int i = 0; i < workSchedule.weekday.size(); ++i){
+            week_day += workSchedule.weekday[i] + (i != workSchedule.weekday.size() -1 ? "-" : ""); 
+        }
+        return week_day;
     }
 
     string displaySkillList(){//THIS USING FOR DISPLAYING
@@ -213,10 +235,13 @@ public:
         return Member::toString() + "-" + std::to_string(this->cost) + "-" + std::to_string(this->skill_rating_score) + "-" + std::to_string(this->support_rating_score) + "-" + std::to_string(this->support_count) + "-" + statusToString(getStatus());
     }
 
-    std::vector<std::pair<Time, Time>> getPairList(){
-        return this->time_pair_list;
-    }
+    // std::vector<std::pair<Time, Time>> getPairList(){
+    //     return this->time_pair_list;
+    // }
 
+    WorkSchedule getSchedule(){
+        return this->workSchedule;
+    }
     // string getPairListToString(){
     //     string result = "";
     //     for (int i = 0; i < time_pair_list.size(); i++){
