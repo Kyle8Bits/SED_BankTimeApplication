@@ -1148,7 +1148,7 @@ public:
     }
 
     bool blockUser(){
-        cout << "Enter the username of the user that you want to block:";
+        cout << "Enter the id of the user that you want to block:";
         string input;
         getline(cin >> std::ws, input);
 
