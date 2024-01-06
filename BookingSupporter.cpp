@@ -21,8 +21,8 @@ class BookingSupporter{
     int host_rating;//THIS IS FOR HOST
     int skill_rating_score;//THIS IS FOR SUPPORTER - skill
     int supporter_rating_score;//THIS IS FOR SUPPORTER - character
-    string host_comment;
-    string supporter_comment; // supporter to host
+    string host_comment; //supporter to host
+    string supporter_comment; // host to supporter
     static int number_of_booking; //the number of the booking
     public:
         //CONSTRUCTOR
