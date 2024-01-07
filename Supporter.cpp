@@ -59,11 +59,6 @@ private:
     double skill_rating_score;
     double support_rating_score;
     int support_count;
-    //void rating(score){
-        // this->skill_rating_score;
-        //this->support_count++;
-        // this->skill_rating_score = (this->skill_raitng_score + score)/count)
-    // }
     Status status; 
     
 public:
@@ -92,38 +87,38 @@ public:
         }
     }
 
-    // bool addSkill(){
-    //     bool check = true;
+    bool addSkill(){
+        bool check = true;
         
-    //     while(check){
-    //         string user_input = "";
-    //         cout << "> Your skill: ";
-    //         getline(cin >> std::ws, user_input);
-    //         if(user_input.empty()){
-    //             cout << "Please input the non-empty value" << endl;
-    //             return false;
-    //         }else{
-    //             skill_list.push_back(user_input);//if the skill is not empty -> push it to the list
+        while(check){
+            string user_input = "";
+            cout << "> Your skill: ";
+            getline(cin >> std::ws, user_input);
+            if(user_input.empty()){
+                cout << "Please input the non-empty value" << endl;
+                return false;
+            }else{
+                skill_list.push_back(user_input);//if the skill is not empty -> push it to the list
 
-    //             cout << "Do you want to continue adding" << endl;
-    //             cout << "1. Yes, 2. No: ";
-    //             int choice; cin >> choice;
-    //             switch(choice){
-    //                 case 1:
-    //                     break;
-    //                 case 2:
-    //                     check = false;
-    //                     break;
-    //                 default:
-    //                     check = false;
-    //                     break;
-    //             }
-    //         }
-    //     }
+                cout << "Do you want to continue adding" << endl;
+                cout << "1. Yes, 2. No: ";
+                int choice; cin >> choice;
+                switch(choice){
+                    case 1:
+                        break;
+                    case 2:
+                        check = false;
+                        break;
+                    default:
+                        check = false;
+                        break;
+                }
+            }
+        }
 
-    //     cout << "Your skills are addedd" << endl;
-    //     return true;
-    // }
+        cout << "Your skills are addedd" << endl;
+        return true;
+    }
 
     void displayPersonalInformation() override{
         Member::displayPersonalInformation();
