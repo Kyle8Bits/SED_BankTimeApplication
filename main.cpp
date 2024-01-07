@@ -46,13 +46,14 @@ int main(){
     system.setBookingList(booking_list_from_file);
 
     bool request = true; // this boolean for the while loop belowcle
-    bool request_guest = true;
+    bool request_guest;
     bool request_member = false;
     bool request_admin = false;
     bool request_supporter = false;
 
     
     while(request){
+        char user_choice = ' ';  
         cout << "\t\t____________________________________\n"
              << "\t\t|        WELCOME TO TIME BANK       |\n"
              << "\t\t|                                   |\n"
@@ -66,11 +67,11 @@ int main(){
              << "\t\t-------------------------------------\n"
              << ">Your choice: ";
 
-        char user_choice = ' ';  
         cin >> user_choice;
         //Get the input of the user's ipnut
             switch(user_choice){
             case '1'://==================GUEST MENU=================
+                request_guest = true;
                 while(request_guest){
                     cout << "\t\t____________________________________\n"
                          << "\t\t|           WELCOME                 |\n"
@@ -203,6 +204,7 @@ int main(){
                                 clearScreen();
                                 system.blockUser();
                             }else if(member_choice == "10"){
+                                //CLEAR AVAILABLE SUPPORTER LIST WHENEVER SIGN OUT
                                 request_member = false;
                                 cout << "Returning to main dashboard" << endl;
                             } else {

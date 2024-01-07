@@ -434,7 +434,7 @@ public:
             logged_in_member->displayPersonalInformation();
             cout << endl;
         } else{
-            logged_in_supporter->displayBlockList();
+            logged_in_supporter->displayPersonalInformation();
         }
 
         // cout << "***MY INFORMATION***" << endl;
@@ -594,6 +594,8 @@ public:
                                 booking_list.push_back(booking);
                                 cout << "Your booking has been created" << endl;
                                 isValidSupporter = true;
+                                this->availableSupporter.clear();
+                                //clear after create booking to prevent push duplicated Supporter
                                 break; 
                             }else{
                                 //if the condition is wrong, we return the function
