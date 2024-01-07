@@ -825,6 +825,7 @@ public:
                                         }
 
                                     } else{
+                                        addHostScoreByID(current_job[i], 11);
                                         cout << "Return main page!" << endl;
                                         break;
                                     }
@@ -1049,17 +1050,18 @@ public:
             while (check){
                 cout << "Do you want to change your status to ONLINE [Y/N]";
                 cin >> option;
-                switch(option){
-                    case 'Y':
-                        logged_in_supporter->setStatus(Status::ONLINE);
+
+                if(option == 'Y' || option == 'y'){
+                    logged_in_supporter->setStatus(Status::ONLINE);
+                    cout << "Your status switch to ONLINE, people can book you now" << endl;
+                    check = false;
+                }
+                else if(option == 'N' || option == 'n'){
+                     cout << "Your status remaining OFFLINE" << endl;
                         check = false;
-                        break;
-                    case 'N':
-                        cout << "Your status remaining OFFLINE" << endl;
-                        check = false;
-                        break;
-                    default:
-                        cout << "Invalid input. Please input again" << endl;
+                }
+                else{
+                    cout << "Invalid input. Please input again" << endl;
                 }
             }
         }
@@ -1067,17 +1069,17 @@ public:
             while (check){
                 cout << "Do you want to change your status to OFFLINE [Y/N]";
                 cin >> option;
-                switch(option){
-                    case 'Y':
-                        logged_in_supporter->setStatus(Status::OFFLINE);
+               if(option == 'Y' || option == 'y'){
+                    logged_in_supporter->setStatus(Status::OFFLINE);
+                    cout << "Your status switch to OFFLINE, people can book you now" << endl;
+                    check = false;
+                }
+                else if(option == 'N' || option == 'n'){
+                     cout << "Your status remaining ONLINE" << endl;
                         check = false;
-                        break;
-                    case 'N':
-                        cout << "Your status remaining ONLINE" << endl;
-                        check = false;
-                        break;
-                    default:
-                        cout << "Invalid input. Please input again" << endl;
+                }
+                else{
+                    cout << "Invalid input. Please input again" << endl;
                 }
             }
         }         
