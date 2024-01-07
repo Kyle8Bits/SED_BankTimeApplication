@@ -22,4 +22,9 @@ public:
         return std::to_string(this->minute);
     }
 };
+
+struct WorkSchedule{
+    std::vector<std::pair<Time, Time>> time;
+    std::vector<string> weekday;
+};
 #endif 
