@@ -6,12 +6,16 @@
 #include <fstream>
 #include <string>
 #include "Time.cpp"
+#include "Member.cpp"
+#include "Supporter.cpp"
 
 using std::cout;
 using std::cin;
 using std::string;
 using std::endl;
 using std::to_string;
+
+#define loop(n) for(int i = 0; i < n; ++i)
 
 class BookingSupporter{
     private:
@@ -36,6 +40,49 @@ class BookingSupporter{
                 this->booking_id = booking_id + std::to_string(number_of_booking);//AUTO GENERATE THE ID FOR BOOKING
             }
         }
+
+    bool isInBlockList(std::vector<string> block_list, string block_id){
+        loop(block_list.size()){
+            if(block_list[i] == block_id){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    void displayAvailableSupporter(std::vector<Member*> member_list, Member* logged_in_member, Supporter* logged_in_supporter, std::vector<Supporter*>& availableSupporter) {
+        bool isSupporter = (logged_in_member == nullptr);
+        if (isSupporter) {
+            logged_in_member = logged_in_supporter;
+        }
+
+        std::cout << std::left << std::setw(12) << "|Member id |" << std::setw(15) << " Fullname     |" << std::setw(12) << " City      |"
+                << std::setw(25) << " Skill                  |" << std::setw(16) << " Cost Per Hour |" << std::setw(40) << " Introduction                |"
+                << std::setw(35) << " Work Day On                      |" << std::setw(30) << " Available Periods           |" << std::endl;
+        std::cout << std::setw(200) << std::setfill('-') << "" << std::setfill(' ') << std::endl;
+
+        for (size_t i = 0; i < member_list.size(); ++i) {
+            if (Supporter* supporter = dynamic_cast<Supporter*>(member_list[i])) {
+                if (supporter->getMemberId() != logged_in_member->getMemberId() && supporter->getStatus() == Status::ONLINE) {
+                    if (!isInBlockList(logged_in_member->block_list, supporter->getMemberId())) {
+                        std::cout << std::setw(15) << supporter->getMemberId() << std::setw(20) << supporter->getFullName()
+                                << std::setw(15) << supporter->getCity() << std::setw(30) << supporter->displaySkillList()
+                                << std::setw(20) << supporter->getCost() << std::setw(45) << supporter->getAboutMe()
+                                << std::setw(55) << supporter->displayWeekday() << std::setw(45) << supporter->displayTimePairList() << std::endl;
+                        std::cout << std::setw(200) << std::setfill('-') << "" << std::setfill(' ') << std::endl;
+
+                        availableSupporter.push_back(supporter);
+                    }
+                }
+            }
+        }
+
+        if (isSupporter) {
+            logged_in_member = nullptr;
+        }
+    }
+
+
 
         // Setter Functions
     void setBookingId (std::string new_booking_id){

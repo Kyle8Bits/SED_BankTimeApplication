@@ -4,6 +4,8 @@
 
 #include "System.cpp"
 #include "FileProcess.cpp"
+#include "Calendar.cpp"
+#include "DateTime.cpp"
 
 using std::cout;
 using std::string;
@@ -24,7 +26,12 @@ namespace colors {
 
 
 int main(){
-    clearScreen();
+    Calendar calendar;
+    DateTime today;
+
+    calendar.printCalendar(today.getThisYear(), today.getThisMonth());
+
+    // clearScreen();
     cout << "EEET2482/COSC2082 ASSIGNMENT\n"
         << "'TIME BANK' APPLICATION\n"
         << "Instructor: Mr. Tran Duc Linh\n"

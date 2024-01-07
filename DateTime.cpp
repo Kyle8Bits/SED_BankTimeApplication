@@ -22,6 +22,18 @@ public:
     void printDate() const {
         std::cout << "Current Date: " << year << '-' << month << '-' << day << std::endl;
     }
+
+    int getToday(){
+        return day;
+    }
+
+    int getThisMonth(){
+        return month;
+    }
+
+    int getThisYear(){
+        return year;
+    }
     
     void printDayOfWeek() const {
         const char* days[] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};

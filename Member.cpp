@@ -195,6 +195,7 @@ public:
     
     friend class System;//Make system is friend of Member
     friend class FileProcess;
+    friend class BookingSupporter;
 };
 
 int Member::number_of_member = 0;

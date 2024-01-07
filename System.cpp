@@ -24,6 +24,7 @@ using std::find;
 
 class System{
 private:
+    BookingSupporter booking;
     std::vector<Member*> member_list; 
     std::vector<BookingSupporter*> booking_list;
     std::vector<Supporter*> availableSupporter;//This to restrict for users only book the valid supporter id
@@ -470,49 +471,6 @@ public:
     //     // cout << "Time list: " << logged_in_supporter->getPairListToString();
     // }
 
-    bool isInBlockList(std::vector<string> block_list, string block_id){
-        loop(block_list.size()){
-            if(block_list[i] == block_id){
-                return true;
-            }
-        }
-        return false;
-    }
-
-    void displayAvailableSupporter(){
-        bool isSupporter = (logged_in_member == nullptr);
-        if(isSupporter){
-            logged_in_member = logged_in_supporter;
-        }
-        
-        cout << "****Available Supporter List****" << endl;
-        cout << "================================================================\n";
-        loop(this->member_list.size()){
-            if(Supporter* supporter = dynamic_cast<Supporter*>(member_list[i])){
-                //Go to each member to print the information
-                if(supporter->getMemberId() != logged_in_member->getMemberId() && supporter->getStatus() == Status::ONLINE){//advoid display the current logged in supporter information
-                    if(!isInBlockList(logged_in_member->block_list, supporter->getMemberId() )){
-                        //IF the current supporter is not in the block list, we wil print the information of supporter
-                        cout << "Supporter " << i + 1 << ": " << endl;
-                        cout << "Member id: " << supporter->getMemberId() <<endl;
-                        cout << "Fullname: " << supporter->getFullName() << endl;
-                        cout << "City: " << supporter->getCity() << endl;
-                        cout << "Skill: " << supporter->displaySkillList() << endl;
-                        cout << "Available Periods: \n" << supporter->displayTimePairList() << endl;
-                        cout << "Work Day On: " << supporter->displayWeekday()<< endl;
-                        cout << "Cost Per Hour: " << supporter->getCost() << endl;
-                        cout << "Introduction: " << supporter->getAboutMe() << endl;
-                        cout << "================================================================\n";
-                        availableSupporter.push_back(supporter);
-                    }
-                    //still push that supporter, even if it in the block list of the current users
-                }
-            }
-        }
-        if(isSupporter){
-            logged_in_member = nullptr;
-        }
-    }
 
     string toLower(string str){
         loop(str.length()){
@@ -545,6 +503,10 @@ public:
         return true;
     }
 
+    void displayAvailableSupporter(){
+        booking.displayAvailableSupporter(member_list, logged_in_member,  logged_in_supporter, availableSupporter);
+    }
+
     void createBooking(){
         cout << "****WELCOME TO BOOKING DASHBOARD****"<<endl;
         displayAvailableSupporter();
@@ -560,7 +522,7 @@ public:
                     logged_in_member = logged_in_supporter;//use this to prevent segment fault when the current users is supporter
                 }
                 if(logged_in_member->getCreditPoint() >= availableSupporter[i]->getCost()){//check the credit point of the users and the cost per hour of the supporter
-                    if(!isInBlockList(logged_in_member->getBlockList(), availableSupporter[i]->getMemberId())){
+                    if(!booking.isInBlockList(logged_in_member->getBlockList(), availableSupporter[i]->getMemberId())){
                         cout << "Choose the time you want to book. Noitce that: the time you choose must match with the free time of the supporter!" << endl;
                         int start_time_hour, start_time_minute, end_time_hour, end_time_minute;
                         string start_time_input, end_time_input;
@@ -1374,6 +1336,10 @@ public:
 
     void setIsAdmin(bool is_admin){
         this->is_admin = is_admin;
+    }
+
+    BookingSupporter getBooking(){
+        return this->booking;
     }
 
     ~System() {//Clear the member to advoid memory leak

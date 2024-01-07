@@ -170,10 +170,13 @@ public:
             return "EMPTY";
         }
         string time_pair_str = "";
+        string next_time_pair_str = "";
         for(int i = 0; i < workSchedule.time.size(); ++i){
-            time_pair_str += "<> From: " + workSchedule.time[i].first.getTime()+" To: " + workSchedule.time[i].second.getTime() + (i != workSchedule.time.size() - 1 ?"\n" : ""); 
+            next_time_pair_str += "From: " + workSchedule.time[i].first.getTime()+" To: " + workSchedule.time[i].second.getTime(); 
         }
-        return time_pair_str;
+        std::ostringstream oss;
+        oss << std::left << std::setw(125) << time_pair_str + next_time_pair_str;
+        return oss.str();
     }
 
     string displayWeekday(){
