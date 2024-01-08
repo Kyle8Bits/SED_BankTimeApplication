@@ -69,8 +69,8 @@ class BookingSupporter{
                                 <<"| " << std::setw(13) << supporter->getCity() <<"| "<< std::setw(23) << supporter->displaySkillList()
                                 <<"| "<< std::setw(14) << supporter->getCost() <<"| "<< std::setw(38) << supporter->getAboutMe()
                                 <<"| "<< std::setw(33) << supporter->displayWeekday() <<"| " << supporter->displayTimePairList() << std::endl;
+                       
                         std::cout << std::setw(186) << std::setfill('-') << "" << std::setfill(' ') << std::endl;
-
                         availableSupporter.push_back(supporter);
                     }
                 }
