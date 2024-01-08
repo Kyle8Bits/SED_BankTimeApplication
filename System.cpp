@@ -386,7 +386,7 @@ public:
         logged_in_member->setAboutMe(about_me_input);
         //create new pointer supporter
         
-        Supporter* new_supporter = new Supporter(*logged_in_member,workSchedule, skill_list_input, cost_input);
+        Supporter* new_supporter = new Supporter(*logged_in_member,workSchedule, Status::OFFLINE, skill_list_input, cost_input);
 
         // loop(workSchedule.weekday.size()){
         //     cout << workSchedule.weekday[i] << " ";
@@ -647,17 +647,35 @@ public:
     }
 
     void addHostScoreByID(string id, int rating){
-        string curretnUser;
+        string currentUser;
         loop(booking_list.size()){
             if(booking_list[i]->getBookingId() == id){
-                curretnUser = booking_list[i]->getHostId();
+                currentUser = booking_list[i]->getHostId();
                 break;
             }
         }
 
         loop(member_list.size()){
-            if(curretnUser == member_list[i]->getMemberId()){
+            if(currentUser == member_list[i]->getMemberId()){
                 member_list[i]->collectScore(rating);
+                break;
+            }
+        }
+    }
+
+    void addSupporterScoreByID(string id, int rating, int skill_rating){
+        string currentUser;
+        loop(booking_list.size()){
+            if(booking_list[i]->getBookingId() == id){
+                currentUser = booking_list[i]->getSupportId();
+                break;
+            }
+        }
+
+        loop(member_list.size()){
+            if(currentUser == member_list[i]->getMemberId()){
+                Supporter* supporter = dynamic_cast<Supporter*>(member_list[i]);
+                supporter->collectSupporterScore(rating, skill_rating);
                 break;
             }
         }
@@ -770,7 +788,7 @@ public:
                                                     }
                                                     //modify rating
                                                     setHostRatingById(current_job[i], rating);
-                                                    cout << "Leave comment about your host: " << endl;
+                                                    cout << "Leave comment about your host(Put 'x' if you dont want to comment): " << endl;
                                                     cout << ">Comment: "; 
                                                     string user_comment; 
                                                     getline(cin >> std::ws, user_comment);
@@ -789,6 +807,8 @@ public:
                                         }
 
                                     } else{
+                                        setHostRatingById(current_job[i], 11);
+                                        setHostCommentById(current_job[i], "x");
                                         addHostScoreByID(current_job[i], 11);
                                         cout << "Return main page!" << endl;
                                         break;
@@ -1153,12 +1173,12 @@ public:
                     switch(option){
                         case 1:
                             while(rate_check){
-                                cout << "Please rate your supporter (scale: 0 - 10)";
-                                cout << ">Rating: ";
-                                cin >> rating;
-                                cout << "How would you like this supporter (scale 0 - 10): ";
+                                cout << "Please rate your supporter's skill(scale: 0 - 10): ";
                                 cout << ">Rating: ";
                                 cin >> skill;
+                                cout << "How would you like this supporter (scale 0 - 10): ";
+                                cout << ">Rating: ";
+                                cin >> rating;
                                 if (rating <= 10 && rating >= 0 && skill <= 10 && skill >= 0){
                                     rate_check = false;
                                 }
@@ -1166,18 +1186,20 @@ public:
                                     cout << "Please enter the valid rating!" << endl;
                                 }
                             }
-                            cout << "Give some comment (Put blank if you do not want to comment): ";
+                            cout << "Give some comment (Put 'x' if you do not want to comment): ";
                             getline(cin >> std::ws, comment);
 
                             setSupportRatingById(skill, rating, comment, complete_list_id[i]);
+
+                            addSupporterScoreByID(complete_list_id[i],rating, skill);
 
                             cout << "Thank you for giving feedback" << endl;
                             check = false;
                             break;
                         case 2:
-                            setSupportRatingById(11, 11, " ", complete_list_id[i]);
-                            // booking_list[i]->setSupporterRatingScore(11);
-                            // booking_list[i]->setSkillRatingScore(11);
+                            setSupportRatingById(11, 11, "x", complete_list_id[i]);
+                            addSupporterScoreByID(complete_list_id[i],11,11);
+
                             check = false;
                             break;
                         default: 

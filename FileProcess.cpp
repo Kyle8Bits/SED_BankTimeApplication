@@ -129,37 +129,37 @@ public:
         }
         
         string username_from_file, password_from_file, id_from_file, full_name_from_file, phonenumber_from_file, address_from_file, city_from_file,crepoint_from_file, about_me_from_file; // varibles to store data from file and push into the list
-        string start_time_hour, start_time_minute, end_time_hour, end_time_minute, cost_from_file, skill_rating_score_file, support_rating_score_file, support_count_file,status_from_file, host_rating_score_file, host_count_file, person_not_comment_file;
+        string start_time_hour, start_time_minute, end_time_hour, end_time_minute, cost_from_file, skill_rating_score_file, support_rating_score_file, support_count_file, host_not_comment_file,status_from_file, host_rating_score_file, host_count_file, supporter_not_comment_file;
         std::vector<string> skill_list = {};
         std::vector<string> block_list = {};
         WorkSchedule workSchedule = {};
         
         while(getline(my_file, username_from_file, '-') &&  getline(my_file, password_from_file, '-') && getline(my_file, id_from_file, '-') && 
-              getline(my_file, full_name_from_file, '-') && getline(my_file, phonenumber_from_file, '-') && getline(my_file, address_from_file, '-') && getline(my_file, city_from_file, '-') && getline(my_file, crepoint_from_file, '-') && getline(my_file, host_rating_score_file,'-') && getline(my_file,host_count_file,'-')&& getline(my_file,person_not_comment_file,'-')){
+              getline(my_file, full_name_from_file, '-') && getline(my_file, phonenumber_from_file, '-') && getline(my_file, address_from_file, '-') && getline(my_file, city_from_file, '-') && getline(my_file, crepoint_from_file, '-') && getline(my_file, host_rating_score_file,'-') && getline(my_file,host_count_file,'-')&& getline(my_file,supporter_not_comment_file,'-')){
 
             char checkType = id_from_file[0];//this to check the id is M or S
-            
             Member* new_member = nullptr;//declare the new member & ready to push to the list
             if(checkType == 'M'){
                 block_list = readBlockList(id_from_file);
 
                 getline(my_file, about_me_from_file);// This to read about me from teh file, I can not but it in the while loop because it does neccessary for users
-                new_member = new Member(username_from_file, password_from_file, id_from_file, std::stoi(crepoint_from_file), full_name_from_file, phonenumber_from_file, address_from_file, city_from_file, about_me_from_file, std::stod(host_rating_score_file), std::stoi(host_count_file),std::stoi(person_not_comment_file), block_list);
+                new_member = new Member(username_from_file, password_from_file, id_from_file, std::stoi(crepoint_from_file), full_name_from_file, phonenumber_from_file, address_from_file, city_from_file, about_me_from_file, std::stod(host_rating_score_file), std::stoi(host_count_file),std::stoi(supporter_not_comment_file), block_list);
             } else if (checkType == 'S'){
                 getline(my_file, about_me_from_file, '-');
                 getline(my_file, cost_from_file, '-');
                 getline(my_file, skill_rating_score_file, '-');
                 getline(my_file, support_rating_score_file, '-');
                 getline(my_file, support_count_file,'-');
+                getline(my_file, host_not_comment_file,'-');
                 getline(my_file, status_from_file);
                 
                 skill_list = readSkillSupporter(id_from_file);
                 workSchedule = readWorkDay(id_from_file);
                 block_list = readBlockList(id_from_file);
+
                 new_member = new Supporter(username_from_file, password_from_file, id_from_file, std::stoi(crepoint_from_file), full_name_from_file, phonenumber_from_file, address_from_file, city_from_file, about_me_from_file,
-                                           std::stod(host_rating_score_file),std::stoi(host_count_file),std::stoi(person_not_comment_file), block_list, workSchedule, skill_list, std::stoi(cost_from_file), 
-                                           std::stod(skill_rating_score_file), std::stod(support_rating_score_file), std::stoi(support_count_file), statusEnum(status_from_file));
-                
+                                           std::stod(host_rating_score_file),std::stoi(host_count_file),std::stoi(supporter_not_comment_file), block_list, workSchedule, statusEnum(status_from_file), skill_list, std::stoi(cost_from_file), 
+                                           std::stod(skill_rating_score_file), std::stod(support_rating_score_file), std::stoi(support_count_file), std::stoi(host_not_comment_file));
             }
             if(new_member){
                 member_list.push_back(new_member);
@@ -167,7 +167,6 @@ public:
         }
         my_file.close();
         
-
         if(!member_list.empty()){//if the list is not empty, run teh code below
             string max_id = member_list[0]->getMemberId();
             string number_part = max_id.substr(1);// take the string from the second position to end (it will skill character "M")

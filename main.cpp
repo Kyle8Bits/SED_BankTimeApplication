@@ -30,7 +30,6 @@ int main(){
     DateTime today;
 
     calendar.printCalendar(today.getThisYear(), today.getThisMonth());
-
     // clearScreen();
     cout << "EEET2482/COSC2082 ASSIGNMENT\n"
         << "'TIME BANK' APPLICATION\n"
@@ -245,7 +244,7 @@ int main(){
                                 << "\t\t|                                                           |\n"
                                 << "\t\t|9. View my information                                     |\n"
                                 << "\t\t|                                                           |\n"
-                                << "\t\t|10. Change my status.                                       |\n"
+                                << "\t\t|10. Change my status.                                      |\n"
                                 << "\t\t*** Current status: "<<system.getCurrentStatus()<<"***\n"
                                 << "\t\t|                                                           |\n"
                                 << "\t\t|11. Sign out                                               |\n"
