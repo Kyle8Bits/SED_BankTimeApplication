@@ -56,10 +56,9 @@ class BookingSupporter{
             logged_in_member = logged_in_supporter;
         }
 
-        std::cout << std::left << std::setw(13) << "| Member id |" << std::setw(25) << " Fullname               |" << std::setw(15) << " City         |"
-                << std::setw(25) << " Skill                  |" << std::setw(16) << " Cost Per Hour |" << std::setw(40) << " Introduction                          |"
-                << std::setw(35) << " Work Day On                      |" << std::setw(30) << " Available Periods           |" << std::endl;
-        std::cout << std::setw(186) << std::setfill('-') << "" << std::setfill(' ') << std::endl;
+        cout << std::left << std::setw(13) << "| Member id |" << std::setw(25) << " Fullname               |" << std::setw(15) << " City         |"
+                << std::setw(16) << " Cost Per Hour |" << std::setw(40) << " Introduction                          |"  << std::setw(40) << " Skill                                 |" << endl;
+        cout << std::setw(149) << std::setfill('-') << "" << std::setfill(' ') << std::endl;
 
         for (size_t i = 0; i < member_list.size(); ++i) {
             if (Supporter* supporter = dynamic_cast<Supporter*>(member_list[i])) {
@@ -69,8 +68,8 @@ class BookingSupporter{
                                 <<"| " << std::setw(13) << supporter->getCity() <<"| "<< std::setw(23) << supporter->displaySkillList()
                                 <<"| "<< std::setw(14) << supporter->getCost() <<"| "<< std::setw(38) << supporter->getAboutMe()
                                 <<"| "<< std::setw(33) << supporter->displayWeekday() <<"| " << supporter->displayTimePairList() << std::endl;
-                       
                         std::cout << std::setw(186) << std::setfill('-') << "" << std::setfill(' ') << std::endl;
+
                         availableSupporter.push_back(supporter);
                     }
                 }

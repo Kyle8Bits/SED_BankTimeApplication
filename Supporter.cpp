@@ -66,7 +66,7 @@ public:
     Supporter(string user_name = "", string pass_word = "", string member_id = "S", int credit_point = 20, string full_name = "", string phone_number = "", 
     string address = "", string city = "", string about_me = "",double host_rating_score = 0, 
     int host_count = 0, int spt_not_comment = 0, std::vector<string> block_list = {}, WorkSchedule workSchedule = {}, Status status = Status::OFFLINE, 
-    std::vector<string> skill_list = {}, int cost = 0, double skill_rating_score = 0, double support_rating_score = 0, int host_not_comment = 0, int support_count = 0)
+    std::vector<string> skill_list = {}, int cost = 0, double skill_rating_score = 0, double support_rating_score = 0, int support_count = 0, int host_not_comment = 0)
     : Member(user_name, pass_word, member_id, credit_point, full_name, phone_number, address, city, about_me,
             host_rating_score, host_count, spt_not_comment, block_list), 
             workSchedule(workSchedule), status(status), skill_list(skill_list), cost(cost), skill_rating_score(skill_rating_score),
@@ -89,22 +89,23 @@ public:
     }
 
     void collectSupporterScore(int score, int skill){
-        this->support_count++;
         int person_comment = this->support_count - this->host_not_comment; //8 - 6 - 2
         if(score != 11 && skill != 11){
             if(support_count == 0){
                 this->support_rating_score = score;
                 this->skill_rating_score = skill;
-
+                this->support_count++;
             }
             else{
                 person_comment++; 
                 this->support_rating_score = static_cast<double>(this->support_rating_score*(person_comment-1) + score)/person_comment;
                 this->skill_rating_score = static_cast<double>(this->skill_rating_score*(person_comment-1) + skill)/person_comment;
+                this->support_count++;
             }//                                                         
         }
         else{
             this->host_not_comment++;
+            this->support_count++;
         }
     }
 
@@ -148,6 +149,7 @@ public:
         cout << "My Skill Rating Score: " << this->skill_rating_score << endl;
         cout << "My Support Rating Score: " << this->support_rating_score << endl;
         cout << "My Support Count: " << this->support_count << endl;
+        cout << "Not comment: " << this->host_not_comment << endl;
         cout << "My Current Status: " << statusToString(status) << endl;
         cout << "My Availability Period: " << this->displayTimePairList() << endl;
 
