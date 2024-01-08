@@ -145,17 +145,19 @@ public:
                 getline(my_file, about_me_from_file);// This to read about me from teh file, I can not but it in the while loop because it does neccessary for users
                 new_member = new Member(username_from_file, password_from_file, id_from_file, std::stoi(crepoint_from_file), full_name_from_file, phonenumber_from_file, address_from_file, city_from_file, about_me_from_file, std::stod(host_rating_score_file), std::stoi(host_count_file),std::stoi(supporter_not_comment_file), block_list);
             } else if (checkType == 'S'){
-                getline(my_file, about_me_from_file, '-');
-                getline(my_file, cost_from_file, '-');
-                getline(my_file, skill_rating_score_file, '-');
-                getline(my_file, support_rating_score_file, '-');
-                getline(my_file, support_count_file,'-');
-                getline(my_file, host_not_comment_file,'-');
-                getline(my_file, status_from_file);
+                getline(my_file, about_me_from_file, '-'); //Be the one
+                getline(my_file, cost_from_file, '-'); // 16
+                getline(my_file, skill_rating_score_file, '-'); //9
+                getline(my_file, support_rating_score_file, '-');//9
+                getline(my_file, support_count_file,'-');//2
+                getline(my_file, host_not_comment_file,'-');//0
+                getline(my_file, status_from_file);//online
                 
                 skill_list = readSkillSupporter(id_from_file);
                 workSchedule = readWorkDay(id_from_file);
                 block_list = readBlockList(id_from_file);
+
+                cout << host_not_comment_file << " Total" << support_count_file << endl;
 
                 new_member = new Supporter(username_from_file, password_from_file, id_from_file, std::stoi(crepoint_from_file), full_name_from_file, phonenumber_from_file, address_from_file, city_from_file, about_me_from_file,
                                            std::stod(host_rating_score_file),std::stoi(host_count_file),std::stoi(supporter_not_comment_file), block_list, workSchedule, statusEnum(status_from_file), skill_list, std::stoi(cost_from_file), 
