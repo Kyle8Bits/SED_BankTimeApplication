@@ -499,27 +499,44 @@ public:
         return str;
     }
 
-    bool checkValidTime(string time){
-        for(int i = 0; i < time.length(); ++i){
-            if(!isdigit(time[i]) && time[i] != ':'){
+    bool checkValidTime(string time) {
+        
+        if (time.length() != 5) {
+            return false;
+        }
+
+        
+        for (int i = 0; i < time.length(); ++i) {
+            if ((i < 2 && !isdigit(time[i])) || (i == 2 && time[i] != ':') || (i > 2 && !isdigit(time[i]))) {
                 return false;
             }
         }
+
+        
+        int hours = stoi(time.substr(0, 2));
+        int minutes = stoi(time.substr(3, 2));
+
+        if (hours < 0 || hours > 23 || minutes < 0 || minutes > 59) {
+            return false;
+        }
+
         return true;
     }
 
-    bool checkValidTime(int start_hour, int start_minute, int end_hour, int end_minute){
-        if(start_hour < 0 || start_hour > 23 || start_minute < 0 || start_minute > 59 || 
-           end_hour < 0 || end_hour > 23 || end_minute < 0 || end_minute > 59){
-            cout << "Please enter the the true range~!" << endl;
+    bool checkValidTime(int start_hour, int start_minute, int end_hour, int end_minute) {
+
+        if (start_hour < 0 || start_hour > 23 || start_minute < 0 || start_minute > 59 ||
+            end_hour < 0 || end_hour > 23 || end_minute < 0 || end_minute > 59) {
+            cout << "Please enter the true range!" << endl;
+            
             return false;
         }
 
-        if(end_hour < start_hour || (end_hour == start_hour && end_minute <= start_minute)){
-            cout << "Your end time must larger than your start time!" << endl;
+        if (end_hour < start_hour || (end_hour == start_hour && end_minute <= start_minute)) {
+            cout << "Your end time must be larger than your start time!" << endl;
             return false;
         }
-        
+
         return true;
     }
 

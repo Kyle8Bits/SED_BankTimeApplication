@@ -180,10 +180,9 @@ public:
     string scheduleToString(){
         string result = "";
         for(int i =0 ; i < workSchedule.size(); i++){
-            result += workSchedule[i].first + "-";
+            result += "-" + workSchedule[i].first + "-";
             for(int a  = 0 ; a < workSchedule[i].second.size(); a++){
                 result += workSchedule[i].second[a].first.getTime() + "=" + workSchedule[i].second[a].second.getTime() + "-";
-                result += (a = workSchedule[i].second.size()-1) ? "|" : "";
             }
         }
         return result;
@@ -232,12 +231,13 @@ public:
             cout<< std::left << std::setw(30)<< "|> Work Schedule:" <<"|" << endl;
 
             for(int i =0 ; i < workSchedule.size(); i++){
+                cout << "-------------------------------"<< endl;
                 cout << "| " << std::left << std::setw(28) << workSchedule[i].first << "|" << endl;
                 for(int a  = 0 ; a < workSchedule[i].second.size(); a++){
-                    cout << std::left << std::setw(5) << workSchedule[i].second[a].first.getTime() << " to " << std::setw(8)<<workSchedule[i].second[a].second.getTime() << "|" << endl;
+                    cout <<"| "<< std::left << std::setw(5) << workSchedule[i].second[a].first.getTime() << " to " << std::setw(19)<<workSchedule[i].second[a].second.getTime() << "|" << endl;
                 }
             }
-            cout << std::setw(30) << std::setfill('-') << endl;
+            // cout << std::setw(30) << std::setfill('-') << endl;
         }
         
     }
