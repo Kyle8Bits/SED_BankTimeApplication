@@ -79,7 +79,7 @@ public:
             loop(member_list.size()){
                 //check the memberlist at index i is the supporter or not
                 if (Supporter* supporter = dynamic_cast<Supporter*>(member_list[i])) {
-                    my_file << supporter->getMemberId() << "-" << supporter->timePairToString() << "|" << supporter->weekDayToString() << endl;
+                    my_file << supporter->getMemberId() << "|" << supporter->scheduleToString() << endl;
                     //Print the skill list with format ID1-STIME#ETIME1-STIME#ETIME2
                     //                                 ID2-STIME#ETIME1-STIME#ETIME2
                 }
@@ -132,7 +132,7 @@ public:
         string start_time_hour, start_time_minute, end_time_hour, end_time_minute, cost_from_file, skill_rating_score_file, support_rating_score_file, support_count_file, host_not_comment_file,status_from_file, host_rating_score_file, host_count_file, supporter_not_comment_file;
         std::vector<string> skill_list = {};
         std::vector<string> block_list = {};
-        WorkSchedule workSchedule = {};
+        std::vector< std::pair< string, std:: vector< std::pair< Time, Time> > > > workSchedule = {};
         
         while(getline(my_file, username_from_file, '-') &&  getline(my_file, password_from_file, '-') && getline(my_file, id_from_file, '-') && 
               getline(my_file, full_name_from_file, '-') && getline(my_file, phonenumber_from_file, '-') && getline(my_file, address_from_file, '-') && getline(my_file, city_from_file, '-') && getline(my_file, crepoint_from_file, '-') && getline(my_file, host_rating_score_file,'-') && getline(my_file,host_count_file,'-')&& getline(my_file,supporter_not_comment_file,'-')){
@@ -244,10 +244,11 @@ public:
         return block_list;
     }
 
-    WorkSchedule readWorkDay(string id_time){
-        WorkSchedule workSchedule;
+    std::vector< std::pair< string, std:: vector< std::pair< Time, Time> > > > readWorkDay(string id_time){
+        std::vector< std::pair< string, std:: vector< std::pair< Time, Time> > > > workSchedule;
         std::vector<std::pair<Time, Time>> time_pair_list;
-        std::vector<string> weekday_list;
+        std:: string weekday;
+
         std::fstream my_file;
         my_file.open(TIMEFILE, std::ios::in);
         if (!my_file.is_open()) {
@@ -255,36 +256,35 @@ public:
             return workSchedule;
         }
         
-        string day_week;
-        string time_pair, id;
+        string time_pair, id, day_week;
+
         Time start_time, end_time;
-        while(getline(my_file, id, '-')){
+        while(getline(my_file, id, '|')){
             if(id == id_time){
-                while(getline(my_file, time_pair, '-') && time_pair[0] != '|'){
+                while(getline(my_file, day_week, '-') && time_pair[0] != '\n'){
+                    while(getline(my_file,time_pair,'-') && (time_pair[0] != '|' || time_pair[0] != '\n')){
                     //This skill[0] != '\n to stop the function when the skill at index 0 is newline
-                    std::stringstream iss;
-                    int start_hour, start_min, end_hour, end_min;
-                    
-                    iss << time_pair;
-                    
-                    iss >> start_hour;
-                    iss.ignore();
-                    iss >> start_min;
-                    iss.ignore();
-                    iss >> end_hour;
-                    iss.ignore();
-                    iss >> end_min;
-                    
-                    workSchedule.time.push_back(std::make_pair(Time(start_hour, start_min), Time(end_hour, end_min)));
+                        std::stringstream iss;
+                        int start_hour, start_min, end_hour, end_min;
+                        
+                        iss << time_pair;
+                        
+                        iss >> start_hour;
+                        iss.ignore();
+                        iss >> start_min;
+                        iss.ignore();
+                        iss >> end_hour;
+                        iss.ignore();
+                        iss >> end_min;
+                        
+                        time_pair_list.push_back(std::make_pair(Time(start_hour, start_min), Time(end_hour, end_min)));
+                    }
+                    workSchedule.push_back(std::make_pair(day_week,time_pair_list));
                 }
-                while (getline(my_file, day_week,'-') && day_week[0] != '\n'){
-                    workSchedule.weekday.push_back(day_week);
-                }
-                
                 break;
             }
             //if the id is not match, skip the rest of the file
-            getline(my_file,time_pair);
+            getline(my_file,day_week);
         } 
         my_file.close();
         return workSchedule;

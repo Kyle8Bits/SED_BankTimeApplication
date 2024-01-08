@@ -54,7 +54,7 @@ private:
     Time start_time; // (start time, end time, day)
     Time end_time;
     std::vector<string> skill_list;
-    WorkSchedule workSchedule;
+    std::vector< std::pair< string, std:: vector< std::pair< Time, Time> > > > workSchedule;
     int cost;//this use for the cost of the supportter per hour
     double skill_rating_score=0;
     double support_rating_score= 0;
@@ -65,7 +65,7 @@ private:
 public:
     Supporter(string user_name = "", string pass_word = "", string member_id = "S", int credit_point = 20, string full_name = "", string phone_number = "", 
     string address = "", string city = "", string about_me = "",double host_rating_score = 0, 
-    int host_count = 0, int spt_not_comment = 0, std::vector<string> block_list = {}, WorkSchedule workSchedule = {}, Status status = Status::OFFLINE, 
+    int host_count = 0, int spt_not_comment = 0, std::vector<string> block_list = {}, std::vector< std::pair< string, std:: vector< std::pair< Time, Time> > > > workSchedule = {}, Status status = Status::OFFLINE, 
     std::vector<string> skill_list = {}, int cost = 0, double skill_rating_score = 0, double support_rating_score = 0, int support_count = 0, int host_not_comment = 0)
     : Member(user_name, pass_word, member_id, credit_point, full_name, phone_number, address, city, about_me,
             host_rating_score, host_count, spt_not_comment, block_list), 
@@ -78,7 +78,7 @@ public:
     }
     
     //paste the Member to the Supporet (It's like copy constructor)
-    Supporter(const Member& member,WorkSchedule workSchedule, Status status = Status::OFFLINE,std::vector<string> skill_list = {}, int cost = 0,
+    Supporter(const Member& member,std::vector< std::pair< string, std:: vector< std::pair< Time, Time> > > > workSchedule, Status status = Status::OFFLINE,std::vector<string> skill_list = {}, int cost = 0,
               double skill_rating_score = 0, double support_rating_score = 0, int support_count = 0):
               Member(member), workSchedule(workSchedule), status(status), skill_list(skill_list), cost(cost), 
               skill_rating_score(skill_rating_score), support_rating_score(support_rating_score), support_count(support_count) ,host_not_comment(host_not_comment)
@@ -151,7 +151,7 @@ public:
         cout << "My Support Count: " << this->support_count << endl;
         cout << "Not comment: " << this->host_not_comment << endl;
         cout << "My Current Status: " << statusToString(status) << endl;
-        cout << "My Availability Period: " << this->displayTimePairList() << endl;
+        this->displayWorkSchedule();
 
     }
 
@@ -166,49 +166,80 @@ public:
         return skill_list_str;
     }
 
-    string timePairToString(){
-        if(workSchedule.time.empty()){
-            return "";
+    // string timePairToString(){
+    //     if(workSchedule.time.empty()){
+    //         return "";
+    //     }
+    //     string time_pair_str = workSchedule.time[0].first.getTime()+"="+ (workSchedule.time[0]).second.getTime()+"-";
+    //     for(int i = 1; i < workSchedule.time.size(); ++i){
+    //         time_pair_str += workSchedule.time[i].first.getTime()+"="+ workSchedule.time[i].second.getTime()+"-"; 
+    //     }
+    //     return time_pair_str;
+    // }
+
+    string scheduleToString(){
+        string result = "";
+        for(int i =0 ; i < workSchedule.size(); i++){
+            result += workSchedule[i].first + "-";
+            for(int a  = 0 ; a < workSchedule[i].second.size(); a++){
+                result += workSchedule[i].second[a].first.getTime() + "=" + workSchedule[i].second[a].second.getTime() + "-";
+                result += (a = workSchedule[i].second.size()-1) ? "|" : "";
+            }
         }
-        string time_pair_str = workSchedule.time[0].first.getTime()+"="+ (workSchedule.time[0]).second.getTime()+"-";
-        for(int i = 1; i < workSchedule.time.size(); ++i){
-            time_pair_str += workSchedule.time[i].first.getTime()+"="+ workSchedule.time[i].second.getTime()+"-"; 
-        }
-        return time_pair_str;
+        return result;
     }
 
-    string weekDayToString(){
-        if(workSchedule.weekday.empty()){
-            return "";
-        }
-        string weekday_str = "Day-" + workSchedule.weekday[0]+"-";
-        for(int i = 1; i < workSchedule.weekday.size(); ++i){
-            weekday_str += workSchedule.weekday[i] +"-"; 
-        }
-        return weekday_str;
-    }
+    // string weekDayToString(){
+    //     if(workSchedule.weekday.empty()){
+    //         return "";
+    //     }
+    //     string weekday_str = "Day-" + workSchedule.weekday[0]+"-";
+    //     for(int i = 1; i < workSchedule.weekday.size(); ++i){
+    //         weekday_str += workSchedule.weekday[i] +"-"; 
+    //     }
+    //     return weekday_str;
+    // }
 
-    string displayTimePairList(){
-        if(workSchedule.time.empty()){
-            return "EMPTY";
-        }
-        string time_pair_str = "";
-        string next_time_pair_str = "";
-        for(int i = 0; i < workSchedule.time.size(); ++i){
-            time_pair_str += "From: " + workSchedule.time[i].first.getTime()+" To: " + workSchedule.time[i].second.getTime(); 
-        }
-        return time_pair_str;
-    }
+    // string displayTimePairList(){
+    //     if(workSchedule.time.empty()){
+    //         return "EMPTY";
+    //     }
+    //     string time_pair_str = "";
+    //     string next_time_pair_str = "";
+    //     for(int i = 0; i < workSchedule.time.size(); ++i){
+    //         time_pair_str += "From: " + workSchedule.time[i].first.getTime()+" To: " + workSchedule.time[i].second.getTime(); 
+    //     }
+    //     return time_pair_str;
+    // }
 
-    string displayWeekday(){
-        if(workSchedule.weekday.empty()){
-            return "EMPTY";
+    // string displayWeekday(){
+    //     if(workSchedule.weekday.empty()){
+    //         return "EMPTY";
+    //     }
+    //     string week_day = "";
+    //     for(int i = 0; i < workSchedule.weekday.size(); ++i){
+    //         week_day += workSchedule.weekday[i] + (i != workSchedule.weekday.size() -1 ? "-" : ""); 
+    //     }
+    //     return week_day;
+    // }
+
+    void displayWorkSchedule(){
+        if(workSchedule.empty()){
+            cout << "EMPTY" << endl;
         }
-        string week_day = "";
-        for(int i = 0; i < workSchedule.weekday.size(); ++i){
-            week_day += workSchedule.weekday[i] + (i != workSchedule.weekday.size() -1 ? "-" : ""); 
+        else{
+            cout << "-------------------------------"<< endl;
+            cout<< std::left << std::setw(30)<< "|> Work Schedule:" <<"|" << endl;
+
+            for(int i =0 ; i < workSchedule.size(); i++){
+                cout << "| " << std::left << std::setw(28) << workSchedule[i].first << "|" << endl;
+                for(int a  = 0 ; a < workSchedule[i].second.size(); a++){
+                    cout << std::left << std::setw(5) << workSchedule[i].second[a].first.getTime() << " to " << std::setw(8)<<workSchedule[i].second[a].second.getTime() << "|" << endl;
+                }
+            }
+            cout << std::setw(30) << std::setfill('-') << endl;
         }
-        return week_day;
+        
     }
 
     string displaySkillList(){//THIS USING FOR DISPLAYING
@@ -263,9 +294,6 @@ public:
     //     return this->time_pair_list;
     // }
 
-    WorkSchedule getSchedule(){
-        return this->workSchedule;
-    }
     // string getPairListToString(){
     //     string result = "";
     //     for (int i = 0; i < time_pair_list.size(); i++){

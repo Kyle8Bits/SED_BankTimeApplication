@@ -68,8 +68,7 @@ class BookingSupporter{
                                 <<"| " << std::setw(13) << supporter->getCity() <<"| "<< std::setw(14) << supporter->getCost() 
                                 <<"| " << std::setw(38) << supporter->getAboutMe() << "| " <<std::setw(38) << supporter->displaySkillList() <<"|"<< endl;
 
-                        cout <<"Workday: "<< std::setw(186) << supporter->displayWeekday() << endl;
-                        cout << "Available periods: " << supporter->displayTimePairList() << endl;
+                        supporter->displayWorkSchedule();
 
                         cout << std::setw(149) << std::setfill('-') << "" << std::setfill(' ') << endl;
 
