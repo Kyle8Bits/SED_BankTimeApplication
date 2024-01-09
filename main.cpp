@@ -25,7 +25,9 @@ int main(){
     Calendar calendar;
     RealTime today;
 
-    calendar.printCalendar(today.getThisYear(), today.getThisMonth());
+    calendar.printCalendar(2024, 2);
+
+    cout << "Day of week " << calendar.calculateDayOfWeek(19, 12, 2003) << endl;
     // clearScreen();
     cout << "EEET2482/COSC2082 ASSIGNMENT\n"
         << "'TIME BANK' APPLICATION\n"

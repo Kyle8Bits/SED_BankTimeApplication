@@ -290,6 +290,10 @@ public:
         return Member::toString() + "-" + std::to_string(this->cost) + "-" + std::to_string(this->skill_rating_score) + "-" + std::to_string(this->support_rating_score) + "-" + std::to_string(this->support_count) + "-" + std::to_string(this->host_not_comment) +  "-" + statusToString(getStatus());
     }
 
+    std::vector< std::pair< string, std:: vector< std::pair< Time, Time> > > > getWorkSchedule(){
+        return workSchedule;
+    }
+
     // std::vector<std::pair<Time, Time>> getPairList(){
     //     return this->time_pair_list;
     // }

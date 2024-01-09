@@ -31,7 +31,9 @@ namespace colors{
     const char* RESET = "\033[0m";  
 }
 
-#define Error() cout << colors::RED << "\t\tERROR: PLease Enter Valid Input!" << colors::RESET << std::endl;
+#define BookingTimeError() cout << colors::RED << "\t\tERROR: This supporter work schedule do not match your booking time" << colors::RESET << std::endl;
+#define LogicTimeError() cout << colors::RED << "\t\tERROR: The start time must come before the endtime" << colors::RESET << std::endl;
+#define TimeFormatError() cout << colors::RED << "\t\tERROR: The time must be in form HH:MM" << colors::RESET << std::endl;
 #define BlockError() cout << colors::RED << "\t\tERROR: You can not book a supporter in your block list" << colors::RESET << std::endl;
 #define InsufficientPointError() cout << colors::RED << "\t\tERROR: Insufficient credit points to book this supporter" << colors::RESET << std::endl;
 #define SucessBooking() cout << colors::GREEN << "\t\tYour booking has been created" << colors::RESET << endl;
@@ -370,8 +372,11 @@ public:
                                 ss2.ignore();
                                 ss2 >> end_time_minute;
 
-                                if (!checkValidTime(start_time_input) && !checkValidTime(end_time_input) && !checkValidTime(start_time_hour, start_time_minute,end_time_hour, end_time_minute)){
+                                if (!checkValidTime(start_time_input) && !checkValidTime(end_time_input)){
                                     cout << "Invalid format! Please enter in the form HH:MM." << endl;
+                                }
+                                else if(!compareTimes(start_time_input, end_time_input)){
+                                    cout << "Invalid! The start time must come before the end time";
                                 }
                                 else{
                                     time_pair_list.push_back(std::make_pair(Time(start_time_hour, start_time_minute), Time(end_time_hour, end_time_minute)));
@@ -546,22 +551,61 @@ public:
         return true;
     }
 
-    bool checkValidTime(int start_hour, int start_minute, int end_hour, int end_minute) {
+    bool compareTimes( string time1, string time2) {
+        std::istringstream stream1(time1);
+        std::istringstream stream2(time2);
 
-        if (start_hour < 0 || start_hour > 23 || start_minute < 0 || start_minute > 59 ||
-            end_hour < 0 || end_hour > 23 || end_minute < 0 || end_minute > 59) {
-            cout << "Please enter the true range!" << endl;
-            
+        int hours1, minutes1, hours2, minutes2;
+
+        char colon; // To consume the ':' character
+
+        // Parse the first time
+        stream1 >> hours1 >> colon >> minutes1;
+
+        // Parse the second time
+        stream2 >> hours2 >> colon >> minutes2;
+
+        // Compare hours
+        if (hours1 < hours2) {
+            return true;
+        } else if (hours1 > hours2) {
             return false;
         }
 
-        if (end_hour < start_hour || (end_hour == start_hour && end_minute <= start_minute)) {
-            cout << "Your end time must be larger than your start time!" << endl;
-            return false;
-        }
-
-        return true;
+        // Hours are equal, compare minutes
+        return (minutes1 <= minutes2);
     }
+
+    bool isTimeIntervalContained(string start1, string end1, string start2, string end2) {
+        // Check if start1 is equal to or after start2
+        bool startCondition = compareTimes(start1, start2) || start1 == start2;
+
+        // Check if end1 is equal to or before end2
+        bool endCondition = compareTimes(end2, end1) || end1 == end2;
+
+        // If both conditions are met, the first interval is contained within the second interval
+        return startCondition && endCondition;
+    }
+
+    bool isSupporterAvilableInBookingTime(string id, int dayOfweek ,string start_time_booking, string end_time_booking){
+        Supporter* booked_supporter;
+        loop(member_list.size()){
+            if (member_list[i]->getMemberId() == id){
+                booked_supporter == member_list[i];
+                break;
+            }
+        }
+
+
+    
+        loop(booked_supporter->getWorkSchedule().size()){
+            if( == booked_supporter->getWorkSchedule()[i].first){
+
+            }
+        }
+
+    }
+
 
     void displayAvailableSupporter(){
         booking.displayAvailableSupporter(member_list, logged_in_member,  logged_in_supporter, availableSupporter);
@@ -620,7 +664,9 @@ public:
                         ss_end_time.ignore();
                         ss_end_time >> end_time_minute;
 
-                        if(checkValidTime(start_time_hour, start_time_minute, end_time_hour, end_time_minute)){
+                        if(compareTimes(start_time_input, end_time_input)){
+                            
+
                             //****CHECK CREDIT POINT****
 
                             int total_cost = findCreditPointFromTime(start_time_hour, start_time_minute, end_time_hour, end_time_minute, availableSupporter[i]->getCost());
@@ -651,11 +697,11 @@ public:
                                 break;
                             }
                         }else{
-                            Error();
+                            LogicTimeError();
                             return;
                         }
                     }else{
-                        Error();
+                        TimeFormatError();
                         return;
                     }            
                     }else{

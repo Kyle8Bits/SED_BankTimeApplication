@@ -45,7 +45,7 @@ class Calendar{
             dayOfWeek += 7;
         }
 
-        return dayOfWeek;
+        return dayOfWeek + 2;
     }
 
     void printCalendar(int year, int month) {
