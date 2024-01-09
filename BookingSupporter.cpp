@@ -64,11 +64,13 @@ class BookingSupporter{
             if (Supporter* supporter = dynamic_cast<Supporter*>(member_list[i])) {
                 if (supporter->getMemberId() != logged_in_member->getMemberId() && supporter->getStatus() == Status::ONLINE) {
                     if (!isInBlockList(logged_in_member->block_list, supporter->getMemberId())) {
-                        std::cout <<"| "<< std::setw(10) << supporter->getMemberId() <<"| "<<std::setw(23) << supporter->getFullName()
-                                <<"| " << std::setw(13) << supporter->getCity() <<"| "<< std::setw(23) << supporter->displaySkillList()
-                                <<"| "<< std::setw(14) << supporter->getCost() <<"| "<< std::setw(38) << supporter->getAboutMe()
-                                <<"| "<< std::setw(33) << supporter->displayWeekday() <<"| " << supporter->displayTimePairList() << std::endl;
-                        std::cout << std::setw(186) << std::setfill('-') << "" << std::setfill(' ') << std::endl;
+                        cout <<"| "<< std::setw(10) << supporter->getMemberId() <<"| "<<std::setw(23) << supporter->getFullName()
+                                <<"| " << std::setw(13) << supporter->getCity() <<"| "<< std::setw(14) << supporter->getCost() 
+                                <<"| " << std::setw(38) << supporter->getAboutMe() << "| " <<std::setw(38) << supporter->displaySkillList() <<"|"<< endl;
+
+                        supporter->displayWorkSchedule();
+
+                        cout << std::setw(149) << std::setfill('-') << "" << std::setfill(' ') << endl;
 
                         availableSupporter.push_back(supporter);
                     }

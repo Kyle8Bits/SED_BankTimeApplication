@@ -241,13 +241,11 @@ public:
         return false;
     }
     
-    bool checkDuplicateDay(std::vector<WorkSchedule>list, string choose){
+    bool checkDuplicateDay(std::vector< std::pair< string, std:: vector< std::pair< Time, Time> > > > list, string choose){
         bool check = true;
-        loop(list.size()){
-            for (int a = 0; a < (list[i].weekday).size(); a++){
-                if (list[i].weekday[a] == choose){
-                    check == false;
-                }
+        loop(list.size()){ 
+            if (list[i].first == choose){
+                check == false;
             }
         }
         return check;
@@ -278,9 +276,9 @@ public:
         cout << "First, you need to add some skills that you have" << endl;
         bool check = true;
         std::vector<string> skill_list_input;
-        std::vector<WorkSchedule> workSchedule;
-        WorkSchedule workScheduleItem;
+        std::vector< std::pair< string, std:: vector< std::pair< Time, Time> > > > workSchedule;
         std::vector<std::pair<Time,Time>> time_pair_list;
+        string weekday;
         while(check){
             cout << ">Your skill:";
             getline(cin >> std::ws, skill_input);
@@ -300,9 +298,8 @@ public:
         while(schedule_check){
         //----------------------THIS FOR GETTING THE WEEKLY WORKDAY----------------
             int day_choice;
-            bool check3 = true;
-            while(check3){
 
+            while(schedule_check){
                 cout<<"Please enter which days of the week you work.\n";
                 cout << "1. Monday \n"
                     << "2. Tuesday \n"
@@ -314,9 +311,7 @@ public:
                 cout <<"=============================================================" << endl;
                 cout << "Already in the list: ";
                 loop(workSchedule.size()){
-                    for (int a = 0; a < (workSchedule[i].weekday).size() ; a++){
-                        cout << workSchedule[i].weekday[a] << ", ";
-                    }
+                    cout << workSchedule[i].first << "-";
                 }
 
                 cout << "\n";
@@ -329,44 +324,65 @@ public:
                         cout << "You already select this day, please choose another day" << endl;
                     }
                     else{
-                        string start_time_input, end_time_input;
-                        int start_time_hour, start_time_minute, end_time_hour, end_time_minute;
-                        cout << "What is your free time (ex: 8:00 to 10:00, or 20:30 to 22:00)" << endl;
-                        //----------------------THIS FOR GETTING START TIME---------------------
-                        bool check2 = true;
-                        while(check2){
-                            cout << "Start time: ";
-                            getline(cin >> std::ws, start_time_input);
-                            std::stringstream ss1;
-                            ss1 << start_time_input;//Get the startime to the ss1
 
-                            ss1 >> start_time_hour;
-                            ss1.ignore();//ignore the colon
-                            ss1 >> start_time_minute;
-                            
-                            //----------------------THIS FOR GETTING END TIME---------------------
-                            
-                            cout << "End time: ";
-                            getline(cin >> std::ws, end_time_input);
-                            
-                            std::stringstream ss2;
-                            ss2 << end_time_input;//Get the startime to the ss2
-                            ss2 >> end_time_hour;
-                            ss2.ignore();
-                            ss2 >> end_time_minute;
+                        bool option_time = true;
+                        while(option_time){
+                            string start_time_input, end_time_input;
+                            int start_time_hour, start_time_minute, end_time_hour, end_time_minute;
+                            cout << "What is your free time (ex: 8:00 to 10:00, or 20:30 to 22:00)" << endl;
+                            //----------------------THIS FOR GETTING START TIME---------------------
+                            bool check_time_valid = true;
 
-                            if (!checkValidTime(start_time_input) && !checkValidTime(end_time_input) && !checkValidTime(start_time_hour, start_time_minute,end_time_hour, end_time_minute)){
-                                cout << "Invalid format! Please enter in the form HH:MM." << endl;
+                            while(check_time_valid){
+                                cout << "Start time: ";
+                                getline(cin >> std::ws, start_time_input);
+                                std::stringstream ss1;
+                                ss1 << start_time_input;//Get the startime to the ss1
+
+                                ss1 >> start_time_hour;
+                                ss1.ignore();//ignore the colon
+                                ss1 >> start_time_minute;
+                                
+                                //----------------------THIS FOR GETTING END TIME---------------------
+                                
+                                cout << "End time: ";
+                                getline(cin >> std::ws, end_time_input);
+                                
+                                std::stringstream ss2;
+                                ss2 << end_time_input;//Get the startime to the ss2
+                                ss2 >> end_time_hour;
+                                ss2.ignore();
+                                ss2 >> end_time_minute;
+
+                                if (!checkValidTime(start_time_input) && !checkValidTime(end_time_input) && !checkValidTime(start_time_hour, start_time_minute,end_time_hour, end_time_minute)){
+                                    cout << "Invalid format! Please enter in the form HH:MM." << endl;
+                                }
+                                else{
+                                    time_pair_list.push_back(std::make_pair(Time(start_time_hour, start_time_minute), Time(end_time_hour, end_time_minute)));
+                                    check_time_valid = false;
+                                }   
                             }
+<<<<<<< HEAD
                             else{
                                 check2 = false;
                                 workScheduleItem.time.push_back(Time);
+=======
+
+                            char option;
+                            cout <<"Do you want to to add more period time for " << getDayString(day_choice) <<" [Y/N]: ";
+                            cin >> option;
+                            if (option == 'N' || option == 'n'){
+                                option_time = false;
+>>>>>>> 63a0ce8417f6a07b37cb5aae4389de355e4bc395
                             }
                         }
+                        weekday = getDayString(day_choice);
+                        check_option = false; 
                     }
-                }
 
-               
+                    workSchedule.push_back(std::make_pair(weekday,time_pair_list));
+
+                }
 
                 char option_day;
                     cout << "Do you want to add more period[Y/N]: "; 
@@ -374,7 +390,6 @@ public:
                     if(option_day != 'Y' && option_day != 'y'){
                         schedule_check = false;
                     }
-
                 }
             }
 
@@ -489,27 +504,44 @@ public:
         return str;
     }
 
-    bool checkValidTime(string time){
-        for(int i = 0; i < time.length(); ++i){
-            if(!isdigit(time[i]) && time[i] != ':'){
+    bool checkValidTime(string time) {
+        
+        if (time.length() != 5) {
+            return false;
+        }
+
+        
+        for (int i = 0; i < time.length(); ++i) {
+            if ((i < 2 && !isdigit(time[i])) || (i == 2 && time[i] != ':') || (i > 2 && !isdigit(time[i]))) {
                 return false;
             }
         }
+
+        
+        int hours = stoi(time.substr(0, 2));
+        int minutes = stoi(time.substr(3, 2));
+
+        if (hours < 0 || hours > 23 || minutes < 0 || minutes > 59) {
+            return false;
+        }
+
         return true;
     }
 
-    bool checkValidTime(int start_hour, int start_minute, int end_hour, int end_minute){
-        if(start_hour < 0 || start_hour > 23 || start_minute < 0 || start_minute > 59 || 
-           end_hour < 0 || end_hour > 23 || end_minute < 0 || end_minute > 59){
-            cout << "Please enter the the true range~!" << endl;
+    bool checkValidTime(int start_hour, int start_minute, int end_hour, int end_minute) {
+
+        if (start_hour < 0 || start_hour > 23 || start_minute < 0 || start_minute > 59 ||
+            end_hour < 0 || end_hour > 23 || end_minute < 0 || end_minute > 59) {
+            cout << "Please enter the true range!" << endl;
+            
             return false;
         }
 
-        if(end_hour < start_hour || (end_hour == start_hour && end_minute <= start_minute)){
-            cout << "Your end time must larger than your start time!" << endl;
+        if (end_hour < start_hour || (end_hour == start_hour && end_minute <= start_minute)) {
+            cout << "Your end time must be larger than your start time!" << endl;
             return false;
         }
-        
+
         return true;
     }
 
