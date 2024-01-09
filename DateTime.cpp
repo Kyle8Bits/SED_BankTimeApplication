@@ -1,5 +1,8 @@
 //CHƯA CHẮC LÀ SẼ XÀI TỚI CÁI NÀY, ĐỂ ĐÂY DỰ PHÒNG//
 
+#ifndef DATETIME_H
+#define DATETIME_H
+
 #include <iostream>
 #include <ctime>
 
@@ -46,3 +49,4 @@ private:
     int day;
     int dayOfWeek;
 };
+#endif

@@ -1,3 +1,7 @@
+#ifndef SYSTEM_H
+#define SYSTEM_H
+
+
 #include <iostream>
 #include <vector>
 #include <fstream>
@@ -362,18 +366,12 @@ public:
                                     check_time_valid = false;
                                 }   
                             }
-<<<<<<< HEAD
-                            else{
-                                check2 = false;
-                                workScheduleItem.time.push_back(Time);
-=======
 
                             char option;
                             cout <<"Do you want to to add more period time for " << getDayString(day_choice) <<" [Y/N]: ";
                             cin >> option;
                             if (option == 'N' || option == 'n'){
                                 option_time = false;
->>>>>>> 63a0ce8417f6a07b37cb5aae4389de355e4bc395
                             }
                         }
                         weekday = getDayString(day_choice);
@@ -412,7 +410,7 @@ public:
         logged_in_member->setAboutMe(about_me_input);
         //create new pointer supporter
         
-        Supporter* new_supporter = new Supporter(*logged_in_member,workSchedule, skill_list_input, cost_input);
+        Supporter* new_supporter = new Supporter(*logged_in_member,workSchedule, Status::OFFLINE, skill_list_input, cost_input);
         // loop(workSchedule.weekday.size()){
         //     cout << workSchedule.weekday[i] << " ";
         // }
@@ -1415,3 +1413,4 @@ public:
         }
     }
 };
+#endif

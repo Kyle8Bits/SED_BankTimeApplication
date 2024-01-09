@@ -1,3 +1,6 @@
+#ifndef FILE_PROCESS_H
+#define FILE_PROCESS_H
+
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -353,3 +356,5 @@ public:
         return booking_list;
     }
 }; 
+
+#endif

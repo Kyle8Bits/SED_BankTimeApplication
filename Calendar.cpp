@@ -1,5 +1,5 @@
-// #ifndef CALENDAR_H
-// #define CALENDAR_H
+#ifndef CALENDAR_H
+#define CALENDAR_H
 
 #include <iostream>
 #include <vector>
@@ -79,4 +79,4 @@ class Calendar{
     return true;
     }
 };
-// #endif
+#endif
