@@ -5,7 +5,7 @@
 #include "System.cpp"
 #include "FileProcess.cpp"
 #include "Calendar.cpp"
-#include "DateTime.cpp"
+#include "RealTime.cpp"
 #include "Calendar.cpp"
 
 using std::cout;
@@ -28,7 +28,7 @@ namespace colors {
 
 int main(){
     Calendar calendar;
-    DateTime today;
+    RealTime today;
 
     calendar.printCalendar(today.getThisYear(), today.getThisMonth());
     // clearScreen();

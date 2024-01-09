@@ -1,15 +1,15 @@
 //CHƯA CHẮC LÀ SẼ XÀI TỚI CÁI NÀY, ĐỂ ĐÂY DỰ PHÒNG//
 
-#ifndef DATETIME_H
-#define DATETIME_H
+#ifndef REAL_TIME_H
+#define REAL_TIME_H
 
 #include <iostream>
 #include <ctime>
 
-class DateTime {
+class RealTime {
 public:
     // Constructor
-    DateTime() {
+    RealTime() {
         update();
     }
 

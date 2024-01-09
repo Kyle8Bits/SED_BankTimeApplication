@@ -5,7 +5,6 @@
 #include <vector>
 
 #include "Account.cpp"
-#include "Category.cpp"
 
 using std::cout;
 using std::cin;
