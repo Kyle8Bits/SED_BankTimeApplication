@@ -4,9 +4,6 @@
 
 #include "System.cpp"
 #include "FileProcess.cpp"
-#include "Calendar.cpp"
-#include "RealTime.cpp"
-#include "Calendar.cpp"
 
 using std::cout;
 using std::string;
@@ -22,12 +19,6 @@ namespace color_main {
 
 
 int main(){
-    Calendar calendar;
-    RealTime today;
-
-    calendar.printCalendar(2024, 2);
-
-    cout << "Day of week " << calendar.calculateDayOfWeek(19, 12, 2003) << endl;
     // clearScreen();
     cout << "EEET2482/COSC2082 ASSIGNMENT\n"
         << "'TIME BANK' APPLICATION\n"
