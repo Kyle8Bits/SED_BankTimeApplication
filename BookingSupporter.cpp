@@ -27,13 +27,14 @@ class BookingSupporter{
     int supporter_rating_score;//THIS IS FOR SUPPORTER - character
     string host_comment; //supporter to host
     string supporter_comment; // host to supporter
+    double total_cost;
     static int number_of_booking; //the number of the booking
     public:
         //CONSTRUCTOR
         BookingSupporter(string host_id = "", string support_id = "", string status = "PENDING", string booking_id ="BK", string progress = "NOT STARTED", Time start_time = Time(0,0), Time end_time = Time(0,0),
-                        int host_rating = 0, int skill_rating_score = 0, int supporter_rating_score = 0, string host_comment = " ", string supporter_comment = " ") 
+                        int host_rating = 0, int skill_rating_score = 0, int supporter_rating_score = 0, string host_comment = " ", string supporter_comment = " ", double total_cost = 0) 
                         : booking_id(booking_id),host_id(host_id), support_id(support_id), status(status), progress(progress), start_time(start_time), end_time(end_time)
-                        , host_rating(host_rating), skill_rating_score(skill_rating_score), supporter_rating_score(supporter_rating_score), host_comment(host_comment), supporter_comment(supporter_comment){
+                        , host_rating(host_rating), skill_rating_score(skill_rating_score), supporter_rating_score(supporter_rating_score), host_comment(host_comment), supporter_comment(supporter_comment), total_cost(total_cost){
             number_of_booking++;//Increse the booking number by 1
 
             if(booking_id == "BK"){//If the booking id is BK (Default value), we auto generate the id with the number of the booking
@@ -181,8 +182,16 @@ class BookingSupporter{
         supporter_comment = comment;
     }
 
+    double getTotalCost(){
+        return this->total_cost;
+    }
+
+    void setTotalCost(double total_cost){
+        this->total_cost = total_cost;
+    }
+
     string toString(){
-        return this->booking_id + "-" + this->host_id + "-" + this->support_id + "-" + this->status + "-" + this->progress + "-" + this->getTimeToFile() + "-" + to_string(this->host_rating) + "-" + to_string(this->skill_rating_score) + "-" + to_string(this->supporter_rating_score) + "-" + this->host_comment + "-" + this->supporter_comment;
+        return this->booking_id + "-" + this->host_id + "-" + this->support_id + "-" + this->status + "-" + this->progress + "-" + this->getTimeToFile() + "-" + to_string(this->host_rating) + "-" + to_string(this->skill_rating_score) + "-" + to_string(this->supporter_rating_score) + "-" + this->host_comment + "-" + this->supporter_comment + "-" + to_string(this->total_cost);
     }
 
 };

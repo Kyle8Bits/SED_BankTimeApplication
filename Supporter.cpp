@@ -37,7 +37,7 @@ private:
     // static int number_of_member;//the total number of the members in teh program
     // //ATTRIBUTE OF MEMBER
     // string member_id; 
-    // int credit_point;
+    // double credit_point;
     // string full_name;
     // string phone_number;
     // string address;
@@ -63,7 +63,7 @@ private:
     Status status = Status::OFFLINE; 
     
 public:
-    Supporter(string user_name = "", string pass_word = "", string member_id = "S", int credit_point = 20, string full_name = "", string phone_number = "", 
+    Supporter(string user_name = "", string pass_word = "", string member_id = "S", double credit_point = 20, string full_name = "", string phone_number = "", 
     string address = "", string city = "", string about_me = "",double host_rating_score = 0, 
     int host_count = 0, int spt_not_comment = 0, std::vector<string> block_list = {}, std::vector< std::pair< string, std:: vector< std::pair< Time, Time> > > > workSchedule = {}, Status status = Status::OFFLINE, 
     std::vector<string> skill_list = {}, int cost = 0, double skill_rating_score = 0, double support_rating_score = 0, int support_count = 0, int host_not_comment = 0)

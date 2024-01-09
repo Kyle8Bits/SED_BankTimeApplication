@@ -12,18 +12,13 @@ using std::cout;
 using std::string;
 using std::vector;
 
-namespace colors {
+namespace color_main {
     const char* RED = "\033[1;91m";
-    const char* GREEN = "\033[92m";
-    const char* YELLOW = "\033[93m";
-    const char* BLUE = "\033[94m";
-    const char* MAGENTA = "\033[95m";
-    const char* CYAN = "\033[96m";
     const char* RESET = "\033[0m";  
 }
 
 #define clearScreen() cout << "\x1B[2J\x1B[H";
-#define Error() cout << colors::RED << "\t\tERROR: PLease Enter Valid Input!" << colors::RESET << std::endl;
+#define Error_Main() cout << color_main::RED << "\t\tERROR: PLease Enter Valid Input!" << color_main::RESET << std::endl;
 
 
 int main(){
@@ -317,7 +312,7 @@ int main(){
                 break;
             default:
                 clearScreen();
-                Error();
+                Error_Main();
                 // cout << "****Please enter the valid input****" << endl;
                 break;
             }

@@ -25,6 +25,19 @@ using std::find;
 #define loop(n) for(int i = 0; i < n; ++i)
 #define FILENAME "members.dat"
 
+namespace colors{
+    const char* RED = "\033[1;91m";
+    const char* GREEN = "\033[92m";
+    const char* RESET = "\033[0m";  
+}
+
+#define Error() cout << colors::RED << "\t\tERROR: PLease Enter Valid Input!" << colors::RESET << std::endl;
+#define BlockError() cout << colors::RED << "\t\tERROR: You can not book a supporter in your block list" << colors::RESET << std::endl;
+#define InsufficientPointError() cout << colors::RED << "\t\tERROR: Insufficient credit points to book this supporter" << colors::RESET << std::endl;
+#define SucessBooking() cout << colors::GREEN << "\t\tYour booking has been created" << colors::RESET << endl;
+
+
+
 class System{
 private:
     BookingSupporter booking;
@@ -554,6 +567,19 @@ public:
         booking.displayAvailableSupporter(member_list, logged_in_member,  logged_in_supporter, availableSupporter);
     }
 
+    double findCreditPointFromTime(int start_hour, int start_minute, int end_hour, int end_minute, int cost_per_hour){
+        int start_minute_total = start_hour * 60 + start_minute;//find the total minues of start time
+        int end_minutes_total = end_hour * 60 + end_minute;//find the total minutes of end time
+
+        int total_minutes = end_minutes_total - start_minute_total;//find the total minutes of the period
+
+        double cost_per_minute = (double) cost_per_hour / 60.0;//find the cost per minute
+        
+        double total_cost = cost_per_minute * total_minutes;//find the total cost of the period
+
+        return total_cost;
+    }
+
     void createBooking(){
         cout << "****WELCOME TO BOOKING DASHBOARD****"<<endl;
         displayAvailableSupporter();
@@ -568,61 +594,76 @@ public:
                 if(isSupporter){
                     logged_in_member = logged_in_supporter;//use this to prevent segment fault when the current users is supporter
                 }
-                if(logged_in_member->getCreditPoint() >= availableSupporter[i]->getCost()){//check the credit point of the users and the cost per hour of the supporter
-                    if(!booking.isInBlockList(logged_in_member->getBlockList(), availableSupporter[i]->getMemberId())){
-                        cout << "Choose the time you want to book. Noitce that: the time you choose must match with the free time of the supporter!" << endl;
-                        int start_time_hour, start_time_minute, end_time_hour, end_time_minute;
-                        string start_time_input, end_time_input;
-                        cout << "Start Time: ";
-                        getline(cin >> std::ws, start_time_input);
-                        cout << "End Time: ";
-                        getline(cin >> std::ws, end_time_input);
 
-                        if(checkValidTime(start_time_input) && checkValidTime(end_time_input)){
-                            //use one string to 2 integer
-                            std::stringstream ss_start_time;
-                            ss_start_time << start_time_input;
+                if(!booking.isInBlockList(logged_in_member->getBlockList(), availableSupporter[i]->getMemberId())){
+                    cout << "Choose the time you want to book. Noitce that: the time you choose must match with the free time of the supporter!" << endl;
+                    int start_time_hour, start_time_minute, end_time_hour, end_time_minute;
+                    string start_time_input, end_time_input;
+                    cout << "Start Time: ";
+                    getline(cin >> std::ws, start_time_input);
+                    cout << "End Time: ";
+                    getline(cin >> std::ws, end_time_input);
 
-                            ss_start_time >> start_time_hour;
-                            ss_start_time.ignore();
-                            ss_start_time >> start_time_minute;
+                    if(checkValidTime(start_time_input) && checkValidTime(end_time_input)){
+                        //use one string to 2 integer
+                        std::stringstream ss_start_time;
+                        ss_start_time << start_time_input;
 
-                            std::stringstream ss_end_time;
-                            ss_end_time << end_time_input;
+                        ss_start_time >> start_time_hour;
+                        ss_start_time.ignore();
+                        ss_start_time >> start_time_minute;
 
-                            ss_end_time >> end_time_hour;
-                            ss_end_time.ignore();
-                            ss_end_time >> end_time_minute;
+                        std::stringstream ss_end_time;
+                        ss_end_time << end_time_input;
 
-                            if(checkValidTime(start_time_hour, start_time_minute, end_time_hour, end_time_minute)){
+                        ss_end_time >> end_time_hour;
+                        ss_end_time.ignore();
+                        ss_end_time >> end_time_minute;
+
+                        if(checkValidTime(start_time_hour, start_time_minute, end_time_hour, end_time_minute)){
+                            //****CHECK CREDIT POINT****
+
+                            int total_cost = findCreditPointFromTime(start_time_hour, start_time_minute, end_time_hour, end_time_minute, availableSupporter[i]->getCost());
+                            cout << "The total cost of this booking is: " << total_cost << endl;
+                            cout << "Do you want to continue? [Y/N]: ";
+                            string choice; cin >> choice;
+                            if(choice == "Y" || choice == "y"){
+                                if(logged_in_member->getCreditPoint() < total_cost){//check the credit point of the users and the cost per hour of the supporter
+                                    InsufficientPointError();
+                                    return;
+                                }
                                 //PUSH NEW BOOKING TO THE BOOKING LIST
                                 BookingSupporter* booking = new BookingSupporter(logged_in_member->getMemberId(), availableSupporter[i]->getMemberId());
                                 //SET THE START AND END TIME OF THE NEW BOOKINg
                                 booking->setStartTime(Time(start_time_hour, start_time_minute));
                                 booking->setEndTime(Time(end_time_hour, end_time_minute));
+                                booking->setTotalCost(total_cost);
                                 booking_list.push_back(booking);
-                                cout << "Your booking has been created" << endl;
+                                // cout << "Your booking has been created" << endl;
+                                SucessBooking();//Print sucessfull message
                                 isValidSupporter = true;
                                 this->availableSupporter.clear();
                                 //clear after create booking to prevent push duplicated Supporter
                                 break; 
-                            }else{
-                                //if the condition is wrong, we return the function
-                                return;
+                            } else{
+                                cout << "You have canceled the booking" << endl;
+                                isValidSupporter = true;
+                                break;
                             }
                         }else{
-                            cout << "Please enter the valid input!" << endl;
+                            Error();
                             return;
-                        }            
+                        }
                     }else{
-                        cout <<"You can not book a supporter in your block list" << endl;
+                        Error();
+                        return;
+                    }            
+                    }else{
+                        // cout <<"You can not book a supporter in your block list" << endl;
+                        BlockError();
                         return;
                     }
-                }else{
-                    cout << "Insufficient credit points to book this supporter" << endl;
-                    isValidSupporter = true;
-                    break;
-                }
+
             }
         }
         if(isSupporter){
@@ -755,6 +796,15 @@ public:
         }
     }
 
+    double getMoneyById(string id){
+        loop(booking_list.size()){
+            if(booking_list[i]->getBookingId() == id){
+                return booking_list[i]->getTotalCost();
+            }
+        }
+        return 0;
+    }
+
     void decideJob(){//For supporter to answer the request booking from host. Either accept or reject or remain pending
         cout << "****THE LIST OF REQUEST BOOKING****\n";
         int count = 1;
@@ -773,7 +823,8 @@ public:
                             "\nCity: " << member_list[a]->getCity() <<
                             "\nStatus: " << booking_list[i]->getStatus() <<
                             "\nTime: " << booking_list[i]->getTime() << 
-                            "\n>Rating: " << std::fixed << std::setprecision(2) << member_list[a]->getAverageRatingScore() << endl;
+                            "\nCost: " << booking_list[i]->getTotalCost() <<
+                            "\nHost Rating: " << std::fixed << std::setprecision(2) << member_list[a]->getAverageRatingScore() << endl;
 
                         if(booking_list[i]->getStatus() == "ACCEPTED"){
                             cout << "Progress: " << booking_list[i]->getProgress() << endl;
@@ -804,7 +855,7 @@ public:
                     if(choice == current_job[i]){
                         validChoice = true;
                         if(getProgressById(current_job[i]) == "IN PROGRESS"){
-                            cout << "Do you complete the job?" << endl;
+                            cout << "Have you completed the job?" << endl;
                             cout << "1. Yes\n" 
                                  << "2. No" << endl;
                             cout << ">Your choice: "; cin >> decide;
@@ -813,6 +864,10 @@ public:
                                     //&***************UNCOMMENT IT WHEN DONE***************
                                     setProgressById(current_job[i], "COMPLETED");
                                     cout << "Congratulation! You just finished the job." << endl;
+                                    cout << "You just receive: " << getMoneyById(current_job[i]) << " CP" << endl;
+                                    logged_in_supporter->addCreditPoint(getMoneyById(current_job[i]));//add the new money to the supporter's account
+                                    cout << "Your new balance: " << logged_in_supporter->getCreditPoint() << endl;
+
                                     cout << "Do you want to leave feedback and rate your host\n";
                                     cout << "1. Yes\n" << "2. No\n" << ">Your choice:";
                                     cin >> decide;
@@ -918,7 +973,6 @@ public:
     }
 
     void buyCredit(){
-    // int* otp = new int(rand() % (999999 - 100000 + 1) + 100000);
     bool check = true;
     string choice;
     int option;
@@ -1163,7 +1217,7 @@ public:
     }
 
     void checkCompleteTask(){
-        std::vector<string> complete_list_id;
+        std::vector<string> complete_list_id;//store booking id
         bool isSupporter = (logged_in_member == nullptr);
 
         if(isSupporter){
@@ -1183,8 +1237,11 @@ public:
                             "\nSupporter name: " << member_list[a]->getFullName() <<
                             "\nCity: " << member_list[a]->getCity() <<
                             "\nTime: " << booking_list[i]->getTime() << 
-                            "\nSupporter comment: " <<booking_list[i]->getHostComment() <<
-                            "\nSupporter rated you: " <<booking_list[i]->getHostRating() << endl;
+                            "\nTotal Cost: " << booking_list[i]->getTotalCost() <<
+                            "\nSupporter comment: " <<booking_list[i]->getHostComment() << endl;
+                            if(booking_list[i]->getHostRating() != 11){//if the host rating is 11 --> supporter do not want to rate
+                                cout << "\nSupporter rated you: " <<booking_list[i]->getHostRating() << endl;
+                            }
 
                             complete_list_id.push_back(booking_list[i]->getBookingId());
                             
@@ -1193,6 +1250,11 @@ public:
                 }
                 count++;
             }
+        }
+
+        if(complete_list_id.empty()){
+            cout << "You do not have any booking that need to be rated" << endl;
+            return;
         }
 
         bool valid_choice = false;
@@ -1212,6 +1274,10 @@ public:
                 valid_choice = true;
 
                 while(check){
+                    cout << "Congratulation! Your booking has been finished" <<endl;
+                    cout << "The cost for this booking is: " << getMoneyById(complete_list_id[i]) << endl;
+                    logged_in_member->subtractCreditPoint(getMoneyById(complete_list_id[i]));
+                    cout << "Your new balance: " << logged_in_member->getCreditPoint() << endl;
                     cout <<"Do you want to give a feedback to this supporter?"<< endl;
                     cout << "1. Yes"<<
                             "\n2. No" << endl;
@@ -1261,6 +1327,7 @@ public:
         }
 
         if(isSupporter){
+            
             logged_in_member = nullptr;
         }
     }

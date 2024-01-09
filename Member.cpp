@@ -20,7 +20,7 @@ protected:
 
     //ATTRIBUTE OF MEMBER
     string member_id; 
-    int credit_point;
+    double credit_point;
     string full_name;
     string phone_number;
     string address;
@@ -33,7 +33,7 @@ protected:
 
 public:
     //CONSTRUCTOR
-    Member(string user_name = "", string pass_word = "", string member_id = "M", int credit_point = 20, string full_name = "", string phone_number = "", 
+    Member(string user_name = "", string pass_word = "", string member_id = "M", double credit_point = 20, string full_name = "", string phone_number = "", 
     string address = "", string city = "", string about_me = "",double host_rating_score = 0, 
     int host_count = 0, int supporter_not_comment = 0, std::vector<string> block_list = {})
     : Account(user_name, pass_word), 
@@ -91,11 +91,11 @@ public:
 
     //Getter and setter
 
-    int getCreditPoint() const {
+    double getCreditPoint() const {
         return credit_point;
     }
 
-    void setCreditPoint(int value) {
+    void setCreditPoint(double value) {
         credit_point = value;
     }
 
@@ -153,6 +153,14 @@ public:
 
     void setHostCount(int value) {
         host_count = value;
+    }
+
+    void addCreditPoint(double credit_point){
+        this->credit_point += credit_point;
+    }
+
+    void subtractCreditPoint(double credit_point){
+        this->credit_point -= credit_point;
     }
 
     string displayBlockList(){//THIS USE FOR PRINTING OUT
