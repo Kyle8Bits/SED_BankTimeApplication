@@ -360,7 +360,7 @@ public:
                             }
                             else{
                                 check2 = false;
-                                workScheduleItem.time.push_back(Time)
+                                workScheduleItem.time.push_back(Time);
                             }
                         }
                     }
@@ -397,8 +397,7 @@ public:
         logged_in_member->setAboutMe(about_me_input);
         //create new pointer supporter
         
-        Supporter* new_supporter = new Supporter(*logged_in_member,workSchedule, Status::OFFLINE, skill_list_input, cost_input);
-
+        Supporter* new_supporter = new Supporter(*logged_in_member,workSchedule, skill_list_input, cost_input);
         // loop(workSchedule.weekday.size()){
         //     cout << workSchedule.weekday[i] << " ";
         // }
