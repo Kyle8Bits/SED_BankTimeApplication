@@ -399,7 +399,15 @@ public:
         cout << "Please introduce some basic things about yourself (Academic Level, Hobby, ...)" << endl;
         getline(cin >> std::ws, about_me_input);
 
-        
+        //---------------------FIX ID IN BOOKING LIST-----------------
+        loop(booking_list.size()){
+            if(logged_in_member->getMemberId() == booking_list[i]->getHostId()){
+                string new_id =  booking_list[i]->getHostId();
+                new_id[0] = 'S';
+                booking_list[i]->setHostId(new_id);
+            }
+        }
+
         //----------------------ADD ALL IT IN SUPPORTER---------------------
         //first change the id of logged_in_member from M to S
         string supporter_id = logged_in_member->getMemberId(); supporter_id[0] ='S';//Change the first cahracter of id from M to S
