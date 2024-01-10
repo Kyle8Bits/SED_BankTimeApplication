@@ -46,6 +46,8 @@ int main(){
     bool request_admin = false;
     bool request_supporter = false;
     bool request_setting_member = false;
+    bool request_setting_supporter = false;
+
 
     
     while(request){
@@ -198,12 +200,15 @@ int main(){
                                     << "\t\t|                                                           |\n"
                                     << "\t\t|7. Become supporter                                        |\n"
                                     << "\t\t|                                                           |\n"
-                                    << "\t\t|8. Set min supporter rating                                |\n"
+                                    << "\t\t|8. Set min skill rating for suppoter                       |\n"
                                     << "\t\t|                                                           |\n"
-                                    << "\t\t|9. Return                                                  |\n"
+                                    << "\t\t|9. Set min supporter rating for suppoter                   |\n"
+                                    << "\t\t|                                                           |\n"
+                                    << "\t\t|10. Return                                                 |\n"
                                     << "\t\t-------------------------------------------------------------\n"
                                     << ">Your choice: ";
-                                string member_setting_choice; cin >> member_setting_choice;
+                                string member_setting_choice; 
+                                getline(cin >> std::ws, member_setting_choice);
                                 if(member_setting_choice == "1"){
                                     clearScreen();
                                     if(!system.getLoggedInMember()->setPasswordRequest()){
@@ -234,13 +239,17 @@ int main(){
                                     }
                                 } else if(member_setting_choice == "8"){
                                     clearScreen();
-                                    // system.setMinSupporterRating();
+                                    // system.setMinRatingSuppoter();
                                 } else if(member_setting_choice == "9"){
+                                    clearScreen();
+                                    // system.setMinSupportratinSupporter();
+                                } else if(member_setting_choice == "10"){
                                     clearScreen();
                                     cout << "Returning to main dashboard" << endl;
                                     request_setting_member = false;
                                 }
                                 else{
+                                    clearScreen();
                                     Error_Main();
                                 }
                             }
@@ -248,6 +257,7 @@ int main(){
                             request_member = false;
                             cout << "Returning to main dashboard" << endl;
                         }else {
+                            clearScreen();
                             Error_Main();
                         }
                     }
@@ -276,10 +286,12 @@ int main(){
                             << "\t\t|                                                           |\n"
                             << "\t\t|8. View my information                                     |\n"
                             << "\t\t|                                                           |\n"
-                            << "\t\t|9. Change my status.                                       |\n"
+                            << "\t\t|9. Change my status                                        |\n"
                             << "\t\t*** Current status: "<<system.getCurrentStatus()<<"***\n"
                             << "\t\t|                                                           |\n"
-                            << "\t\t|10. Sign out                                               |\n"
+                            << "\t\t|10. Setting                                                |\n"
+                            << "\t\t|                                                           |\n"
+                            << "\t\t|11. Sign out                                               |\n"
                             << "\t\t-------------------------------------------------------------\n"
                             << ">Your choice: ";
                         string supporter_choice; 
@@ -312,7 +324,77 @@ int main(){
                         } else if (supporter_choice == "9"){
                             clearScreen();
                             system.statusSetting();
-                        } else if (supporter_choice == "10"){
+                        } else if(supporter_choice == "10"){
+                            clearScreen();
+                            request_setting_supporter = true;
+                            while(request_setting_supporter){
+                                cout << "\t\t____________________________________________________________\n"
+                                    << "\t\t|                   WELCOME BACK  + (NAME)                  |\n"
+                                    << "\t\t|                                                           |\n"
+                                    << "\t\t|1. Change password                                         |\n"
+                                    << "\t\t|                                                           |\n"
+                                    << "\t\t|2. Change phone number                                     |\n"
+                                    << "\t\t|                                                           |\n"
+                                    << "\t\t|3. Change address                                          |\n"
+                                    << "\t\t|                                                           |\n"
+                                    << "\t\t|4. Change city                                             |\n"
+                                    << "\t\t|                                                           |\n"
+                                    << "\t\t|5. Block a users                                           |\n"
+                                    << "\t\t|                                                           |\n"
+                                    << "\t\t|6. View block list                                         |\n"
+                                    << "\t\t|                                                           |\n"
+                                    << "\t\t|7. Set min host rating for host                            |\n"
+                                    << "\t\t|                                                           |\n"
+                                    << "\t\t|8. Set min skill rating for supporter                      |\n"
+                                    << "\t\t|                                                           |\n"
+                                    << "\t\t|9. Set min supporter rating for suppoter                   |\n"
+                                    << "\t\t|                                                           |\n"
+                                    << "\t\t|10. Return                                                 |\n"
+                                    << "\t\t-------------------------------------------------------------\n"
+                                    << ">Your choice: ";
+                                string suppoter_setting_choice;
+                                getline(cin >> std::ws, suppoter_setting_choice);
+
+                                if(suppoter_setting_choice == "1"){
+                                    clearScreen();
+                                    if(!system.getLoggedInSupporter()->setPasswordRequest()){
+                                        cout << "Invalid Password" << endl;
+                                    }
+                                }else if(suppoter_setting_choice == "2"){
+                                    clearScreen();
+                                    system.getLoggedInSupporter()->setPhoneNumberRequest();
+                                }else if(suppoter_setting_choice == "3"){
+                                    clearScreen();
+                                    system.getLoggedInSupporter()->setAddressRequest();
+                                }else if(suppoter_setting_choice == "4"){
+                                    clearScreen();
+                                    system.getLoggedInSupporter()->setCityRequest();
+                                }else if(suppoter_setting_choice == "5"){
+                                    clearScreen();
+                                    system.blockUser();
+                                } else if(suppoter_setting_choice == "6"){
+                                    clearScreen();
+                                    system.getLoggedInSupporter()->unblockUser();
+                                } else if(suppoter_setting_choice == "7"){
+                                    clearScreen();
+                                    // system.setMinRatingHost();
+                                } else if(suppoter_setting_choice == "8"){
+                                    clearScreen();
+                                    // system.setMinRatingSupporter();
+                                } else if(suppoter_setting_choice == "9"){
+                                    clearScreen();
+                                    // system.setMinSupporterRating();
+                                }else if(suppoter_setting_choice == "10"){
+                                    clearScreen();
+                                    cout << "Returning to main dashboard" << endl;
+                                    request_setting_supporter = false;
+                                }
+                                else{
+                                    clearScreen();
+                                    Error_Main();
+                                }
+                            }
+                        } else if (supporter_choice == "11"){
                             clearScreen();
                             request_supporter = false;
                             cout << "Return to main dashboard" << endl;

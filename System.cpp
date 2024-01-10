@@ -1542,6 +1542,7 @@ public:
         cout << "Enter the id of the user that you want to block:";
         string input;
         getline(cin >> std::ws, input);
+       
 
         bool isSupporter = (logged_in_member == nullptr);
         if(isSupporter){
@@ -1551,7 +1552,10 @@ public:
         bool valid_choice = false;
         char choice; 
         bool check = true;
-
+        if(input == logged_in_member->getMemberId()){
+            cout << "You can not block yourself!" << endl;
+            return false;
+        }
         loop(member_list.size()){
             if(input == member_list[i]->getMemberId()){
                 valid_choice = true;
