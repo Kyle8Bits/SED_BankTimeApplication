@@ -41,7 +41,7 @@ int main(){
     system.setBookingList(booking_list_from_file);
 
     bool request = true; // this boolean for the while loop belowcle
-    bool request_guest;
+    bool request_guest = false;
     bool request_member = false;
     bool request_admin = false;
     bool request_supporter = false;
@@ -49,7 +49,7 @@ int main(){
 
     
     while(request){
-        char user_choice = ' ';  
+        string user_choice;
         cout << "\t\t____________________________________\n"
              << "\t\t|        WELCOME TO TIME BANK       |\n"
              << "\t\t|                                   |\n"
@@ -62,307 +62,278 @@ int main(){
              << "\t\t|          3. Quit                  |\n"
              << "\t\t-------------------------------------\n"
              << ">Your choice: ";
-
-        cin >> user_choice;
+        
+        getline(cin >> std::ws, user_choice);
         //Get the input of the user's ipnut
-            switch(user_choice){
-            case '1'://==================GUEST MENU=================
-                request_guest = true;
-                while(request_guest){
-                    cout << "\t\t____________________________________\n"
-                         << "\t\t|           WELCOME                 |\n"
-                         << "\t\t|                                   |\n"
-                         << "\t\t|       YOU ARE USING AS GUEST      |\n"
-                         << "\t\t|                                   |\n"
-                         << "\t\t|1. View supporters's information   |\n"
-                         << "\t\t|                                   |\n"
-                         << "\t\t|2. Register                        |\n"
-                         << "\t\t|                                   |\n"
-                         << "\t\t|3. Return                          |\n"
-                         << "\t\t|                                   |\n"
-                         << "\t\t-------------------------------------\n"
-                         << ">Your choice: ";
+        if(user_choice == "1"){
+            request_guest = true;
+            while(request_guest){
+                cout << "\t\t____________________________________\n"
+                     << "\t\t|           WELCOME                 |\n"
+                     << "\t\t|                                   |\n"
+                     << "\t\t|       YOU ARE USING AS GUEST      |\n"
+                     << "\t\t|                                   |\n"
+                     << "\t\t|1. View supporters's information   |\n"
+                     << "\t\t|                                   |\n"
+                     << "\t\t|2. Register                        |\n"
+                     << "\t\t|                                   |\n"
+                     << "\t\t|3. Return                          |\n"
+                     << "\t\t|                                   |\n"
+                     << "\t\t-------------------------------------\n"
+                     << ">Your choice: ";
 
-                    char guest_choice; cin >> guest_choice;
-                    switch(guest_choice){
-                        case '1':
-                            system.displaySupporter();
-                            break;
-                        case '2':
-                            system.registerMember();
-                            request_guest = false;
-                            cout << "Go to login page" << endl;
-                            break;
-                        case '3':
-                            request_guest = false;
-                            cout << "Returning to the home page" << endl;
-                            clearScreen();
-                            break;
-                        default:
-                            cout << "Invalid input, please choose again!" << endl;
-                            clearScreen();
+                string guest_choice; 
+                getline(cin >> std::ws, guest_choice);
+                if(guest_choice == "1"){
+                    clearScreen();
+                    system.displaySupporter();
+                } else if(guest_choice == "2"){
+                    if(system.registerMember()){
+                        request_guest = false;
+                        cout << "Go to login page" << endl;
                     }
+                } else if(guest_choice == "3"){
+                    clearScreen();
+                    request_guest = false;
+                    cout << "Returning to the home page" << endl;
+                } else{
+                    clearScreen();
+                    Error_Main();
                 }
-                break;
-            case '2':
-                if(system.loginMember()){
-                    //LOGIN AS ADMINSTRATOR
-                    if(system.getIsAdmin() == true){
-                        request_admin = true;
-                        while(request_admin){
-                            cout << "\t\t____________________________________________________________\n";
-                            cout << "\t\t|                   ADMIN DASHBOARD                         |\n"
-                                << "\t\t|                                                           |\n"
-                                << "\t\t|              1. Display Member List                       |\n"
-                                << "\t\t|                                                           |\n"
-                                << "\t\t|              2. Reset Member's Password                   |\n"
-                                << "\t\t|                                                           |\n"
-                                << "\t\t|              3. Exit                                      |\n"
-                                << "\t\t-------------------------------------------------------------\n";
-                            char admin_choice = ' '; cin >> admin_choice;
-                            switch(admin_choice){
-                                case '1':
-                                    clearScreen();
-                                    system.displayMemberList();
-                                    break;
-                                case '2':
-                                    clearScreen();
-                                    system.resetMemberPassword();
-                                    break;
-                                case '3':
-                                    request_admin = false;
-                                    cout << "Exit to main page" << endl;
-                                    break;
-                                default:
-                                    cout << "Please enter the valid choice" << endl;
-                                    break;
-                            }  
+            }
+        } else if(user_choice == "2"){
+            if(system.loginMember()){
+                //LOGIN AS ADMINSTRATOR
+                if(system.getIsAdmin() == true){
+                    request_admin = true;
+                    while(request_admin){
+                        cout << "\t\t____________________________________________________________\n";
+                        cout << "\t\t|                   ADMIN DASHBOARD                         |\n"
+                            << "\t\t|                                                           |\n"
+                            << "\t\t|              1. Display Member List                       |\n"
+                            << "\t\t|                                                           |\n"
+                            << "\t\t|              2. Reset Member's Password                   |\n"
+                            << "\t\t|                                                           |\n"
+                            << "\t\t|              3. Exit                                      |\n"
+                            << "\t\t-------------------------------------------------------------\n";
+                        string admin_choice; 
+                        getline(cin >> std::ws, admin_choice);
+
+                        if(admin_choice == "1"){
+                            clearScreen();
+                            system.displayMemberList();
+                        } else if(admin_choice == "2"){
+                            clearScreen();
+                            system.resetMemberPassword();
+                        } else if(admin_choice == "3"){
+                            request_admin = false;
+                            cout << "Exit to main page" << endl;
+                        } else{
+                            cout << "Please enter the valid choice" << endl;
                         }
-                        system.setIsAdmin(false);
+                    }
+                    system.setIsAdmin(false);
 //===========================================================MEMBER MENU HOMEPAGE========================================================
-                    }else if(system.getLoggedInSupporter() == nullptr){ 
-                        request_member = true;
-                        while(request_member){
-                            cout << "\t\t____________________________________________________________\n"
-                                << "\t\t|                   WELCOME BACK  + (NAME)                  |\n"
-                                << "\t\t|                                                           |\n"
-                                << "\t\t|1. Buy credit point                                        |\n"
-                                << "\t\t|                                                           |\n"
-                                << "\t\t|2. View supporter list                                     |\n"
-                                << "\t\t|                                                           |\n"
-                                << "\t\t|3. Book a supporter                                        |\n"
-                                << "\t\t|                                                           |\n"
-                                << "\t\t|4. View history booking                                    |\n"
-                                << "\t\t|                                                           |\n"
-                                << "\t\t|5. View complted tasks by supporter                        |\n"
-                                << "\t\t|> Notice: You have " << system.getNotification() << " new completed task from supporter\n"                                                    
-                                << "\t\t|                                                           |\n"
-                                << "\t\t|6. View my information                                     |\n"
-                                << "\t\t|                                                           |\n"
-                                << "\t\t|7. Setting                                                 |\n"
-                                << "\t\t|                                                           |\n"
-                                << "\t\t|8. Sign out                                                |\n"
-                                << "\t\t-------------------------------------------------------------\n"
-                                << ">Your choice: ";
-                            string member_choice; cin >> member_choice;
-                            if(member_choice == "1"){
-                                clearScreen();
-                                system.buyCredit();
-                            } else if(member_choice == "2"){
-                                clearScreen();
-                                system.displayAvailableSupporter();
-                            } else if(member_choice == "3"){
-                                clearScreen();
-                                system.createBooking();
-                            } else if(member_choice == "4"){
-                                clearScreen();
-                                system.viewHistory();
-                            } else if(member_choice == "5"){
-                                clearScreen();
-                                system.checkCompleteTask();
-                            } else if(member_choice == "6"){
-                                clearScreen();
-                                system.viewPersonalInformation();
-                            } else if(member_choice == "7"){
-                                request_setting_member = true;
-                                while(request_setting_member){
-                                    cout << "\t\t____________________________________________________________\n"
-                                        << "\t\t|                   WELCOME BACK  + (NAME)                  |\n"
-                                        << "\t\t|                                                           |\n"
-                                        << "\t\t|1. Change password                                         |\n"
-                                        << "\t\t|                                                           |\n"
-                                        << "\t\t|2. Change phone number                                     |\n"
-                                        << "\t\t|                                                           |\n"
-                                        << "\t\t|3. Change address                                          |\n"
-                                        << "\t\t|                                                           |\n"
-                                        << "\t\t|4. Change city                                             |\n"
-                                        << "\t\t|                                                           |\n"
-                                        << "\t\t|5. Block a users                                           |\n"
-                                        << "\t\t|                                                           |\n"
-                                        << "\t\t|6. View block list                                         |\n"
-                                        << "\t\t|                                                           |\n"
-                                        << "\t\t|7. Become supporter                                        |\n"
-                                        << "\t\t|                                                           |\n"
-                                        << "\t\t|8. Set min supporter rating                                |\n"
-                                        << "\t\t|                                                           |\n"
-                                        << "\t\t|9. Return                                                  |\n"
-                                        << "\t\t-------------------------------------------------------------\n"
-                                        << ">Your choice: ";
-                                    string member_setting_choice; cin >> member_setting_choice;
-                                    if(member_setting_choice == "1"){
-                                        clearScreen();
-                                        if(!system.getLoggedInMember()->setPasswordRequest()){
-                                            cout << "Invalid Password" << endl;
-                                        }
-                                    }else if(member_setting_choice == "2"){
-                                        clearScreen();
-                                        system.getLoggedInMember()->setPhoneNumberRequest();
-                                    }else if(member_setting_choice == "3"){
-                                        clearScreen();
-                                        system.getLoggedInMember()->setAddressRequest();
-                                    }else if(member_setting_choice == "4"){
-                                        clearScreen();
-                                        system.getLoggedInMember()->setCityRequest();
-                                    }else if(member_setting_choice == "5"){
-                                        clearScreen();
-                                        system.blockUser();
-                                    } else if(member_setting_choice == "6"){
-                                        clearScreen();
-                                        system.getLoggedInMember()->unblockUser();
-                                    }else if (member_setting_choice == "7"){
-                                        clearScreen();
-                                        if(system.upgradeToSupporter()){
-                                            cout << "Successfully become supporter" << endl;
-                                            cout << "Please login again" << endl;
-                                            request_member = false;
-                                            request_setting_member = false;
-                                        }
-                                    } else if(member_setting_choice == "8"){
-                                        clearScreen();
-                                        // system.setMinSupporterRating();
-                                    } else if(member_setting_choice == "9"){
-                                        clearScreen();
-                                        cout << "Returning to main dashboard" << endl;
+                }else if(system.getLoggedInSupporter() == nullptr){ 
+                    request_member = true;
+                    while(request_member){
+                        cout << "\t\t____________________________________________________________\n"
+                            << "\t\t|                   WELCOME BACK  + (NAME)                  |\n"
+                            << "\t\t|                                                           |\n"
+                            << "\t\t|1. Buy credit point                                        |\n"
+                            << "\t\t|                                                           |\n"
+                            << "\t\t|2. View supporter list                                     |\n"
+                            << "\t\t|                                                           |\n"
+                            << "\t\t|3. Book a supporter                                        |\n"
+                            << "\t\t|                                                           |\n"
+                            << "\t\t|4. View history booking                                    |\n"
+                            << "\t\t|                                                           |\n"
+                            << "\t\t|5. View complted tasks by supporter                        |\n"
+                            << "\t\t|> Notice: You have " << system.getNotification() << " new completed task from supporter\n"                                                    
+                            << "\t\t|                                                           |\n"
+                            << "\t\t|6. View my information                                     |\n"
+                            << "\t\t|                                                           |\n"
+                            << "\t\t|7. Setting                                                 |\n"
+                            << "\t\t|                                                           |\n"
+                            << "\t\t|8. Sign out                                                |\n"
+                            << "\t\t-------------------------------------------------------------\n"
+                            << ">Your choice: ";
+                        string member_choice;
+                        getline(cin >> std::ws, member_choice);
+                        if(member_choice == "1"){
+                            clearScreen();
+                            system.buyCredit();
+                        } else if(member_choice == "2"){
+                            clearScreen();
+                            system.displayAvailableSupporter();
+                        } else if(member_choice == "3"){
+                            clearScreen();
+                            system.createBooking();
+                        } else if(member_choice == "4"){
+                            clearScreen();
+                            system.viewHistory();
+                        } else if(member_choice == "5"){
+                            clearScreen();
+                            system.checkCompleteTask();
+                        } else if(member_choice == "6"){
+                            clearScreen();
+                            system.viewPersonalInformation();
+                        } else if(member_choice == "7"){
+                            request_setting_member = true;
+                            while(request_setting_member){
+                                cout << "\t\t____________________________________________________________\n"
+                                    << "\t\t|                   WELCOME BACK  + (NAME)                  |\n"
+                                    << "\t\t|                                                           |\n"
+                                    << "\t\t|1. Change password                                         |\n"
+                                    << "\t\t|                                                           |\n"
+                                    << "\t\t|2. Change phone number                                     |\n"
+                                    << "\t\t|                                                           |\n"
+                                    << "\t\t|3. Change address                                          |\n"
+                                    << "\t\t|                                                           |\n"
+                                    << "\t\t|4. Change city                                             |\n"
+                                    << "\t\t|                                                           |\n"
+                                    << "\t\t|5. Block a users                                           |\n"
+                                    << "\t\t|                                                           |\n"
+                                    << "\t\t|6. View block list                                         |\n"
+                                    << "\t\t|                                                           |\n"
+                                    << "\t\t|7. Become supporter                                        |\n"
+                                    << "\t\t|                                                           |\n"
+                                    << "\t\t|8. Set min supporter rating                                |\n"
+                                    << "\t\t|                                                           |\n"
+                                    << "\t\t|9. Return                                                  |\n"
+                                    << "\t\t-------------------------------------------------------------\n"
+                                    << ">Your choice: ";
+                                string member_setting_choice; cin >> member_setting_choice;
+                                if(member_setting_choice == "1"){
+                                    clearScreen();
+                                    if(!system.getLoggedInMember()->setPasswordRequest()){
+                                        cout << "Invalid Password" << endl;
+                                    }
+                                }else if(member_setting_choice == "2"){
+                                    clearScreen();
+                                    system.getLoggedInMember()->setPhoneNumberRequest();
+                                }else if(member_setting_choice == "3"){
+                                    clearScreen();
+                                    system.getLoggedInMember()->setAddressRequest();
+                                }else if(member_setting_choice == "4"){
+                                    clearScreen();
+                                    system.getLoggedInMember()->setCityRequest();
+                                }else if(member_setting_choice == "5"){
+                                    clearScreen();
+                                    system.blockUser();
+                                } else if(member_setting_choice == "6"){
+                                    clearScreen();
+                                    system.getLoggedInMember()->unblockUser();
+                                }else if (member_setting_choice == "7"){
+                                    clearScreen();
+                                    if(system.upgradeToSupporter()){
+                                        cout << "Successfully become supporter" << endl;
+                                        cout << "Please login again" << endl;
+                                        request_member = false;
                                         request_setting_member = false;
                                     }
-                                    else{
-                                        cout << "Invalid choice" << endl;
-                                    }
+                                } else if(member_setting_choice == "8"){
+                                    clearScreen();
+                                    // system.setMinSupporterRating();
+                                } else if(member_setting_choice == "9"){
+                                    clearScreen();
+                                    cout << "Returning to main dashboard" << endl;
+                                    request_setting_member = false;
                                 }
-                            }else if(member_choice == "8"){
-                                request_member = false;
-                                cout << "Returning to main dashboard" << endl;
-                            }else {
-                                Error_Main();
+                                else{
+                                    Error_Main();
+                                }
                             }
+                        }else if(member_choice == "8"){
+                            request_member = false;
+                            cout << "Returning to main dashboard" << endl;
+                        }else {
+                            Error_Main();
                         }
-//===========================================================SUPPORTER MENU HOMEPAGE========================================================
-                    } else{
-                        request_supporter = true;
-                        while(request_supporter){
-                            cout << "\t\t____________________________________________________________\n"
-                                << "\t\t|                   WELCOME BACK  + (NAME)                  |\n"
-                                << "\t\t|                                                           |\n"
-                                << "\t\t|1. Buy credit point                                        |\n"
-                                << "\t\t|                                                           |\n"
-                                << "\t\t|2. View supporter list                                     |\n"
-                                << "\t\t|                                                           |\n"
-                                << "\t\t|3. Book a supporter                                        |\n"
-                                << "\t\t|                                                           |\n"
-                                << "\t\t|4. View history booking                                    |\n"
-                                << "\t\t|                                                           |\n"
-                                << "\t\t|5. View current job requests                               |\n"
-                                << "\t\t|Notice: You have "<< system.getRequestNotification() << " new request\n"                                             
-                                << "\t\t|                                                           |\n"
-                                << "\t\t|6. Check completed task by supporter                       |\n"
-                                << "\t\t|> Notice: You have " << system.getNotification() << " new completed task from supporter\n"   
-                                << "\t\t|                                                           |\n"
-                                << "\t\t|7. View history job                                        |\n"
-                                << "\t\t|                                                           |\n"
-                                << "\t\t|8. Manage account                                          |\n"
-                                << "\t\t|                                                           |\n"
-                                << "\t\t|9. View my information                                     |\n"
-                                << "\t\t|                                                           |\n"
-                                << "\t\t|10. Change my status.                                      |\n"
-                                << "\t\t*** Current status: "<<system.getCurrentStatus()<<"***\n"
-                                << "\t\t|                                                           |\n"
-                                << "\t\t|11. Sign out                                               |\n"
-                                << "\t\t-------------------------------------------------------------\n"
-                                << ">Your choice: ";
-                                int supporter_choice; cin >> supporter_choice;
-
-                                switch(supporter_choice){
-                                    case 1:
-                                        clearScreen();
-                                        system.buyCredit();
-                                        break;
-                                    case 2:
-                                        clearScreen();
-                                        system.displayAvailableSupporter();
-                                        break;
-                                    case 3:
-                                        clearScreen();
-                                        system.createBooking();
-                                        break;
-                                    case 4:
-                                        clearScreen();
-                                        system.viewHistory();
-                                        break;
-                                    case 5:
-                                        clearScreen();
-                                        system.decideJob();
-                                        break;
-                                    case 6:
-                                        clearScreen();
-                                        system.checkCompleteTask();
-                                        break;
-                                    case 7:
-                                        clearScreen();
-                                        system.viewHistoryJob();
-                                        break;
-                                    case 8:
-                                        clearScreen();
-                                        break;
-                                    case 9:
-                                        clearScreen();
-                                        system.viewPersonalInformation();
-                                        break;
-                                    case 10:
-                                        clearScreen();
-                                        system.statusSetting();
-                                        break;
-                                    case 11:
-                                        clearScreen();
-                                        request_supporter = false;
-                                        cout << "Return to main dashboard" << endl;
-                                        break;
-                                    // case 12:
-                                    //     clearScreen();
-                                    //     system.blockUser();
-                                    //     break;
-                                    default:
-                                        cout << "Please enter valid input" << endl;
-                                        break;
-                                }
-                        } 
                     }
-                } 
-                else{
-                    cout << "Incorrect username or password" << endl;
+//===========================================================SUPPORTER MENU HOMEPAGE========================================================
+                } else{
+                    request_supporter = true;
+                    while(request_supporter){
+                        cout << "\t\t____________________________________________________________\n"
+                            << "\t\t|                   WELCOME BACK  + (NAME)                  |\n"
+                            << "\t\t|                                                           |\n"
+                            << "\t\t|1. Buy credit point                                        |\n"
+                            << "\t\t|                                                           |\n"
+                            << "\t\t|2. View supporter list                                     |\n"
+                            << "\t\t|                                                           |\n"
+                            << "\t\t|3. Book a supporter                                        |\n"
+                            << "\t\t|                                                           |\n"
+                            << "\t\t|4. View history booking                                    |\n"
+                            << "\t\t|                                                           |\n"
+                            << "\t\t|5. View current job requests                               |\n"
+                            << "\t\t|Notice: You have "<< system.getRequestNotification() << " new request\n"                                             
+                            << "\t\t|                                                           |\n"
+                            << "\t\t|6. Check completed task by supporter                       |\n"
+                            << "\t\t|> Notice: You have " << system.getNotification() << " new completed task from supporter\n"   
+                            << "\t\t|                                                           |\n"
+                            << "\t\t|7. View history job                                        |\n"
+                            << "\t\t|                                                           |\n"
+                            << "\t\t|8. View my information                                     |\n"
+                            << "\t\t|                                                           |\n"
+                            << "\t\t|9. Change my status.                                       |\n"
+                            << "\t\t*** Current status: "<<system.getCurrentStatus()<<"***\n"
+                            << "\t\t|                                                           |\n"
+                            << "\t\t|10. Sign out                                               |\n"
+                            << "\t\t-------------------------------------------------------------\n"
+                            << ">Your choice: ";
+                        string supporter_choice; 
+                        getline(cin >> std::ws, supporter_choice);
+
+                        if(supporter_choice == "1"){
+                            clearScreen();
+                            system.buyCredit();
+                        } else if(supporter_choice == "2"){
+                            clearScreen();
+                            system.displayAvailableSupporter();
+                        } else if(supporter_choice == "3"){
+                            clearScreen();
+                            system.createBooking();
+                        } else if(supporter_choice == "4"){
+                            clearScreen();
+                            system.viewHistory();
+                        } else if(supporter_choice == "5"){
+                            clearScreen();
+                            system.decideJob();
+                        } else if(supporter_choice == "6"){
+                            clearScreen();
+                            system.checkCompleteTask();
+                        } else if(supporter_choice == "7"){
+                            clearScreen()
+                            system.viewHistoryJob();
+                        }else if(supporter_choice == "8"){
+                            clearScreen();
+                            system.viewPersonalInformation();
+                        } else if (supporter_choice == "9"){
+                            clearScreen();
+                            system.statusSetting();
+                        } else if (supporter_choice == "10"){
+                            clearScreen();
+                            request_supporter = false;
+                            cout << "Return to main dashboard" << endl;
+                        } else{
+                            clearScreen();
+                            Error_Main();
+                        }
+                    } 
                 }
-                break;
-            case '3':
-                clearScreen();
-                cout << "Thank you for using our app" << endl;
-                cout << "Exit successfully!" << endl;
-                request = false;
-                break;
-            default:
-                clearScreen();
-                Error_Main();
-                // cout << "****Please enter the valid input****" << endl;
-                break;
+            } else{
+                cout << "Incorrect username or password" << endl;
             }
+        } else if(user_choice == "3"){
+            clearScreen();
+            cout << "Thank you for using our app" << endl;
+            cout << "Exit successfully!" << endl;
+            request = false;
+        } else{
+            clearScreen();
+            Error_Main();
+        }
     }
 
     if( !file_process.saveToFile(system.getMemberList()) ){
