@@ -322,14 +322,15 @@ public:
         string bookingid_from_file, hostid_from_file, supportid_from_file, status_from_file, progress_from_file;
         string start_hour_file, start_minute_file, end_hour_file, end_minute_file;
         string host_rating_file, skill_rating_file, supporter_rating_file, host_comment_file, supporter_comment_file, total_cost_file;
+        string day_from_file, month_from_file, year_from_file;
 
         while (getline(my_file, bookingid_from_file, '-') && getline(my_file, hostid_from_file, '-') && getline(my_file, supportid_from_file, '-') && getline(my_file, status_from_file, '-') && getline(my_file, progress_from_file, '-')
                && getline(my_file, start_hour_file, '-') && getline(my_file, start_minute_file, '-') && getline(my_file, end_hour_file, '-') && getline(my_file, end_minute_file, '-')
-               && getline(my_file, host_rating_file, '-') && getline(my_file, skill_rating_file, '-') && getline(my_file, supporter_rating_file, '-') && getline(my_file, host_comment_file, '-') && getline(my_file, supporter_comment_file, '-') && getline(my_file, total_cost_file)){
+               && getline(my_file, host_rating_file, '-') && getline(my_file, skill_rating_file, '-') && getline(my_file, supporter_rating_file, '-') && getline(my_file, host_comment_file, '-') && getline(my_file, supporter_comment_file, '-') && getline(my_file, total_cost_file,'-') && getline(my_file, day_from_file,'-') && getline(my_file, month_from_file,'-') && getline(my_file, year_from_file)){
             
             Time start_time(std::stoi(start_hour_file), std::stoi(start_minute_file));
             Time end_time(std::stoi(end_hour_file), std::stoi(end_minute_file));
-            BookingSupporter *booking  = new BookingSupporter(hostid_from_file, supportid_from_file, status_from_file, bookingid_from_file, progress_from_file, start_time, end_time, stoi(host_rating_file), stoi(skill_rating_file), stoi(supporter_rating_file), host_comment_file, supporter_comment_file, std::stod(total_cost_file));
+            BookingSupporter *booking  = new BookingSupporter(hostid_from_file, supportid_from_file, status_from_file, bookingid_from_file, progress_from_file, start_time, end_time, stoi(host_rating_file), stoi(skill_rating_file), stoi(supporter_rating_file), host_comment_file, supporter_comment_file, std::stod(total_cost_file), std::stoi(day_from_file), std::stoi(month_from_file), std::stoi(year_from_file));
             booking_list.push_back(booking);
         }
         my_file.close();
