@@ -200,11 +200,9 @@ int main(){
                                     << "\t\t|                                                           |\n"
                                     << "\t\t|7. Become supporter                                        |\n"
                                     << "\t\t|                                                           |\n"
-                                    << "\t\t|8. Set min skill rating for suppoter                       |\n"
+                                    << "\t\t|8. Add information about yourself                          |\n"
                                     << "\t\t|                                                           |\n"
-                                    << "\t\t|9. Set min supporter rating for suppoter                   |\n"
-                                    << "\t\t|                                                           |\n"
-                                    << "\t\t|10. Return                                                 |\n"
+                                    << "\t\t|9. Return                                                 |\n"
                                     << "\t\t-------------------------------------------------------------\n"
                                     << ">Your choice: ";
                                 string member_setting_choice; 
@@ -239,11 +237,8 @@ int main(){
                                     }
                                 } else if(member_setting_choice == "8"){
                                     clearScreen();
-                                    // system.setMinRatingSuppoter();
+                                    system.getLoggedInMember()->addInformation();
                                 } else if(member_setting_choice == "9"){
-                                    clearScreen();
-                                    // system.setMinSupportratinSupporter();
-                                } else if(member_setting_choice == "10"){
                                     clearScreen();
                                     cout << "Returning to main dashboard" << endl;
                                     request_setting_member = false;
@@ -343,13 +338,15 @@ int main(){
                                     << "\t\t|                                                           |\n"
                                     << "\t\t|6. View block list                                         |\n"
                                     << "\t\t|                                                           |\n"
-                                    << "\t\t|7. Set min host rating for host                            |\n"
+                                    << "\t\t|7. Modify your cost                                        |\n"
                                     << "\t\t|                                                           |\n"
-                                    << "\t\t|8. Set min skill rating for supporter                      |\n"
+                                    << "\t\t|8. Adjust your personal information                        |\n"
                                     << "\t\t|                                                           |\n"
-                                    << "\t\t|9. Set min supporter rating for suppoter                   |\n"
+                                    << "\t\t|9. Modify free time period                                 |\n"
                                     << "\t\t|                                                           |\n"
-                                    << "\t\t|10. Return                                                 |\n"
+                                    << "\t\t|10. Set min host rating                                     |\n"
+                                    << "\t\t|                                                           |\n"
+                                    << "\t\t|11. Return                                                 |\n"
                                     << "\t\t-------------------------------------------------------------\n"
                                     << ">Your choice: ";
                                 string suppoter_setting_choice;
@@ -377,14 +374,18 @@ int main(){
                                     system.getLoggedInSupporter()->unblockUser();
                                 } else if(suppoter_setting_choice == "7"){
                                     clearScreen();
-                                    // system.setMinRatingHost();
+                                    // modify cost
+
                                 } else if(suppoter_setting_choice == "8"){
                                     clearScreen();
-                                    // system.setMinRatingSupporter();
+                                    // modify personal information
                                 } else if(suppoter_setting_choice == "9"){
                                     clearScreen();
-                                    // system.setMinSupporterRating();
-                                }else if(suppoter_setting_choice == "10"){
+                                    // modify time period
+                                } else if(suppoter_setting_choice == "10"){
+                                    clearScreen();
+                                    //set min host rating
+                                }else if(suppoter_setting_choice == "11"){
                                     clearScreen();
                                     cout << "Returning to main dashboard" << endl;
                                     request_setting_supporter = false;

@@ -227,6 +227,23 @@ public:
         return about_me;
     }
 
+    bool addInformation(){ //THIS IS SET ABOUT ME
+        cout << "In this section you can introduce yourself, so that the another member can know about you and your skills!" << endl;
+
+        string input_from_user;
+        getline(cin >> std::ws, input_from_user);
+        
+        if(!input_from_user.empty()){
+            this->setAboutMe(input_from_user);
+            cout << "Modify information sucessfully!" << endl;
+            return true;
+        }else{
+            cout << "You can not leave this section empty!" << endl;
+        }
+
+        return false;
+    }
+
     void setAboutMe(string value) {
         about_me = value;
     }

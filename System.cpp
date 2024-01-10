@@ -247,21 +247,6 @@ public:
             cout << "You do not have permisson to do that" << endl;
         }
     }
-
-    bool addInformation(){ //THIS IS SET ABOUT ME
-        cout << "In this section you can introduce yourself, so that the another member can know about you and your skills!" << endl;
-
-        string input_from_user;
-        getline(cin >> std::ws, input_from_user);
-        
-        if(checkNonEmpty(input_from_user)){
-            logged_in_member->setAboutMe(input_from_user);
-            cout << "Modify information sucessfully!" << endl;
-            return true;
-        }
-
-        return false;
-    }
     
     bool checkDuplicateDay(std::vector< std::pair< string, std:: vector< std::pair< Time, Time> > > > list, string choose){
         bool check = true;
