@@ -648,21 +648,7 @@ public:
         string input; cin >> input;
 
 
-        //=========================CHECK IS THAT SUPPORTER IS EXSIT=======================
-        Supporter* selected_supporter;
-        bool existSupporter = false;
-        loop(availableSupporter.size()){
-            if (availableSupporter[i]->getMemberId() == input){
-                existSupporter = true;
-                selected_supporter = availableSupporter[i];
-                break;
-            }
-        }
-
-        if (!existSupporter){
-            NotExistSupporterError();
-            return;
-        }
+//=========================CHECK IS THAT SUPPORTER IS EXSIT=======================
         
         bool isSupporter = (logged_in_member == nullptr);
         bool isValidSupporter = false;//this to check the create bookign is successfully or not?
@@ -673,93 +659,93 @@ public:
                     logged_in_member = logged_in_supporter;//use this to prevent segment fault when the current users is supporter
                 }
 
-        //===========================User choose the day to book here===============================================
-                Calendar calendar;
-                RealTime today;
-                bool decide_month_check = true;
-                while(decide_month_check){
-                    // clearScreen();
-                    calendar.printCalendar(today.getThisYear(), today.getThisMonth());
-                    
-                    cout <<"1. Book withtin this month" << endl;
-                    cout <<"2. Book for with another calendar" << endl;
-                    cout <<"3. Cancle" << endl;
-                    
-                    int choice;
-                    cout << "> Your choice: "; cin >> choice;
+//==================================SELECT TIME==========================================================================
+                if(!booking.isInBlockList(logged_in_member->getBlockList(), availableSupporter[i]->getMemberId())){
+//===========================User choose the day to book here===============================================
+                    Calendar calendar;
+                    RealTime today;
+                    bool decide_month_check = true;
+                    while(decide_month_check){
+                        // clearScreen();
+                        calendar.printCalendar(today.getThisYear(), today.getThisMonth());
+                        
+                        cout <<"1. Book withtin this month" << endl;
+                        cout <<"2. Book for with another calendar" << endl;
+                        cout <<"3. Cancle" << endl;
+                        
+                        int choice;
+                        cout << "> Your choice: "; cin >> choice;
 
-                    int day;
-                    if (choice == 1){
-                        bool day_check =true;
-                        while(day_check){
-                            cout << "> Choice the day in above month: "; cin >> day;
+                        int day;
+                        if (choice == 1){
+                            bool day_check =true;
+                            while(day_check){
+                                cout << "> Choice the day in above month: "; cin >> day;
 
-                            if (day >= 1 && day <= calendar.getDaysInMonth(today.getThisMonth(), today.getThisYear())){
-                                if ( day >= today.getToday()){
-                                    day_check = false;
-                                }
-                                else{
-                                    calendar.printCalendar(today.getThisYear(), today.getThisMonth());
-                                    cout << colors::RED << "The selected must be today or the following days. Please select again" << colors::RESET <<  endl;
-                                }
-                            }
-                            else{
-
-                                calendar.printCalendar(today.getThisYear(), today.getThisMonth());
-                                cout << colors::RED << "The selected day does not exist in this month. Please select again" << colors::RESET << endl;
-                            }
-                        }
-                        decide_month_check = false;
-                    }
-                    else if( choice == 2){
-                        clearScreen();
-                        bool year_month_check = true;
-                        while(year_month_check){
-                            int year, month;
-                            cout << "Please enter the year you want to make the booking: "; cin >> year;
-                            cout << "Please enter the month you want to make the booking: "; cin >> month;
-
-                            if (year >= today.getThisYear() && (month >= today.getThisMonth() &&  month <= 12)){
-                                clearScreen();
-                                calendar.printCalendar(year,month);
-
-                                bool day_check =true;
-                                while(day_check){
-                                    cout << "> Choice the day in above month: "; cin >> day;
-
-                                    if (day >= 1 && day <= calendar.getDaysInMonth(today.getThisYear(), today.getThisMonth())){
-                                        if ( day >= today.getToday()){
-                                            day_check = false;
-                                        }
-                                        else{
-                                            cout << colors::RED << "The selected must be today or the following days. Please select again" << colors::RESET << endl;
-                                        }
+                                if (day >= 1 && day <= calendar.getDaysInMonth(today.getThisMonth(), today.getThisYear())){
+                                    if ( day >= today.getToday()){
+                                        day_check = false;
                                     }
                                     else{
-                                        cout << colors::RED << "The selected day does not exist in this month. Please select again" << colors::RESET << endl;
+                                        calendar.printCalendar(today.getThisYear(), today.getThisMonth());
+                                        cout << colors::RED << "The selected must be today or the following days. Please select again" << colors::RESET <<  endl;
                                     }
                                 }
+                                else{
 
-                                year_month_check =false;
+                                    calendar.printCalendar(today.getThisYear(), today.getThisMonth());
+                                    cout << colors::RED << "The selected day does not exist in this month. Please select again" << colors::RESET << endl;
+                                }
                             }
-                            else{
-                                cout << colors::RED <<"The selected month and year is invalid. Please select again" << colors::RESET <<  endl;
-                            }
+                            decide_month_check = false;
                         }
-                        decide_month_check = false;
-                    }
-                    else if (choice == 3){
-                        cout << "Returning to dashboard" << endl;
-                        return;
+                        else if( choice == 2){
+                            clearScreen();
+                            bool year_month_check = true;
+                            while(year_month_check){
+                                int year, month;
+                                cout << "Please enter the year you want to make the booking: "; cin >> year;
+                                cout << "Please enter the month you want to make the booking: "; cin >> month;
+
+                                if (year >= today.getThisYear() && (month >= today.getThisMonth() &&  month <= 12)){
+                                    clearScreen();
+                                    calendar.printCalendar(year,month);
+
+                                    bool day_check =true;
+                                    while(day_check){
+                                        cout << "> Choice the day in above month: "; cin >> day;
+
+                                        if (day >= 1 && day <= calendar.getDaysInMonth(today.getThisYear(), today.getThisMonth())){
+                                            if ( day >= today.getToday()){
+                                                day_check = false;
+                                            }
+                                            else{
+                                                cout << colors::RED << "The selected must be today or the following days. Please select again" << colors::RESET << endl;
+                                            }
+                                        }
+                                        else{
+                                            cout << colors::RED << "The selected day does not exist in this month. Please select again" << colors::RESET << endl;
+                                        }
+                                    }
+
+                                    year_month_check =false;
+                                }
+                                else{
+                                    cout << colors::RED <<"The selected month and year is invalid. Please select again" << colors::RESET <<  endl;
+                                }
+                            }
+                            decide_month_check = false;
+                        }
+                        else if (choice == 3){
+                            cout << "Returning to dashboard" << endl;
+                            return;
+                        }
+
+                        else{
+                            cout << colors::RED <<"Invalid select please choose again" << colors::RESET << endl;
+                        }
                     }
 
-                    else{
-                        cout << colors::RED <<"Invalid select please choose again" << colors::RESET << endl;
-                    }
-                }
-
-  //==================================SELECT TIME==========================================================================
-                if(!booking.isInBlockList(logged_in_member->getBlockList(), availableSupporter[i]->getMemberId())){
                     cout << "Choose the time you want to book. Noitce that: the time you choose must match with the free time of the supporter!" << endl;
                     int start_time_hour, start_time_minute, end_time_hour, end_time_minute;
                     string start_time_input, end_time_input;
@@ -768,6 +754,8 @@ public:
                     cout << "End Time: ";
                     getline(cin >> std::ws, end_time_input);
 
+
+//==================================SELECT TIME==========================================================================
                     if(checkValidTime(start_time_input) && checkValidTime(end_time_input)){
                         //use one string to 2 integer
                         std::stringstream ss_start_time;
@@ -840,7 +828,7 @@ public:
             logged_in_member = nullptr;
         }
         if(!isValidSupporter){
-            cout << "Please enter the valid supporter's id" << endl;
+            cout << colors::RED << "Please enter the valid supporter's id" << colors::RESET << endl;
         }
     }
 
