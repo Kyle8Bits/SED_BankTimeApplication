@@ -115,6 +115,98 @@ public:
         phone_number = value;
     }
 
+    bool isValidPhone(const string& str) {
+        
+        // check if all characters in the string are digits
+        for (char ch : str) {
+            if (!std::isdigit(ch)) {
+                cout << "You can not type character!" << endl;
+                return false;
+            }
+        }
+        // check if the string length is exactly 10
+        if (str.length() != 10) {
+            cout << "Your phone number must have 10 numbers" << endl;
+            return false;
+        }
+        // if both conditions are satisfied, return true
+        return true;
+    }
+
+    bool setCityRequest(){
+        cout << "Please choose your current city!" << endl;
+        cout << "1. Hanoi" << endl;
+        cout << "2. Ho Chi Minh" << endl;
+        string input; 
+        getline(cin >> std::ws, input);
+        if(input == "1"){
+            this->city = "Hanoi";
+            cout << "Your new city is record!" << endl;
+            return true;
+        }
+        else if(input == "2"){
+            this->city = "Ho Chi Minh";
+            cout << "Your new city is record!" << endl;
+            return true;
+        }
+        else{
+            cout << "Invalid input!" << endl;
+            return false;
+        }
+    }
+
+    void setAddressRequest(){
+        cout << "Please enter your new address!" << endl;
+        cout << "Enter: ";
+        string input;
+        getline(cin >> std::ws, input);
+        this->address = input;
+        cout << "Your new address is record!" << endl;
+    }
+
+    bool setPhoneNumberRequest() {
+        cout << "Please enter new phone number" << endl;
+        cout << "Enter: ";
+        string input; 
+        getline(cin >> std::ws, input);
+        if(isValidPhone(input)){
+            this->phone_number = input;
+            cout << "Your new phone number is record!" << endl;
+            return true;
+        }
+        return false;
+    }
+
+    bool unblockUser(){
+        cout << "Your current block list: " << displayBlockList() << endl;
+        cout << "Do you want to unblock any user?" << endl;
+        cout << "1. Yes" << endl;
+        cout << "2. No" << endl;
+        string choice;
+        getline(cin >> std::ws, choice);
+        if(choice == "1"){
+            cout << "Please enter the username you want to unblock!" << endl;
+            cout << ">Your choice: ";
+            string input;
+            getline(cin >> std::ws, input);
+            for(int i = 0; i < this->block_list.size(); ++i){
+                if(this->block_list[i] == input){
+                    this->block_list.erase(this->block_list.begin() + i);
+                    cout << "You just unblock this users " << input << endl;
+                    return true;
+                }
+            }
+            cout << "Please enter the valid input" << endl;
+            return false;
+        }else if(choice == "2"){
+            cout << "Return dashboard!" << endl;
+            return false;
+        }else{
+            cout << "Please enter valid input!" << endl;
+            return false;
+        }
+    }
+
     string getAddress() const {
         return address;
     }

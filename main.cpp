@@ -45,6 +45,7 @@ int main(){
     bool request_member = false;
     bool request_admin = false;
     bool request_supporter = false;
+    bool request_setting_member = false;
 
     
     while(request){
@@ -156,15 +157,11 @@ int main(){
                                 << "\t\t|5. View complted tasks by supporter                        |\n"
                                 << "\t\t|> Notice: You have " << system.getNotification() << " new completed task from supporter\n"                                                    
                                 << "\t\t|                                                           |\n"
-                                << "\t\t|6. Become supporter                                        |\n"
+                                << "\t\t|6. View my information                                     |\n"
                                 << "\t\t|                                                           |\n"
-                                << "\t\t|7. Manage account                                          |\n"
+                                << "\t\t|7. Setting                                                 |\n"
                                 << "\t\t|                                                           |\n"
-                                << "\t\t|8. View my information                                     |\n"
-                                << "\t\t|                                                           |\n"
-                                << "\t\t|9. Block a user                                            |\n"
-                                << "\t\t|                                                           |\n"
-                                << "\t\t|10. Sign out                                               |\n"
+                                << "\t\t|8. Sign out                                                |\n"
                                 << "\t\t-------------------------------------------------------------\n"
                                 << ">Your choice: ";
                             string member_choice; cin >> member_choice;
@@ -183,27 +180,80 @@ int main(){
                             } else if(member_choice == "5"){
                                 clearScreen();
                                 system.checkCompleteTask();
-                            }else if(member_choice == "6"){
-                                clearScreen();
-                                if(system.upgradeToSupporter()){
-                                    cout << "Sucessfully become supporter " << endl;
-                                    request_member = false;
-                                }
-                            }else if(member_choice == "7"){
-                                clearScreen();
-                                //Manage account
-                            }else if(member_choice == "8"){
+                            } else if(member_choice == "6"){
                                 clearScreen();
                                 system.viewPersonalInformation();
-                            }else if(member_choice == "9"){
-                                clearScreen();
-                                system.blockUser();
-                            }else if(member_choice == "10"){
-                                //CLEAR AVAILABLE SUPPORTER LIST WHENEVER SIGN OUT
+                            } else if(member_choice == "7"){
+                                request_setting_member = true;
+                                while(request_setting_member){
+                                    cout << "\t\t____________________________________________________________\n"
+                                        << "\t\t|                   WELCOME BACK  + (NAME)                  |\n"
+                                        << "\t\t|                                                           |\n"
+                                        << "\t\t|1. Change password                                         |\n"
+                                        << "\t\t|                                                           |\n"
+                                        << "\t\t|2. Change phone number                                     |\n"
+                                        << "\t\t|                                                           |\n"
+                                        << "\t\t|3. Change address                                          |\n"
+                                        << "\t\t|                                                           |\n"
+                                        << "\t\t|4. Change city                                             |\n"
+                                        << "\t\t|                                                           |\n"
+                                        << "\t\t|5. Block a users                                           |\n"
+                                        << "\t\t|                                                           |\n"
+                                        << "\t\t|6. View block list                                         |\n"
+                                        << "\t\t|                                                           |\n"
+                                        << "\t\t|7. Become supporter                                        |\n"
+                                        << "\t\t|                                                           |\n"
+                                        << "\t\t|8. Set min supporter rating                                |\n"
+                                        << "\t\t|                                                           |\n"
+                                        << "\t\t|9. Return                                                  |\n"
+                                        << "\t\t-------------------------------------------------------------\n"
+                                        << ">Your choice: ";
+                                    string member_setting_choice; cin >> member_setting_choice;
+                                    if(member_setting_choice == "1"){
+                                        clearScreen();
+                                        if(!system.getLoggedInMember()->setPasswordRequest()){
+                                            cout << "Invalid Password" << endl;
+                                        }
+                                    }else if(member_setting_choice == "2"){
+                                        clearScreen();
+                                        system.getLoggedInMember()->setPhoneNumberRequest();
+                                    }else if(member_setting_choice == "3"){
+                                        clearScreen();
+                                        system.getLoggedInMember()->setAddressRequest();
+                                    }else if(member_setting_choice == "4"){
+                                        clearScreen();
+                                        system.getLoggedInMember()->setCityRequest();
+                                    }else if(member_setting_choice == "5"){
+                                        clearScreen();
+                                        system.blockUser();
+                                    } else if(member_setting_choice == "6"){
+                                        clearScreen();
+                                        system.getLoggedInMember()->unblockUser();
+                                    }else if (member_setting_choice == "7"){
+                                        clearScreen();
+                                        if(system.upgradeToSupporter()){
+                                            cout << "Successfully become supporter" << endl;
+                                            cout << "Please login again" << endl;
+                                            request_member = false;
+                                            request_setting_member = false;
+                                        }
+                                    } else if(member_setting_choice == "8"){
+                                        clearScreen();
+                                        // system.setMinSupporterRating();
+                                    } else if(member_setting_choice == "9"){
+                                        clearScreen();
+                                        cout << "Returning to main dashboard" << endl;
+                                        request_setting_member = false;
+                                    }
+                                    else{
+                                        cout << "Invalid choice" << endl;
+                                    }
+                                }
+                            }else if(member_choice == "8"){
                                 request_member = false;
                                 cout << "Returning to main dashboard" << endl;
-                            } else {
-                                cout << "Invalid choice" << endl;
+                            }else {
+                                Error_Main();
                             }
                         }
 //===========================================================SUPPORTER MENU HOMEPAGE========================================================
@@ -286,6 +336,10 @@ int main(){
                                         request_supporter = false;
                                         cout << "Return to main dashboard" << endl;
                                         break;
+                                    // case 12:
+                                    //     clearScreen();
+                                    //     system.blockUser();
+                                    //     break;
                                     default:
                                         cout << "Please enter valid input" << endl;
                                         break;

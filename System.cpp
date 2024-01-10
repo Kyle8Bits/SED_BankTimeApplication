@@ -1578,7 +1578,7 @@ public:
         }
 
         if(isSupporter){
-            logged_in_supporter->setBlockList(logged_in_member->block_list);
+            // logged_in_supporter->setBlockList(logged_in_member->block_list);
             logged_in_member = nullptr;
         }
 

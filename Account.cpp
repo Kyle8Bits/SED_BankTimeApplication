@@ -29,5 +29,22 @@ public:
     void setPassword(string pass_word){
         this->pass_word = pass_word;
     }
+
+    bool setPasswordRequest(){
+        cout << "Please enter your old password!" << endl;
+        cout << "Password: ";
+        string input;
+        getline(cin >> std::ws, input);
+        if(input == this->pass_word){
+            cout << "Please enter new password: ";
+            getline(cin >> std::ws, input);
+            this->pass_word = input;
+            cout << "Your new password is record!" << endl;
+            return true;
+        }
+
+        return false;
+    }
+
 };
 #endif // ACCOUNT_H
