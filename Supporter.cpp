@@ -274,6 +274,22 @@ public:
         return this->cost;
     }
 
+    void setCostRequest(){
+        cout << "Please enter new cost!" << endl;
+        cout << ">Input: ";
+        string input;
+        getline(cin >> std::ws, input);
+        for(int i = 0; i < input.length(); i++){
+            if(!isdigit(input[i])){
+                cout << "Please enter valid number!" << endl;
+                return;
+            }
+        }
+
+        this->cost = std::stoi(input);
+        return;
+    }
+
     string getAvailabilityPeriod(){
         return "From: " + this->start_time.getTime() + " To: " + this->end_time.getTime();
     }

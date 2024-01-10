@@ -374,11 +374,10 @@ int main(){
                                     system.getLoggedInSupporter()->unblockUser();
                                 } else if(suppoter_setting_choice == "7"){
                                     clearScreen();
-                                    // modify cost
-
+                                    system.getLoggedInSupporter()->setCostRequest();
                                 } else if(suppoter_setting_choice == "8"){
                                     clearScreen();
-                                    // modify personal information
+                                    system.getLoggedInSupporter()->addInformation();
                                 } else if(suppoter_setting_choice == "9"){
                                     clearScreen();
                                     // modify time period
