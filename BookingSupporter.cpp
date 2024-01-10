@@ -15,7 +15,13 @@ using std::string;
 using std::endl;
 using std::to_string;
 
-#define loop(n) for(int i = 0; i < n; ++i)
+#define loop(n) for(int i = 0; i < n; ++i)\
+
+namespace bk_colors {
+    const char* YELLOW = "\033[1;93m";
+    const char* WHITE_BOLD = "\033[1;97m";
+    const char* RESET = "\033[0m";
+}
 
 class BookingSupporter{
     private:
@@ -58,21 +64,24 @@ class BookingSupporter{
             logged_in_member = logged_in_supporter;
         }
 
-        cout << std::left << std::setw(13) << "| Member id |" << std::setw(25) << " Fullname               |" << std::setw(15) << " City         |"
-                << std::setw(16) << " Cost Per Hour |" << std::setw(40) << " Introduction                          |"  << std::setw(40) << " Skill                                 |" << endl;
-        cout << std::setw(149) << std::setfill('-') << "" << std::setfill(' ') << std::endl;
+        cout << bk_colors::YELLOW << std::left << std::setw(13) << "| Member id |" << std::setw(25) << " Fullname               |" << std::setw(15) << " City         |"
+                << std::setw(16) << " Cost Per Hour |" << std::setw(40) << " Introduction                          |"  << std::setw(40) << " Skill                                 |"
+                << std::setw(15) << " Skill Rating |" << std::setw(9) << " Rating |"  <<endl;
+
+        cout << std::setw(173) << std::setfill('-') << "" << std::setfill(' ') << bk_colors::RESET <<std::endl;
 
         for (size_t i = 0; i < member_list.size(); ++i) {
             if (Supporter* supporter = dynamic_cast<Supporter*>(member_list[i])) {
                 if (supporter->getMemberId() != logged_in_member->getMemberId() && supporter->getStatus() == Status::ONLINE) {
                     if (!isInBlockList(logged_in_member->block_list, supporter->getMemberId())) {
-                        cout <<"| "<< std::setw(10) << supporter->getMemberId() <<"| "<<std::setw(23) << supporter->getFullName()
+                        cout <<bk_colors::WHITE_BOLD<<"| "<< std::setw(10) << supporter->getMemberId() <<"| "<<std::setw(23) << supporter->getFullName()
                                 <<"| " << std::setw(13) << supporter->getCity() <<"| "<< std::setw(14) << supporter->getCost() 
-                                <<"| " << std::setw(38) << supporter->getAboutMe() << "| " <<std::setw(38) << supporter->displaySkillList() <<"|"<< endl;
-
+                                <<"| " << std::setw(38) << supporter->getAboutMe() << "| " <<std::setw(38) << supporter->displaySkillList() 
+                                <<"| " <<std::setw(13) << supporter->getSkillRatingScore() << "| " <<std::setw(7) << supporter->getSupportRatingScore() << "|"<<bk_colors::RESET<<endl;
+                        cout << bk_colors::YELLOW << std::setw(173) << std::setfill('-') << "" << std::setfill(' ') << bk_colors::RESET << std::endl;
                         supporter->displayWorkSchedule();
 
-                        cout << std::setw(149) << std::setfill('-') << "" << std::setfill(' ') << endl;
+                        cout << bk_colors::YELLOW << std::setw(173) << std::setfill('-') << "" << std::setfill(' ') << bk_colors::RESET << endl;
 
                         availableSupporter.push_back(supporter);
                     }

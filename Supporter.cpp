@@ -30,7 +30,11 @@ enum class Status{
     OFFLINE,
     ONLINE
 };
-
+namespace sp_colors {
+    const char* YELLOW = "\033[1;93m";
+    const char* WHITE_BOLD = "\033[1;97m";
+    const char* RESET = "\033[0m";
+}
 class Supporter : public Member{
 private:
     //SUPPORTER INHERITED THESE ATTRIBUTES FROM MEMBER CLASS
@@ -227,16 +231,16 @@ public:
             cout << "EMPTY" << endl;
         }
         else{
-            cout << "\t\t\t-------------------------------"<< endl;
-            cout << "\t\t\t" << std::left << std::setw(30)<< "|> Work Schedule:" <<"|" << endl;
+            cout << sp_colors::WHITE_BOLD << std::left << std::setw(30)<< "|> Work Schedule:" <<"|" << endl;
 
             for(int i =0 ; i < workSchedule.size(); i++){
-                cout << "\t\t\t-------------------------------"<< endl;
-                cout << "\t\t\t" << "| " << std::left << std::setw(28) << workSchedule[i].first << "|" << endl;
+                cout << sp_colors::YELLOW<< "-------------------------------"<< sp_colors::RESET << endl;
+                cout << "| " << std::left << std::setw(28) << workSchedule[i].first << "|" << endl;
                 for(int a  = 0 ; a < workSchedule[i].second.size(); a++){
-                    cout << "\t\t\t" <<"| "<< std::left << std::setw(5) << workSchedule[i].second[a].first.getTime() << " to " << std::setw(19)<<workSchedule[i].second[a].second.getTime() << "|" << endl;
+                    cout << "| "<< std::left << std::setw(5) << workSchedule[i].second[a].first.getTime() << " to " << std::setw(19)<<workSchedule[i].second[a].second.getTime() << "|" << endl;
                 }
             }
+            sp_colors::RESET;
             // cout << std::setw(30) << std::setfill('-') << endl;
         }
         
