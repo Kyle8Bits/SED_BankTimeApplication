@@ -383,7 +383,7 @@ int main(){
                                     // modify time period
                                 } else if(suppoter_setting_choice == "10"){
                                     clearScreen();
-                                    //set min host rating
+                                    system.getLoggedInSupporter()->setMinHostRatingRequest();
                                 }else if(suppoter_setting_choice == "11"){
                                     clearScreen();
                                     cout << "Returning to main dashboard" << endl;

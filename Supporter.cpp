@@ -64,17 +64,18 @@ private:
     double support_rating_score= 0;
     int host_not_comment = 0;
     int support_count = 0;
+    int min_host_rating;
     Status status = Status::OFFLINE; 
     
 public:
     Supporter(string user_name = "", string pass_word = "", string member_id = "S", double credit_point = 20, string full_name = "", string phone_number = "", 
     string address = "", string city = "", string about_me = "",double host_rating_score = 0, 
     int host_count = 0, int spt_not_comment = 0, std::vector<string> block_list = {}, std::vector< std::pair< string, std:: vector< std::pair< Time, Time> > > > workSchedule = {}, Status status = Status::OFFLINE, 
-    std::vector<string> skill_list = {}, int cost = 0, double skill_rating_score = 0, double support_rating_score = 0, int support_count = 0, int host_not_comment = 0)
+    std::vector<string> skill_list = {}, int cost = 0, double skill_rating_score = 0, double support_rating_score = 0, int support_count = 0, int host_not_comment = 0, int min_host_rating = 0)
     : Member(user_name, pass_word, member_id, credit_point, full_name, phone_number, address, city, about_me,
             host_rating_score, host_count, spt_not_comment, block_list), 
             workSchedule(workSchedule), status(status), skill_list(skill_list), cost(cost), skill_rating_score(skill_rating_score),
-            support_rating_score(support_rating_score), support_count(support_count), host_not_comment(host_not_comment)
+            support_rating_score(support_rating_score), support_count(support_count), host_not_comment(host_not_comment), min_host_rating(min_host_rating)
     {
         if(member_id == "S"){//If the member id is S (Default value), we auto generate the id with the number of the number
             this->member_id = member_id + std::to_string(number_of_member);//AUTO GENERATE THE ID FOR MEMBER
@@ -83,9 +84,9 @@ public:
     
     //paste the Member to the Supporet (It's like copy constructor)
     Supporter(const Member& member,std::vector< std::pair< string, std:: vector< std::pair< Time, Time> > > > workSchedule, Status status = Status::OFFLINE,std::vector<string> skill_list = {}, int cost = 0,
-              double skill_rating_score = 0, double support_rating_score = 0, int support_count = 0):
+              double skill_rating_score = 0, double support_rating_score = 0, int support_count = 0, int min_host_rating = 0):
               Member(member), workSchedule(workSchedule), status(status), skill_list(skill_list), cost(cost), 
-              skill_rating_score(skill_rating_score), support_rating_score(support_rating_score), support_count(support_count) ,host_not_comment(host_not_comment)
+              skill_rating_score(skill_rating_score), support_rating_score(support_rating_score), support_count(support_count) ,host_not_comment(host_not_comment), min_host_rating(min_host_rating)
         {
             if(member_id == "S"){//If the member id is S (Default value), we auto generate the id with the number of the number
             this->member_id = member_id + std::to_string(number_of_member);//AUTO GENERATE THE ID FOR MEMBER
@@ -155,8 +156,8 @@ public:
         cout << "My Support Count: " << this->support_count << endl;
         cout << "Not comment: " << this->host_not_comment << endl;
         cout << "My Current Status: " << statusToString(status) << endl;
+        cout << "My Minimum Host Rating: " << this->min_host_rating << endl;
         this->displayWorkSchedule();
-
     }
 
     string skillListToString(){//THIS USING FOR SAVE TO FILE
@@ -294,6 +295,23 @@ public:
         return;
     }
 
+    bool setMinHostRatingRequest(){
+        cout << "Please enter your minimum rating! This will help you avoid the bad host!" << endl;
+        cout << ">Your choice: ";
+        string input;
+        getline(cin >> std::ws, input);
+        for(int i = 0; i < input.length(); i++){
+            if(!isdigit(input[i])){
+                cout << "Please enter valid number!" << endl;
+                return false;
+            }
+        }
+
+        this->min_host_rating = std::stoi(input);
+        cout << "Your minimum rating is set!" << endl;
+        return true;
+    }
+
     string getAvailabilityPeriod(){
         return "From: " + this->start_time.getTime() + " To: " + this->end_time.getTime();
     }
@@ -307,7 +325,7 @@ public:
     }
 
     string toString() override{
-        return Member::toString() + "-" + std::to_string(this->cost) + "-" + std::to_string(this->skill_rating_score) + "-" + std::to_string(this->support_rating_score) + "-" + std::to_string(this->support_count) + "-" + std::to_string(this->host_not_comment) +  "-" + statusToString(getStatus());
+        return Member::toString() + "-" + std::to_string(this->cost) + "-" + std::to_string(this->skill_rating_score) + "-" + std::to_string(this->support_rating_score) + "-" + std::to_string(this->support_count) + "-" + std::to_string(this->host_not_comment) +  "-" + statusToString(getStatus()) + "-" + std::to_string(this->min_host_rating);
     }
 
     std::vector< std::pair< string, std:: vector< std::pair< Time, Time> > > > getWorkSchedule(){
