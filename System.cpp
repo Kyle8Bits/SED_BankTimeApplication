@@ -1160,7 +1160,7 @@ public:
                             cout << ">Your choice: "; cin >> decide;
                             switch(decide){
                                 case '1':
-                                    if(cr)
+                                    // if(cr)
                                     setStatusById(current_job[i], "ACCEPTED");
                                     break;
                                 case '2':

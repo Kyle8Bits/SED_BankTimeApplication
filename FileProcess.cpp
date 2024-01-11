@@ -132,7 +132,7 @@ public:
         }
         
         string username_from_file, password_from_file, id_from_file, full_name_from_file, phonenumber_from_file, address_from_file, city_from_file,crepoint_from_file, about_me_from_file; // varibles to store data from file and push into the list
-        string start_time_hour, start_time_minute, end_time_hour, end_time_minute, cost_from_file, skill_rating_score_file, support_rating_score_file, support_count_file, host_not_comment_file,status_from_file, host_rating_score_file, host_count_file, supporter_not_comment_file;
+        string start_time_hour, start_time_minute, end_time_hour, end_time_minute, cost_from_file, skill_rating_score_file, support_rating_score_file, support_count_file, host_not_comment_file,status_from_file, host_rating_score_file, host_count_file, supporter_not_comment_file, min_host_rating_file;
         std::vector<string> skill_list = {};
         std::vector<string> block_list = {};
         std::vector< std::pair< string, std:: vector< std::pair< Time, Time> > > > workSchedule = {};
@@ -154,8 +154,9 @@ public:
                 getline(my_file, support_rating_score_file, '-');//9
                 getline(my_file, support_count_file,'-');//2
                 getline(my_file, host_not_comment_file,'-');//0
-                getline(my_file, status_from_file);//online
-                
+                getline(my_file, status_from_file, '-');//online
+                getline(my_file, min_host_rating_file);
+
                 skill_list = readSkillSupporter(id_from_file);
                 workSchedule = readWorkDay(id_from_file);
                 block_list = readBlockList(id_from_file);
@@ -164,7 +165,7 @@ public:
 
                 new_member = new Supporter(username_from_file, password_from_file, id_from_file, std::stod(crepoint_from_file), full_name_from_file, phonenumber_from_file, address_from_file, city_from_file, about_me_from_file,
                                            std::stod(host_rating_score_file),std::stoi(host_count_file),std::stoi(supporter_not_comment_file), block_list, workSchedule, statusEnum(status_from_file), skill_list, std::stoi(cost_from_file), 
-                                           std::stod(skill_rating_score_file), std::stod(support_rating_score_file), std::stoi(support_count_file), std::stoi(host_not_comment_file));
+                                           std::stod(skill_rating_score_file), std::stod(support_rating_score_file), std::stoi(support_count_file), std::stoi(host_not_comment_file), std::stoi(min_host_rating_file));
             }
             if(new_member){
                 member_list.push_back(new_member);
