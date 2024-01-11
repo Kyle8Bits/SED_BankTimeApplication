@@ -63,7 +63,7 @@ class BookingSupporter{
         if (isSupporter) {
             logged_in_member = logged_in_supporter;
         }
-
+        cout << std::setw(173) << std::setfill('-') << "" << std::setfill(' ') << bk_colors::RESET <<std::endl;
         cout << bk_colors::YELLOW << std::left << std::setw(13) << "| Member id |" << std::setw(25) << " Fullname               |" << std::setw(15) << " City         |"
                 << std::setw(16) << " Cost Per Hour |" << std::setw(40) << " Introduction                          |"  << std::setw(40) << " Skill                                 |"
                 << std::setw(15) << " Skill Rating |" << std::setw(9) << " Rating |"  <<endl;

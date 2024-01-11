@@ -19,7 +19,7 @@ namespace color_main {
 
 
 int main(){
-    // clearScreen();
+    clearScreen();
     cout << "EEET2482/COSC2082 ASSIGNMENT\n"
         << "'TIME BANK' APPLICATION\n"
         << "Instructor: Mr. Tran Duc Linh\n"

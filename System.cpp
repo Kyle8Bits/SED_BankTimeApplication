@@ -30,6 +30,7 @@ using std::find;
 
 namespace colors{
     const char* RED = "\033[1;91m";
+    const char* YELLOW = "\033[1;93m";
     const char* GREEN = "\033[92m";
     const char* RESET = "\033[0m";  
 }
@@ -41,7 +42,7 @@ namespace colors{
 #define BlockError() cout << colors::RED << "\t\tERROR: You can not book a supporter in your block list" << colors::RESET << std::endl;
 #define InsufficientPointError() cout << colors::RED << "\t\tERROR: Insufficient credit points to book this supporter" << colors::RESET << std::endl;
 #define SucessBooking() cout << colors::GREEN << "\t\tYour booking has been created" << colors::RESET << endl;
-
+#define IdNotInListError() cout << colors::RED << "\t\tPlease enter the valid supporter's id" << colors::RESET << endl;
 
 
 class System{
@@ -856,14 +857,14 @@ public:
                     BlockError();
                     return;
                 }
-
+                break;
             }
         }
         if(isSupporter){
             logged_in_member = nullptr;
         }
         if(!isValidSupporter){
-            cout << colors::RED << "Please enter the valid supporter's id" << colors::RESET << endl;
+            IdNotInListError();
         }
     }
 
@@ -1003,6 +1004,13 @@ public:
         int count = 1;
         std::vector<string> current_job = {};
         
+        cout << "\n";
+        cout << colors::YELLOW << std::setw(146) << std::setfill('-') << colors::RESET << endl;
+        cout << bk_colors::YELLOW << std::left << std::setw(7) << "| Num |" << std::setw(13) << " Booking ID |" << std::setw(20) << " Host Name         |"
+                << std::setw(15) << " City         |" << std::setw(15) << " Host Rating  |"  << std::setw(12) << " Status    |" << std::setw(17) << " Progress       |"
+                << std::setw(20) << " Time              |" << std::setw(15) << " Book date    |" << std::setw(8) << " Cost  |" <<endl;
+
+        cout << colors::YELLOW << std::setw(146) << std::setfill('-') << colors::RESET << std::setfill(' ')<< endl;
         for(int i = 0; i < booking_list.size(); i++){
             if ( logged_in_supporter->getMemberId() == booking_list[i]->getSupportId() && booking_list[i]->getProgress() != "COMPLETED"){//Check if current user is = host id 
                 for (int a = 0; a < member_list.size(); a++){
@@ -1010,20 +1018,25 @@ public:
                         //push the id to the vector current_job
                         current_job.push_back(booking_list[i]->getBookingId());
                         //Print basic information
-                        cout <<"Booking: " << std::to_string(count) <<
-                            "\nBooking ID: " << booking_list[i]->getBookingId() <<
-                            "\nHost name: " << member_list[a]->getFullName() <<
-                            "\nCity: " << member_list[a]->getCity() <<
-                            "\nStatus: " << booking_list[i]->getStatus() <<
-                            "\nTime: " << booking_list[i]->getTime() << 
-                            "\nDate booking "<< booking_list[i]->getDate() <<
-                            "\nCost: " << booking_list[i]->getTotalCost() <<
-                            "\nHost Rating: " << std::fixed << std::setprecision(2) << member_list[a]->getAverageRatingScore() << endl;
+                        cout <<"| "<< std::setw(4) <<std::to_string(count) << "| " 
+                             << std::setw(11)<< booking_list[i]->getBookingId() << "| "
+                             << std::setw(18)<< member_list[a]->getFullName() << "| " 
+                             << std::setw(13)<< member_list[a]->getCity() << "| "
+                             << std::setw(13) << std::fixed << std::setprecision(2) << member_list[a]->getAverageRatingScore() << "| ";
 
-                        if(booking_list[i]->getStatus() == "ACCEPTED"){
-                            cout << "Progress: " << booking_list[i]->getProgress() << endl;
-                        }
-                        cout << "==============================================\n" << endl;
+                            if(booking_list[i]->getStatus() == "ACCEPTED"){
+                            cout << colors::GREEN << std::setw(10) << booking_list[i]->getStatus() << colors::RESET << "| ";
+                            cout << colors::GREEN << std::setw(15) << booking_list[i]->getProgress() << colors::RESET << "| ";
+                            }
+                            else{
+                            cout << colors::YELLOW << std::setw(10) << booking_list[i]->getStatus() << colors::RESET << "| ";
+                            cout << colors::YELLOW << std::setw(15)<< "WAIT" << colors::RESET << "| ";
+                            }
+                        cout << std::setw(18)<< booking_list[i]->getTime() << "| "
+                             << std::setw(13) << booking_list[i]->getDate() << "| "
+                             << std::setw(6) << booking_list[i]->getTotalCost() <<"|" << endl;
+
+                        cout << colors::YELLOW << std::setw(146) << std::setfill('-') << colors::RESET << endl;
                     }
                 }
                 count++;
@@ -1147,6 +1160,7 @@ public:
                             cout << ">Your choice: "; cin >> decide;
                             switch(decide){
                                 case '1':
+                                    if(cr)
                                     setStatusById(current_job[i], "ACCEPTED");
                                     break;
                                 case '2':
@@ -1154,9 +1168,9 @@ public:
                                     break;
                                 case '3':
                                     break;
-                                    break;
                             }
                         }
+                        break;
                     }
                 }
                 if(!validChoice){
@@ -1164,6 +1178,29 @@ public:
                 }
             }
         }
+    }
+
+    bool isOverLap(string bk_id){
+        std::vector<BookingSupporter*> relateBooking = {};
+        std::vector<BookingSupporter*> denide_booking_list ={};
+        BookingSupporter* booking_accept;
+        loop(booking_list.size()){
+            if(booking_list[i]->getSupportId() == logged_in_supporter->getMemberId() && booking_list[i]->getBookingId() != bk_id){
+                relateBooking.push_back(booking_list[i]);
+            }
+            if(booking_list[i]->getBookingId() == bk_id){
+                booking_accept = booking_list[i];
+            }
+        }
+
+        loop(relateBooking.size()){
+            if(booking_accept->getDate() == relateBooking[i]->getDate()){
+                denide_booking_list.push_back(relateBooking[i]);
+            }
+
+        }
+
+
     }
 
     void buyCredit(){
