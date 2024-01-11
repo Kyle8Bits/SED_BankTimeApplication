@@ -1154,14 +1154,20 @@ public:
                             }
                             
                         }else{
+                            std::vector <BookingSupporter* > overLap_list = isOverLap(choice);
                             cout << "1. ACCEPTED\n"<<
                                     "2. REJECTED\n" <<
                                     "3. RETURN\n"<< endl;
                             cout << ">Your choice: "; cin >> decide;
                             switch(decide){
                                 case '1':
-                                    if(cr)
-                                    setStatusById(current_job[i], "ACCEPTED");
+                                    if(overLap_list.empty()){
+                                        setStatusById(current_job[i], "ACCEPTED");
+                                    }
+                                    else{
+                                        cout << "ACCEPTED booking " << choice << " will automatically REJECTED the overlapping booking below:" << endl;
+                                        
+                                    }
                                     break;
                                 case '2':
                                     setStatusById(current_job[i], "REJECTED");
@@ -1180,10 +1186,11 @@ public:
         }
     }
 
-    bool isOverLap(string bk_id){
+    std::vector<BookingSupporter*> isOverLap(string bk_id){
         std::vector<BookingSupporter*> relateBooking = {};
         std::vector<BookingSupporter*> denide_booking_list ={};
         BookingSupporter* booking_accept;
+
         loop(booking_list.size()){
             if(booking_list[i]->getSupportId() == logged_in_supporter->getMemberId() && booking_list[i]->getBookingId() != bk_id){
                 relateBooking.push_back(booking_list[i]);
@@ -1194,12 +1201,12 @@ public:
         }
 
         loop(relateBooking.size()){
-            if(booking_accept->getDate() == relateBooking[i]->getDate()){
+            if(booking_accept->getDate() == relateBooking[i]->getDate() &&( !compareTimes(relateBooking[i]->getEndTime(), booking_accept->getStartTime()) || compareTimes(booking_accept->getEndTime(), booking_accept->getStartTime()))){
                 denide_booking_list.push_back(relateBooking[i]);
             }
-
         }
 
+        return denide_booking_list;
 
     }
 

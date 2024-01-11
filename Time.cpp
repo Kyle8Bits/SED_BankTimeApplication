@@ -15,6 +15,20 @@ public:
         return std::to_string(this->hour) + ":" + std::to_string(this->minute);
     }
 
+    string getTimeColon(){
+
+        string digitalTime = "";
+
+        if(this->hour <= 9){
+            digitalTime += "0" + std::to_string(this->hour) + ":" + std::to_string(this->minute);
+        }
+        else{
+            digitalTime += std::to_string(this->hour) + ":" + std::to_string(this->minute);
+        }
+
+        return digitalTime;
+    }
+
     string getHour(){
         return std::to_string(this->hour);
     }

@@ -148,6 +148,14 @@ class BookingSupporter{
         return start_time.getHour() + "-" + start_time.getMinute() + "-" + end_time.getHour() + "-" + end_time.getMinute();
     }
     
+    string getStartTime(){
+        return start_time.getTimeColon();
+    }
+
+    string getEndTime(){
+        return end_time.getTimeColon();
+    }
+
     string getTime(){
         return start_time.getTime() + " To " + end_time.getTime();
     }
