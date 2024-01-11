@@ -124,19 +124,19 @@ class BookingSupporter{
     }
 
     // Getter Functions
-    std::string getBookingId() const { 
+    std::string getBookingId(){ 
         return booking_id;
     }
 
-    std::string getHostId() const {
+    std::string getHostId(){
         return host_id;
     }
 
-    std::string getSupportId() const {
+    std::string getSupportId(){
         return support_id;
     }
 
-    std::string getStatus() const {
+    std::string getStatus(){
         return status;
     }
 
