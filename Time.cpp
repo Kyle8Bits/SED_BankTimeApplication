@@ -12,7 +12,11 @@ public:
     Time(int hour = 0, int minute = 0) : hour(hour), minute(minute) {}
 
     string getTime(){
-        return std::to_string(this->hour) + ":" + std::to_string(this->minute);
+        std::stringstream ss;
+        ss << std::to_string(this->hour) << ":" <<
+               std::setw(2) << std::setfill('0') << std::to_string(this->minute);
+        
+        return ss.str();
     }
 
     string getTimeColon(){

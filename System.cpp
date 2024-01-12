@@ -598,7 +598,9 @@ public:
     bool isSupporterAvilableInBookingTime(string id, int dayOfweek ,string start_time_booking, string end_time_booking){
         bool check = false;
         std::vector<std::pair<Time, Time>> selected_timepair;
-        Supporter* booked_supporter = nullptr;
+        selected_timepair.clear();
+        id[0] = toupper(id[0]);
+        Supporter* booked_supporter;
         loop(availableSupporter.size()){
             if (availableSupporter[i]->getMemberId() == id){
                 booked_supporter = availableSupporter[i];
@@ -608,6 +610,7 @@ public:
         string day = getDayString(dayOfweek);
 
         loop(booked_supporter->getWorkSchedule().size()){
+
             if( day == booked_supporter->getWorkSchedule()[i].first){
                 selected_timepair = booked_supporter->getWorkSchedule()[i].second;
                 break;
@@ -621,6 +624,10 @@ public:
                     check = true;
                     break;
                 }
+
+            }
+            else{
+                cout << "Empty" << endl;
             }
         }
 
@@ -1162,6 +1169,7 @@ public:
                             if(decide == "1"){
                                 if(overLap_list.empty()){
                                     setStatusById(current_job[i], "ACCEPTED");
+                                    cout<< colors::GREEN << "You have accepted this booking." << colors::RESET << endl;
                                 }
                                 else{
                                     int count_overlap = 1;
@@ -1174,21 +1182,22 @@ public:
                                     cout << std::setw(149) << colors::YELLOW << std::setfill('-') << colors::RESET <<  endl;
 
                                     loop (overLap_list.size()){
+                                        cout << overLap_list[i]->getBookingId() << " : " << overLap_list[i]->getTime() << endl;
                                         for (int a = 0; a < member_list.size(); a++){
                                             if(overLap_list[i]->getHostId() == member_list[a]->getMemberId()){
                                                 colors::RESET;
 
                                                 cout << std::setfill(' ') <<"| "<< std::setw(4) <<std::to_string(count_overlap) << "| " 
-                                                    << std::setw(11)<< booking_list[i]->getBookingId() << "| "
+                                                    << std::setw(11)<< overLap_list[i]->getBookingId() << "| "
                                                     << std::setw(18)<< member_list[a]->getFullName() << "| " 
                                                     << std::setw(13)<< member_list[a]->getCity() << "| "
                                                     << std::setw(13) << std::fixed << std::setprecision(2) 
                                                     << member_list[a]->getAverageRatingScore() << "| "
-                                                    << std::setw(10) << booking_list[i]->getStatus() << "| "
+                                                    << std::setw(10) << overLap_list[i]->getStatus() << "| "
                                                     << std::setw(15) << "WAIT           " << "| "
-                                                    << std::setw(18)<< booking_list[i]->getTime() << "| "
-                                                    << std::setw(13) << booking_list[i]->getDate() << "| "
-                                                    << std::setw(6) << booking_list[i]->getTotalCost() <<"|" << endl;
+                                                    << std::setw(18)<< overLap_list[i]->getTime() << "| "
+                                                    << std::setw(13) << overLap_list[i]->getDate() << "| "
+                                                    << std::setw(6) <<overLap_list[i]->getTotalCost() <<"|" << endl;
 
                                                     count_overlap++;
                                                     cout << std::setfill('-') << std::setw(149) << colors::YELLOW  << colors::RESET  <<  endl;
@@ -1245,8 +1254,14 @@ public:
         std::vector<BookingSupporter*> denide_booking_list ={};
         BookingSupporter* booking_accept;
 
+        denide_booking_list.clear();
+        relateBooking.clear();
+
+        bk_id[0] = toupper(bk_id[0]);
+        bk_id[1] = toupper(bk_id[1]);
+
         loop(booking_list.size()){
-            if((booking_list[i]->getSupportId() == logged_in_supporter->getMemberId()) && (booking_list[i]->getBookingId() != bk_id)){
+            if(booking_list[i]->getSupportId() == logged_in_supporter->getMemberId() && booking_list[i]->getBookingId() != bk_id){
                 relateBooking.push_back(booking_list[i]);
             }
             if(booking_list[i]->getBookingId() == bk_id){
@@ -1254,9 +1269,12 @@ public:
             }
         }
 
+        cout <<"Choose: " << bk_id << "-" <<booking_accept->getTime() << "\n" << endl;
+
         loop(relateBooking.size()){
-            if(booking_accept->getDate() == relateBooking[i]->getDate() &&( !compareTimes(relateBooking[i]->getEndTime(), booking_accept->getStartTime()) || compareTimes(booking_accept->getEndTime(), booking_accept->getStartTime()))){
+            if(booking_accept->getDate() == relateBooking[i]->getDate() && compareTimes(booking_accept->getStartTime(), relateBooking[i]->getEndTime()) && compareTimes(relateBooking[i]->getStartTime(), booking_accept->getEndTime()) && relateBooking[i]->getStatus() != "REJECTED" ){
                 denide_booking_list.push_back(relateBooking[i]);
+                cout << "Status " << relateBooking[i]->getStatus() << endl;
             }
         }
 

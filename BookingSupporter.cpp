@@ -137,7 +137,7 @@ class BookingSupporter{
     }
 
     std::string getStatus(){
-        return status;
+        return this->status;
     }
 
     string getProgress(){return this->progress;}
@@ -145,7 +145,12 @@ class BookingSupporter{
     friend class FileProcess; // make friend with System
 
     string getTimeToFile(){
-        return start_time.getHour() + "-" + start_time.getMinute() + "-" + end_time.getHour() + "-" + end_time.getMinute();
+        std::stringstream ss;
+        ss << std::setw(2) << std::setfill('0') << start_time.getHour() << "-"
+           << std::setw(2) << std::setfill('0') << start_time.getMinute() << "-"
+           << std::setw(2) << std::setfill('0') << end_time.getHour() << "-"
+           << std::setw(2) << std::setfill('0') << end_time.getMinute() << std::setfill(' ');
+           return ss.str();
     }
     
     string getStartTime(){
