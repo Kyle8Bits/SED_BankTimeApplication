@@ -674,6 +674,10 @@ public:
 
 //==================================SELECT TIME==========================================================================
                 if(!booking.isInBlockList(logged_in_member->getBlockList(), availableSupporter[i]->getMemberId())){
+                    if(logged_in_member->getHostRatingScore() < availableSupporter[i]->getMinHostRating()){
+                        cout << colors::RED << "You can not book this supporter because your host rating score is lower than the supporter's min host rating score" << colors::RESET << endl;
+                        return;
+                    }
 //===========================User choose the day to book here===============================================
                     Calendar calendar;
                     RealTime today;
@@ -1283,137 +1287,60 @@ public:
     }
 
     void buyCredit(){
-    bool check = true;
-    string choice;
-    int option;
-    string verify;
+        bool isSupporter = (logged_in_member == nullptr);
 
-        if (logged_in_supporter == nullptr)
-        {
-            while (check)
-            {
-                cout << "****Buying Credit Menu****" << endl;
-                cout << "Current balance: " << logged_in_member->getCreditPoint() << " CP "
-                     << "\n"
-                     << endl;
-                cout << "Ammount list: \n"
-                     << "1. Price: $20 \n"
-                     << "Total credit point: 20 CP \n"
-                     << "====================================\n"
-                     << "2. Price: $50 \n"
-                     << "Total credit point: 50 CP + 5 CP Bonus \n"
-                     << "====================================\n"
-                     << "3. Price: $100 \n"
-                     << "Total credit point: 100 CP + 20 CP Bonus\n"
-                     << "====================================\n"
-                     << endl;
-                cout << "Choice the bundle: ";
-                cin >> option;
-                //==verify part===
-                cout << "Please enter your password to verify: ";
-                getline(cin >> std::ws, verify);
-                if (verify == logged_in_member->getPassword())
-                {
-                    switch (option)
-                    {
-                    case 1:
-                        logged_in_member->setCreditPoint(logged_in_member->getCreditPoint() + 20);
-                        cout << "You have bought 20 CP\n";
-                        cout << "New balance: " << logged_in_member->getCreditPoint() << endl;
-                        break;
-                    case 2:
-                        logged_in_member->setCreditPoint(logged_in_member->getCreditPoint() + 55);
-                        cout << "You have bought 55 CP\n";
-                        cout << "New balance: " << logged_in_member->getCreditPoint() << endl;
-                        break;
-                    case 3:
-                        logged_in_member->setCreditPoint(logged_in_member->getCreditPoint() + 120);
-                        cout << "You have bought 120 CP\n";
-                        cout << "New balance: " << logged_in_member->getCreditPoint()<< endl;
-                        break;
-                    case 4:
-                        cout << " Returning to home page....." << endl;
-                        break;
-                    default:
-                        cout << "Invalid option, please select again" << endl;
-                    }
-                    cout << "Do you want to continue buying credit [Y/N]: ";
-                    std::getline(std::cin >> std::ws, choice);
-                    if (choice == "N" || choice == "N")
-                    {
-                        check = false;
-                    }
-                    cout << "Successfully buy credit" << endl;
-                }
-                else
-                {
-                    cout << "Verify fail.Please try again" << endl;
-                }
+        if(isSupporter){
+            logged_in_member = logged_in_supporter; //use member point to the suppoter
+        }
+
+        string option;
+        bool check = true;
+        while(check){
+            cout << "****Buying Credit Menu****" << endl;
+            cout << "Current balance: " << logged_in_member->getCreditPoint() << " CP " << endl << endl;
+            cout << "Ammount list: \n"
+                 << "1. Price: $20 \n"
+                 << "Total credit point: 20 CP \n"
+                 << "====================================\n"
+                 << "2. Price: $50 \n"
+                 << "Total credit point: 50 CP + 5 CP Bonus \n"
+                 << "====================================\n"
+                 << "3. Price: $100 \n"
+                 << "Total credit point: 100 CP + 20 CP Bonus\n"
+                 << "====================================\n"
+                 << "4. Returning Menu" << endl;
+            cout << "Choice the bundle: ";
+            getline(cin >> std::ws, option);
+
+            if(option == "1"){
+                logged_in_member->setCreditPoint(logged_in_member->getCreditPoint() + 20);
+                cout << colors::GREEN << "You have bought 20 CP\n" << colors::RESET;
+                cout << colors::GREEN << "New balance: " << logged_in_member->getCreditPoint() << colors::RESET << endl ;
+                check = false;
+            }
+            else if(option == "2"){
+                logged_in_member->setCreditPoint(logged_in_member->getCreditPoint() + 55);
+                cout << colors::GREEN << "You have bought 55 CP\n" << colors::RESET;
+                cout << colors::GREEN << "New balance: " << logged_in_member->getCreditPoint() << colors::RESET << endl;
+                check = false;
+            }
+            else if(option == "3"){
+                logged_in_member->setCreditPoint(logged_in_member->getCreditPoint() + 120);
+                cout << colors::GREEN << "You have bought 120 CP\n" << colors::RESET;
+                cout << colors::GREEN << "New balance: " << logged_in_member->getCreditPoint() << colors::RESET << endl;
+                check = false;
+            } else if(option == "4"){
+                check = false;
+                cout << "Returning main page" << endl;
+            }
+            else{
+                cout << colors::RED << "Invalid option, please select again" << endl << colors::RESET;
             }
         }
-        else
-        {
-            while (check)
-            {
-                cout << "****Buying Credit Menu****" << endl;
-                cout << "Current credit point balance: " << logged_in_supporter->getCreditPoint() << " CP "
-                     << "\n"
-                     << endl;
-                cout << "Ammount list: \n"
-                     << "1. Price: $20 \n"
-                     << "Total credit point: 20 CP \n"
-                     << "====================================\n"
-                     << "2. Price: $50\n"
-                     << "Total credit point: 50 CP + 5 CP Bonus \n"
-                     << "====================================\n"
-                     << "3. Price: $100 \n"
-                     << "Total credit point: 100 CP + 20 CP Bonus\n"
-                     << "====================================\n"
-                     << endl;
-                cout << "Choice the bundle: ";
-                cin >> option;
-                //==verify part===
-                cout << "Please enter your password to verify: ";
-                getline(cin >> std::ws, verify);
-                if (verify == logged_in_supporter->getPassword())
-                {
-                    switch (option)
-                    {
-                    case 1:
-                        logged_in_supporter->setCreditPoint(logged_in_supporter->getCreditPoint() + 20);
-                        cout << "You have bought 20 CP\n";
-                        cout << "New balance: " << logged_in_supporter->getCreditPoint() << endl;
-                        break;
-                    case 2:
-                        logged_in_supporter->setCreditPoint(logged_in_supporter->getCreditPoint() + 55);
-                        cout << "You have bought 55 CP\n";
-                        cout << "New balance: " << logged_in_supporter->getCreditPoint() << endl;
-                        break;
-                    case 3:
-                        logged_in_supporter->setCreditPoint(logged_in_supporter->getCreditPoint() + 120);
-                        cout << "You have bought 120 CP\n";
-                        cout << "New balance: " << logged_in_supporter->getCreditPoint() << endl;
-                        break;
-                    case 4:
-                        cout << " Returning to home page....." << endl;
-                        break;
-                    default:
-                        cout << "Invalid option, please select again" << endl;
-                    }
-                    cout << "Do you want to continue buying credit [Y/N]: ";
-                    std::getline(std::cin >> std::ws, choice);
-                    if (choice == "N")
-                    {
-                        check = false;
-                    }
-                    cout << "Successfully buy credit" << endl;
-                }
-                else
-                {
-                    cout << "Verify fail.Please try again" << endl;
-                }
-            }
+        if(isSupporter){
+            logged_in_member = nullptr;
         }
+        
     }
 
     void displaySupporter(){
@@ -1637,7 +1564,6 @@ public:
         }
 
         if(isSupporter){
-            
             logged_in_member = nullptr;
         }
     }

@@ -342,11 +342,13 @@ int main(){
                                     << "\t\t|                                                           |\n"
                                     << "\t\t|8. Adjust your personal information                        |\n"
                                     << "\t\t|                                                           |\n"
-                                    << "\t\t|9. Modify free time period                                 |\n"
+                                    << "\t\t|9. Modify skills                                           |\n"
                                     << "\t\t|                                                           |\n"
-                                    << "\t\t|10. Set min host rating                                     |\n"
+                                    << "\t\t|10. Modify free time period                                 |\n"
                                     << "\t\t|                                                           |\n"
-                                    << "\t\t|11. Return                                                 |\n"
+                                    << "\t\t|11. Set min host rating                                    |\n"
+                                    << "\t\t|                                                           |\n"
+                                    << "\t\t|12. Return                                                 |\n"
                                     << "\t\t-------------------------------------------------------------\n"
                                     << ">Your choice: ";
                                 string suppoter_setting_choice;
@@ -378,13 +380,16 @@ int main(){
                                 } else if(suppoter_setting_choice == "8"){
                                     clearScreen();
                                     system.getLoggedInSupporter()->addInformation();
-                                } else if(suppoter_setting_choice == "9"){
+                                }else if(suppoter_setting_choice == "9"){
                                     clearScreen();
-                                    // modify time period
+                                    system.getLoggedInSupporter()->modifySkill();
                                 } else if(suppoter_setting_choice == "10"){
                                     clearScreen();
+                                    // modify time period
+                                } else if(suppoter_setting_choice == "11"){
+                                    clearScreen();
                                     system.getLoggedInSupporter()->setMinHostRatingRequest();
-                                }else if(suppoter_setting_choice == "11"){
+                                }else if(suppoter_setting_choice == "12"){
                                     clearScreen();
                                     cout << "Returning to main dashboard" << endl;
                                     request_setting_supporter = false;
