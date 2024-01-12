@@ -510,12 +510,12 @@ public:
     // }
 
 
-    string toLower(string str){
-        loop(str.length()){
-            str[i] = std::tolower(str[i]);
-        }
-        return str;
-    }
+    // string toLower(string str){
+    //     loop(str.length()){
+    //         str[i] = std::tolower(str[i]);
+    //     }
+    //     return str;
+    // }
 
     bool checkValidTime(string time) {
         
@@ -650,8 +650,9 @@ public:
         cout << "****WELCOME TO BOOKING DASHBOARD****"<<endl;
         displayAvailableSupporter();
         cout << "Please input the supporter's id that you want to book: ";
-        string input; cin >> input;
-
+        string input; 
+        getline(cin >> std::ws, input);
+        input[0] = toupper(input[0]);
 
 //=========================CHECK IS THAT SUPPORTER IS EXSIT=======================
         
@@ -659,7 +660,7 @@ public:
         bool isValidSupporter = false;//this to check the create bookign is successfully or not?
 
         loop(availableSupporter.size()){
-            if(toLower(input) == toLower(availableSupporter[i]->getMemberId())){
+            if(input == availableSupporter[i]->getMemberId()){
                 if(isSupporter){
                     logged_in_member = logged_in_supporter;//use this to prevent segment fault when the current users is supporter
                 }
@@ -688,7 +689,7 @@ public:
                             while(day_check){
                                 bool dayofweek = true;
                                 while(dayofweek){
-                                cout << "> Choice the day in above month: "; cin >> day;
+                                cout << "> Choose the day in above month: "; cin >> day;
                                     if(isAvailableDay(input, calendar.extractTheDayweek(day,today.getThisMonth(), today.getThisYear()) -1 )){
                                         dayofweek = false;
                                     }
@@ -1054,12 +1055,15 @@ public:
             cout <<"Type 'Quit' to exit\n" <<
                 "Enter booking invitation code: " ;
             std::getline(cin >> std::ws, choice);
+            choice[0] = toupper(choice[0]);//make the first character of users'input beomce upper
+            //it helps users can enter lower character but still match the id
+            choice[1] = toupper(choice[1]);
 
-            if(choice == "Quit" || choice == "quit"){
+            if(choice == "QUit"){
                 cout << "Returning home page" << endl;
             } else{
-                loop(current_job.size()){
-                    if(choice ==  current_job[i]){
+                loop(current_job.size()){ 
+                    if(choice  == current_job[i]){
                         validChoice = true;
                         if(getProgressById(current_job[i]) == "IN PROGRESS"){
                             cout << "Have you completed the job?" << endl;
@@ -1242,7 +1246,7 @@ public:
         BookingSupporter* booking_accept;
 
         loop(booking_list.size()){
-            if(booking_list[i]->getSupportId() == logged_in_supporter->getMemberId() && booking_list[i]->getBookingId() != bk_id){
+            if((booking_list[i]->getSupportId() == logged_in_supporter->getMemberId()) && (booking_list[i]->getBookingId() != bk_id)){
                 relateBooking.push_back(booking_list[i]);
             }
             if(booking_list[i]->getBookingId() == bk_id){
@@ -1264,7 +1268,7 @@ public:
     bool check = true;
     string choice;
     int option;
-        string verify;
+    string verify;
 
         if (logged_in_supporter == nullptr)
         {
