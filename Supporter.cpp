@@ -31,8 +31,10 @@ enum class Status{
     ONLINE
 };
 namespace sp_colors {
+    const char* RED = "\033[1;91m";
     const char* YELLOW = "\033[1;93m";
     const char* WHITE_BOLD = "\033[1;97m";
+    const char* GREEN = "\033[92m";
     const char* RESET = "\033[0m";
 }
 class Supporter : public Member{
@@ -114,37 +116,117 @@ public:
         }
     }
 
-    bool addSkill(){
-        bool check = true;
-        
-        while(check){
-            string user_input = "";
-            cout << "> Your skill: ";
-            getline(cin >> std::ws, user_input);
-            if(user_input.empty()){
-                cout << "Please input the non-empty value" << endl;
-                return false;
-            }else{
-                skill_list.push_back(user_input);//if the skill is not empty -> push it to the list
+    
 
-                cout << "Do you want to continue adding" << endl;
-                cout << "1. Yes, 2. No: ";
-                int choice; cin >> choice;
-                switch(choice){
-                    case 1:
-                        break;
-                    case 2:
-                        check = false;
-                        break;
-                    default:
-                        check = false;
-                        break;
-                }
+    bool modifySkill(){
+        bool check_adding;
+        bool check_adding_2;
+        bool check_remove;
+        bool check_remove_2;
+        string input;
+        do{
+            cout << "This is your current skill: " << displaySkillList() << endl;
+            cout << "What do you want to do!" << endl;
+            cout << "1. Add more skill" << endl;
+            cout << "2. Remove skills" << endl;
+            cout << "3. Return menu" << endl;
+            cout << ">Your choice:";
+            input = "";
+            getline(cin >> std::ws, input);
+
+            if(input == "1"){
+                do{
+                    bool valid = true;
+                    check_adding = true;
+                    check_adding_2 = true;
+
+                    cout << "This is your current skill: ";
+                    cout << displaySkillList() << endl;
+
+                    cout << "****ADD NEW SKILL****" << endl;
+                    string skill_input;
+                    cout << "> Your skill: ";
+                    getline(cin >> std::ws, skill_input);
+                    if(skill_input.empty()){
+                        cout << "Please input the non-empty value" << endl;
+                        return false;
+                    }
+
+                    for(int i = 0; i < skill_list.size(); ++i){
+                        if(skill_input == skill_list[i]){
+                            cout << sp_colors::RED << "This skill is already exist!" << sp_colors::RESET << endl;
+                            valid = false;
+                        }
+                    }
+                    if(valid){
+                        skill_list.push_back(skill_input);//if the skill is not empty -> push it to the list
+                        cout << sp_colors::GREEN << "Your skill is added succesfully!" << sp_colors::RESET << endl;
+                        while(check_adding_2){
+                            cout << "Do you want to continue adding" << endl;
+                            cout << "1. Yes " << endl;
+                            cout << "2. No " << endl;
+                            cout << "> Your choice: ";
+                            getline(cin >> std::ws, skill_input);
+                            if(skill_input == "1"){
+                                cout << sp_colors::YELLOW << "Your new skill: " << skillListToString() << sp_colors::RESET << endl;
+                                check_adding_2 = false;
+                                continue;
+                            } else if(skill_input == "2"){
+                                cout << sp_colors::YELLOW << "Your new skill: " << skillListToString() << sp_colors::RESET << endl;
+                                check_adding = false;
+                                check_adding_2 = false;
+                            } else{
+                                cout << sp_colors::RED << "Please enter valid input" << sp_colors::RESET << endl;
+                            }
+                        }
+                    }
+                } while(check_adding);
+            } else if(input == "2"){
+                do{
+                    check_remove_2 = true;
+                    check_remove = true;
+                    cout << "This is your current skill: " << displaySkillList() << endl;
+                    cout << "Please enter the name of skill you want to remove!" << endl;
+                    cout << ">Your choice: ";
+                    string remove_option;
+                    getline(cin >> std::ws, remove_option);
+                    bool valid_choice = false;
+
+                    for(int i = 0; i < this->skill_list.size(); ++i){
+                        if(remove_option == skill_list[i]){
+                            skill_list.erase(skill_list.begin() + i);
+                            valid_choice = true;
+                            cout << sp_colors::GREEN << "Your skill is removed succesfully!" << sp_colors::RESET << endl;
+                            while(check_remove_2){
+                                cout << "Do you want to remove more skill?" << endl;
+                                cout << "1. Yes" << endl;
+                                cout << "2. No" << endl;
+                                cout << ">Your choice: ";
+                                getline(cin >> std::ws, remove_option);
+                                if(remove_option == "1"){
+                                    check_remove_2 = false;
+                                } else if(remove_option == "2"){
+                                    check_remove_2 = false;
+                                    check_remove = false;
+                                } else{
+                                    cout << sp_colors::RED << "Please enter valid input" << sp_colors::RESET << endl;
+                                }
+                            }
+                        } 
+                    }
+
+                    if(!valid_choice){
+                        cout << sp_colors::RED << "Please enter valid input" << sp_colors::RESET << endl;
+                    }
+                }while(check_remove);
+            } else if(input == "3"){
+                return true;
+            } else{
+                cout << sp_colors::RED << "Please enter valid input" << sp_colors::RESET << endl;
             }
-        }
+        }while(true);
 
-        cout << "Your skills are addedd" << endl;
-        return true;
+        return false;
     }
 
     void displayPersonalInformation() override{
