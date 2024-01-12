@@ -344,7 +344,7 @@ int main(){
                                     << "\t\t|                                                           |\n"
                                     << "\t\t|9. Modify free time period                                 |\n"
                                     << "\t\t|                                                           |\n"
-                                    << "\t\t|10. Set min host rating                                     |\n"
+                                    << "\t\t|10. Set min host rating                                    |\n"
                                     << "\t\t|                                                           |\n"
                                     << "\t\t|11. Return                                                 |\n"
                                     << "\t\t-------------------------------------------------------------\n"

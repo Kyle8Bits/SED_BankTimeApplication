@@ -667,6 +667,10 @@ public:
 
 //==================================SELECT TIME==========================================================================
                 if(!booking.isInBlockList(logged_in_member->getBlockList(), availableSupporter[i]->getMemberId())){
+                    if(logged_in_member->getHostRatingScore() < availableSupporter[i]->getMinHostRating()){
+                        cout << colors::RED << "You can not book this supporter because your host rating score is lower than the supporter's min host rating score" << colors::RESET << endl;
+                        return;
+                    }
 //===========================User choose the day to book here===============================================
                     Calendar calendar;
                     RealTime today;

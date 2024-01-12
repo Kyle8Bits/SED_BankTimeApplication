@@ -295,6 +295,10 @@ public:
         return;
     }
 
+    int getMinHostRating(){
+        return this->min_host_rating;
+    }
+
     bool setMinHostRatingRequest(){
         cout << "Please enter your minimum rating! This will help you avoid the bad host!" << endl;
         cout << ">Your choice: ";

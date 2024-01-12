@@ -272,6 +272,10 @@ public:
         this->credit_point -= credit_point;
     }
 
+    double getHostRatingScore() {
+        return this->host_rating_score;
+    }
+
     string displayBlockList(){//THIS USE FOR PRINTING OUT
         if(block_list.empty()){
             return "EMPTY";
