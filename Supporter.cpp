@@ -430,8 +430,55 @@ public:
     //     return result;
     // }
 
-};
+    
 
+    void setWorkSchedule() {
+        displayWorkSchedule();
+
+    // Prompt the user to choose the day and time period to modify
+    int dayChoice, timePeriodIndex;
+    std::cout << "Enter the number of the day you want to modify (1-7): ";
+    std::cin >> dayChoice;
+
+    while (true) {  // Loop until valid day choice is entered
+        if (dayChoice < 1 || dayChoice > 7) {
+            std::cout << "Invalid day choice. Please enter a number between 1 and 7: ";
+            std::cin >> dayChoice;
+        } else {
+            break;
+        }
+    }
+
+    std::cout << "Enter the number of the time period you want to modify (1-"
+              << workSchedule[dayChoice - 1].second.size() << "): ";
+    std::cin >> timePeriodIndex;
+
+    while (true) {  // Loop until valid time period index is entered
+        if (timePeriodIndex < 1 || timePeriodIndex > workSchedule[dayChoice - 1].second.size()) {
+            std::cout << "Invalid time period choice. Please enter a number between 1 and "
+                      << workSchedule[dayChoice - 1].second.size() << ": ";
+            std::cin >> timePeriodIndex;
+        } else {
+            break;
+        }
+    }
+
+    // Prompt the user for new start and end times
+    Time newStartTime, newEndTime;
+    std::cout << "Enter the new start time (HH:MM): ";
+    std::cin >> newStartTime;
+    std::cout << "Enter the new end time (HH:MM): ";
+    std::cin >> newEndTime;
+
+    // Modify the time period in the work schedule
+    workSchedule[dayChoice - 1].second[timePeriodIndex - 1].first = newStartTime;
+    workSchedule[dayChoice - 1].second[timePeriodIndex - 1].second = newEndTime;
+
+    std::cout << "Time period modified successfully!" << std::endl;
+           
+    };
+
+};
 
 
 #endif

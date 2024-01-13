@@ -386,6 +386,7 @@ int main(){
                                 } else if(suppoter_setting_choice == "10"){
                                     clearScreen();
                                     // modify time period
+                                    system.getLoggedInSupporter()->setWorkSchedule();
                                 } else if(suppoter_setting_choice == "11"){
                                     clearScreen();
                                     system.getLoggedInSupporter()->setMinHostRatingRequest();

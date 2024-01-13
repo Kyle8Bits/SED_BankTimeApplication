@@ -9,6 +9,7 @@ private:
     int hour;
     int minute;
 public:
+    friend std::istream& operator>>(std::istream& is, Time& time);
     Time(int hour = 0, int minute = 0) : hour(hour), minute(minute) {}
 
     string getTime(){
@@ -39,5 +40,27 @@ public:
     string getMinute(){
         return std::to_string(this->minute);
     }
+    
+    friend std::istream& operator>>(std::istream& is, Time& time) {
+    int hour, minute;
+    char colon;
+
+    // Read hour
+    is >> hour;
+
+    // Check for colon separator
+    if (is >> colon && colon == ':') {
+        // Read minute
+        is >> minute;
+
+        // Set the Time object
+        time = Time(hour, minute);
+    } else {
+        // Set failbit if the format is incorrect
+        is.setstate(std::ios::failbit);
+    }
+
+    return is;
+}
 };
 #endif 
