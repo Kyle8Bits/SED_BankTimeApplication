@@ -2,6 +2,7 @@
 #define TIME
 #include <iostream>
 #include <string> 
+#include <iomanip>
 using std::string;
 
 class Time{
@@ -40,27 +41,5 @@ public:
     string getMinute(){
         return std::to_string(this->minute);
     }
-    
-    friend std::istream& operator>>(std::istream& is, Time& time) {
-    int hour, minute;
-    char colon;
-
-    // Read hour
-    is >> hour;
-
-    // Check for colon separator
-    if (is >> colon && colon == ':') {
-        // Read minute
-        is >> minute;
-
-        // Set the Time object
-        time = Time(hour, minute);
-    } else {
-        // Set failbit if the format is incorrect
-        is.setstate(std::ios::failbit);
-    }
-
-    return is;
-}
 };
 #endif 

@@ -430,52 +430,170 @@ public:
     //     return result;
     // }
 
+    // string getDayAndTime(){
+    //     bool check = true
+    //     while(check){
+
+    //     }
+    //     cout << "Please enter the day you want to add!" << endl;
+    //     cout << "1. Monday \n"
+    //         << "2. Tuesday \n"
+    //         << "3. Wednesday \n"
+    //         << "4. Thursday \n"
+    //         << "5. Friday \n"
+    //         << "6. Saturday \n"
+    //         << "7. Sunday \n";
+    //     cout << ">Your choice: ";
+    //     string day_choice;
+    //     getline(cin >> std::ws, day_choice);
+    //     string day;
+    //     switch (std::stoi(day_choice)) {
+    //         case 1:
+    //             day = "Monday";
+    //             break;
+    //         case 2:
+    //             day = "Tuesday";
+    //             break;
+    //         case 3:
+    //             day = "Wednesday";
+    //             break;
+    //         case 4:
+    //             day = "Thursday";
+    //             break;
+    //         case 5:
+    //             day = "Friday";
+    //             break;
+    //         case 6:
+    //             day = "Saturday";
+    //             break;
+    //         case 7:
+    //             day = "Sunday";
+    //             break;
+    //         default:
+    //             cout << sp_colors::RED << "Invalid Choice!" << sp_colors::RESET << endl;
+    //             return;
+    //     }
+    //     cout << "Please enter the start time!" << endl;
+    //     cout << ">Your choice: ";
+    //     string start_time;
+    //     getline(cin >> std::ws, start_time);
+    //     cout << "Please enter the end time!" << endl;
+    //     cout << ">Your choice: ";
+    //     string end_time;
+    //     getline(cin >> std::ws, end_time);
+    //     Time start_time_obj = Time(std::stoi(start_time.substr(0,2)), std::stoi(start_time.substr(3,2)));
+    //     Time end_time_obj = Time(std::stoi(end_time.substr(0,2)), std::stoi(end_time.substr(3,2)));
+    //     std::vector<std::pair<Time, Time>> time_pair_list;
+    //     time_pair_list.push_back(std::make_pair(start_time_obj, end_time_obj));
+    //     workSchedule.push_back(std::make_pair(day, time_pair_list));
+    //     cout << sp_colors::GREEN << "Your time period is added!" << sp_colors::RESET << endl;
+    // }
     
-
     void setWorkSchedule() {
+        cout << "This is your current schedule!" << endl;
         displayWorkSchedule();
+        cout << sp_colors::YELLOW << "-------------------------------" << sp_colors::RESET << endl << endl;
 
-    // Prompt the user to choose the day and time period to modify
-    int dayChoice, timePeriodIndex;
-    std::cout << "Enter the number of the day you want to modify (1-7): ";
-    std::cin >> dayChoice;
+        bool check_page = true;
 
-    while (true) {  // Loop until valid day choice is entered
-        if (dayChoice < 1 || dayChoice > 7) {
-            std::cout << "Invalid day choice. Please enter a number between 1 and 7: ";
-            std::cin >> dayChoice;
-        } else {
-            break;
-        }
-    }
+        while(check_page){
+            bool add_check = true;
+            bool remove_check = true;
+            bool isValidAdd = false;
+            bool isValidRemove = false;
+            bool isValidRemoveTime = false;
+            cout << "What do you want to modify in your schedule!" << endl;
+            cout << "1. Add new free time period" << endl;
+            cout << "2. Remove free time period" << endl;
+            cout << "3. Quit" << endl;
+            string user_choice;
 
-    std::cout << "Enter the number of the time period you want to modify (1-"
-              << workSchedule[dayChoice - 1].second.size() << "): ";
-    std::cin >> timePeriodIndex;
+            getline(cin >> std::ws, user_choice);
+            if(user_choice == "1"){//THis is for add new free time
+                while(add_check){
+                    cout << "Please enter which days of the week you work.\n";
+                    cout << "1. Monday \n"
+                        << "2. Tuesday \n"
+                        << "3. Wednesday \n"
+                        << "4. Thursday \n"
+                        << "5. Friday \n"
+                        << "6. Saturday \n"
+                        << "7. Sunday \n"
+                        << "8. Return \n";
+                    cout <<"=============================================================" << endl;
+                    cout << ">Your Choice: " << endl;
+                    string user_add_day;
+                    getline(cin >> std::ws, user_add_day);
 
-    while (true) {  // Loop until valid time period index is entered
-        if (timePeriodIndex < 1 || timePeriodIndex > workSchedule[dayChoice - 1].second.size()) {
-            std::cout << "Invalid time period choice. Please enter a number between 1 and "
-                      << workSchedule[dayChoice - 1].second.size() << ": ";
-            std::cin >> timePeriodIndex;
-        } else {
-            break;
-        }
-    }
+                    if(user_add_day == "8"){//get out the loop
+                        add_check = false;
+                        break;
+                    }
+                    if(user_add_day == "1" || user_add_day == "2" || user_add_day == "3" || user_add_day == "4"
+                    || user_add_day == "5" || user_add_day == "6" || user_add_day == "7"){
 
-    // Prompt the user for new start and end times
-    Time newStartTime, newEndTime;
-    std::cout << "Enter the new start time (HH:MM): ";
-    std::cin >> newStartTime;
-    std::cout << "Enter the new end time (HH:MM): ";
-    std::cin >> newEndTime;
+                    }
 
-    // Modify the time period in the work schedule
-    workSchedule[dayChoice - 1].second[timePeriodIndex - 1].first = newStartTime;
-    workSchedule[dayChoice - 1].second[timePeriodIndex - 1].second = newEndTime;
+                }
+                    
+            }else if(user_choice == "2"){//this is for remove free time
+                while(remove_check){
+                    cout << "Please choose your day that you want to remove" << endl;
+                    for(int i = 0; i < workSchedule.size(); ++i){
+                        cout <<  i + 1 << ": " << workSchedule[i].first << endl;
+                        if(i == workSchedule.size() - 1){
+                            cout << i + 2 << ": Return" << endl;
+                        }
+                    }
 
-    std::cout << "Time period modified successfully!" << std::endl;
-           
+                    cout << ">Your choice: ";
+                    string user_remove_day;
+                    getline(cin >> std::ws, user_remove_day);
+                    if(user_remove_day == std::to_string(workSchedule.size() + 1)){//get out the loop
+                        remove_check = false;
+                        break;
+                    }
+                    for(int i = 0; i < workSchedule.size(); ++i){
+                        if(user_remove_day == std::to_string(i + 1)){
+                            string remove_time;
+                            cout << "Please choose the time period that you want to modify" << endl;
+
+                            for(int a = 0; a < workSchedule[i].second.size(); ++a){
+                                cout << a + 1 << ": " << workSchedule[i].second[a].first.getTime() << " to " << workSchedule[i].second[a].second.getTime() << endl;
+                            }
+
+                            cout << ">Your choice: ";
+                            getline(cin >> std::ws, remove_time);
+                            for(int a = 0; a < workSchedule[i].second.size(); ++a){
+                                if(remove_time == std::to_string(a + 1)){
+                                    workSchedule[i].second.erase(workSchedule[i].second.begin() + a);
+                                    cout << sp_colors::GREEN << "Your time period is removed!" << sp_colors::RESET << endl;
+                                    isValidRemoveTime = true;
+                                    break;
+                                } 
+                            }
+                            if(!isValidRemove){
+                                cout << sp_colors::RED << "Invalid Choice!" << sp_colors::RESET << endl;
+                            }
+                            //get out this page. Force users to enter again
+                            isValidRemove = true;
+                            remove_check = false;
+                        }
+                    }
+                }
+                //if the time in the day is empty, we remove the day too
+                for(int i = 0; i < workSchedule.size(); ++i){
+                    if(workSchedule[i].second.empty()){
+                        workSchedule.erase(workSchedule.begin() + i);
+                    }
+                }
+                
+            }else if(user_choice == "3"){
+                check_page = false;
+            }else{
+                cout << sp_colors::RED << "Invalid Choice!" << sp_colors::RESET << endl;
+            }
+        }      
     };
 
 };
