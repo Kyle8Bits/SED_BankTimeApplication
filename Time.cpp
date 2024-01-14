@@ -21,6 +21,20 @@ public:
         return ss.str();
     }
 
+    bool isLater(Time another_time){
+        //This function will return true if this time is later than another_time
+        if(this->hour > another_time.hour){
+            //if this hour is greater than another_time hour, return true
+            return true;
+        }else if(this->hour == another_time.hour){
+            if(this->minute > another_time.minute){
+                //if is the same hour, but this minute is larger --> true
+                return true;
+            }
+        }
+        return false;
+    }
+
     string getTimeColon(){
 
         string digitalTime = "";

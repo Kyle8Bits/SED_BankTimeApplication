@@ -275,40 +275,6 @@ public:
         return result;
     }
 
-    // string weekDayToString(){
-    //     if(workSchedule.weekday.empty()){
-    //         return "";
-    //     }
-    //     string weekday_str = "Day-" + workSchedule.weekday[0]+"-";
-    //     for(int i = 1; i < workSchedule.weekday.size(); ++i){
-    //         weekday_str += workSchedule.weekday[i] +"-"; 
-    //     }
-    //     return weekday_str;
-    // }
-
-    // string displayTimePairList(){
-    //     if(workSchedule.time.empty()){
-    //         return "EMPTY";
-    //     }
-    //     string time_pair_str = "";
-    //     string next_time_pair_str = "";
-    //     for(int i = 0; i < workSchedule.time.size(); ++i){
-    //         time_pair_str += "From: " + workSchedule.time[i].first.getTime()+" To: " + workSchedule.time[i].second.getTime(); 
-    //     }
-    //     return time_pair_str;
-    // }
-
-    // string displayWeekday(){
-    //     if(workSchedule.weekday.empty()){
-    //         return "EMPTY";
-    //     }
-    //     string week_day = "";
-    //     for(int i = 0; i < workSchedule.weekday.size(); ++i){
-    //         week_day += workSchedule.weekday[i] + (i != workSchedule.weekday.size() -1 ? "-" : ""); 
-    //     }
-    //     return week_day;
-    // }
-
     void displayWorkSchedule(){
         if(workSchedule.empty()){
             cout << "EMPTY" << endl;
@@ -417,77 +383,72 @@ public:
     std::vector< std::pair< string, std:: vector< std::pair< Time, Time> > > > getWorkSchedule(){
         return workSchedule;
     }
+    
+    string getDayString(int day) {
+        switch (day) {
+            case 1: return "Monday";
+            case 2: return "Tuesday";
+            case 3: return "Wednesday";
+            case 4: return "Thursday";
+            case 5: return "Friday";
+            case 6: return "Saturday";
+            case 7: return "Sunday";
+        }
+        return "";
+    }
 
-    // std::vector<std::pair<Time, Time>> getPairList(){
-    //     return this->time_pair_list;
-    // }
+    bool isValidTime(const string& time){//use paste by reference to advoid create the copy of parameter (const to not chagne the time that we paste in)
+        if(time.length() != 5 || time[2] != ':' || !isdigit(time[0]) || !isdigit(time[1]) || !isdigit(time[3]) || !isdigit(time[4])){
+            //if the length of the string is not 5 --> error
+            //if the 0,1,3,4 character is not digit --> error
+            //FORMAT HH:MM
+            return false;
+        } 
 
-    // string getPairListToString(){
-    //     string result = "";
-    //     for (int i = 0; i < time_pair_list.size(); i++){
-    //         result += "From: " + time_pair_list[i].first.getTime() + " To: " + time_pair_list[i].second.getTime() + "\n"; 
-    //     }
-    //     return result;
-    // }
+        //Check the valid time 
+        int hour = std::stoi(time.substr(0,2));//get the 2 first character of the string --> convert to int
+        int minute = std::stoi(time.substr(3,2));//get the 2 last character of the string --> convert to int
+        if (hour < 0 || hour > 23 || minute < 0 || minute > 59){
+            //if hour is not in range(0-24) --> false
+            //if minutes is not in rnage(0-60) --> false
+            return false;
+        }
 
-    // string getDayAndTime(){
-    //     bool check = true
-    //     while(check){
+        return true;
+    }
 
-    //     }
-    //     cout << "Please enter the day you want to add!" << endl;
-    //     cout << "1. Monday \n"
-    //         << "2. Tuesday \n"
-    //         << "3. Wednesday \n"
-    //         << "4. Thursday \n"
-    //         << "5. Friday \n"
-    //         << "6. Saturday \n"
-    //         << "7. Sunday \n";
-    //     cout << ">Your choice: ";
-    //     string day_choice;
-    //     getline(cin >> std::ws, day_choice);
-    //     string day;
-    //     switch (std::stoi(day_choice)) {
-    //         case 1:
-    //             day = "Monday";
-    //             break;
-    //         case 2:
-    //             day = "Tuesday";
-    //             break;
-    //         case 3:
-    //             day = "Wednesday";
-    //             break;
-    //         case 4:
-    //             day = "Thursday";
-    //             break;
-    //         case 5:
-    //             day = "Friday";
-    //             break;
-    //         case 6:
-    //             day = "Saturday";
-    //             break;
-    //         case 7:
-    //             day = "Sunday";
-    //             break;
-    //         default:
-    //             cout << sp_colors::RED << "Invalid Choice!" << sp_colors::RESET << endl;
-    //             return;
-    //     }
-    //     cout << "Please enter the start time!" << endl;
-    //     cout << ">Your choice: ";
-    //     string start_time;
-    //     getline(cin >> std::ws, start_time);
-    //     cout << "Please enter the end time!" << endl;
-    //     cout << ">Your choice: ";
-    //     string end_time;
-    //     getline(cin >> std::ws, end_time);
-    //     Time start_time_obj = Time(std::stoi(start_time.substr(0,2)), std::stoi(start_time.substr(3,2)));
-    //     Time end_time_obj = Time(std::stoi(end_time.substr(0,2)), std::stoi(end_time.substr(3,2)));
-    //     std::vector<std::pair<Time, Time>> time_pair_list;
-    //     time_pair_list.push_back(std::make_pair(start_time_obj, end_time_obj));
-    //     workSchedule.push_back(std::make_pair(day, time_pair_list));
-    //     cout << sp_colors::GREEN << "Your time period is added!" << sp_colors::RESET << endl;
-    // }
+    Time getTimeFromUser(){
+        cout << ">Your choice: ";
+        string time;
+        getline(cin >> std::ws, time);
+        while(!isValidTime(time)){
+            cout << sp_colors::RED << "Please enter valid time!" << sp_colors::RESET << endl;
+            cout << ">Your choice: ";
+            getline(cin >> std::ws, time);
+        }
+        int hour = std::stoi(time.substr(0,2));//get the 2 first character of the string --> convert to int
+        int minute = std::stoi(time.substr(3,2));//get the 2 last character of the string --> convert to int
+        Time time_obj(hour, minute);
+        return time_obj;
+    }
+
+    bool isOverlap(Time start_time, Time end_time, string day){
+        for(int i = 0; i < workSchedule.size(); ++i){
+            if(day == workSchedule[i].first){
+                    //if the input day is the same with the day in the work schedule
+                    //we will go to each time of the period in the work schedule to check
+                for(int a = 0; a < workSchedule[i].second.size(); ++a){
+                    if(end_time.isLater(workSchedule[i].second[a].first) && !start_time.isLater(workSchedule[i].second[a].second)){
+                        //the 2 time overlap when
+                        // End Time of Interval 1>Start Time of Interval 2 and
+                        // Start Time of Interval 1<End Time of Interval 2
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
     
     void setWorkSchedule() {
         cout << "This is your current schedule!" << endl;
@@ -499,44 +460,150 @@ public:
         while(check_page){
             bool add_check = true;
             bool remove_check = true;
-            bool isValidAdd = false;
             bool isValidRemove = false;
             bool isValidRemoveTime = false;
             cout << "What do you want to modify in your schedule!" << endl;
             cout << "1. Add new free time period" << endl;
             cout << "2. Remove free time period" << endl;
             cout << "3. Quit" << endl;
+            cout << ">Your choice: ";
             string user_choice;
 
             getline(cin >> std::ws, user_choice);
             if(user_choice == "1"){//THis is for add new free time
                 while(add_check){
-                    cout << "Please enter which days of the week you work.\n";
-                    cout << "1. Monday \n"
-                        << "2. Tuesday \n"
-                        << "3. Wednesday \n"
-                        << "4. Thursday \n"
-                        << "5. Friday \n"
-                        << "6. Saturday \n"
-                        << "7. Sunday \n"
-                        << "8. Return \n";
-                    cout <<"=============================================================" << endl;
-                    cout << ">Your Choice: " << endl;
-                    string user_add_day;
-                    getline(cin >> std::ws, user_add_day);
+                    cout << "This is your current work day!" << endl;
+                    //PRINT THE WORKING DAY (MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY)
+                    for(int i = 0; i < workSchedule.size(); ++i){
+                        cout << i + 1 << ": " << workSchedule[i].first << endl;
+                    }
+                    cout << workSchedule.size() + 1 << ": Add another day" << endl;
+                    cout << workSchedule.size() + 2 << ": Return" << endl;
+                    cout << sp_colors::YELLOW << "-------------------------------" << sp_colors::RESET << endl << endl;
 
-                    if(user_add_day == "8"){//get out the loop
+                    cout << ">Your choice: ";
+                    string user_add_day_choice;
+                    getline(cin >> std::ws, user_add_day_choice);
+                    if(user_add_day_choice == std::to_string(workSchedule.size() + 2)){
+                        //USER WANT TO RETURN
                         add_check = false;
                         break;
-                    }
-                    if(user_add_day == "1" || user_add_day == "2" || user_add_day == "3" || user_add_day == "4"
-                    || user_add_day == "5" || user_add_day == "6" || user_add_day == "7"){
-
-                    }
-
-                }
+                    } 
                     
-            }else if(user_choice == "2"){//this is for remove free time
+                    if(user_add_day_choice == std::to_string(workSchedule.size() + 1)){
+                        //USER WANT TO ADD MORE DAY                
+                        bool check_add_day = true;
+                        bool check_time_add = true;
+                        while(check_add_day){
+                            
+                            cout << "Please enter which days of the week you work.\n";
+                            cout << "1. Monday \n"
+                                << "2. Tuesday \n"
+                                << "3. Wednesday \n"
+                                << "4. Thursday \n"
+                                << "5. Friday \n"
+                                << "6. Saturday \n"
+                                << "7. Sunday \n"
+                                << "8. Return \n";
+                            cout <<"=============================================================" << endl;
+                            cout << ">Your Choice: " << endl;
+                            string user_add_day;
+                            getline(cin >> std::ws, user_add_day);
+                            if(user_add_day == "8"){
+                                //USER WANT TO RETURN to the previous page
+                                check_add_day = false;
+                            }else if(user_add_day == "1" || user_add_day == "2" || user_add_day == "3" || user_add_day == "4" || user_add_day == "5" || user_add_day == "6" || user_add_day == "7"){
+                                //We need to check is the day already exist in the work schedule
+                                user_add_day = getDayString(std::stoi(user_add_day));
+                                bool day_exist = false;
+                                for(int i = 0; i < workSchedule.size(); ++i){
+                                    if(user_add_day == workSchedule[i].first){
+                                        cout << sp_colors::RED << "This day is already exist in your work schedule!" << sp_colors::RESET << endl;
+                                        cout << sp_colors::RED << "Please choose that day to add your new time" << sp_colors::RESET << endl;
+                                        check_add_day = false;
+                                        day_exist = true;
+                                    }
+                                }
+                                if(!day_exist){
+                                    //WE get the time from users
+                                    while(check_time_add){
+                                        cout << "Please enter the start time (HH:MM)" << endl;
+                                        Time start_time = getTimeFromUser();
+                                        cout << "Please enter the end time (HH:MM)" << endl;
+                                        Time end_time = getTimeFromUser();
+                                        cout << "FROM: " << start_time.getTime() << " TO: " << end_time.getTime() << endl;
+                                        
+                                        if(!start_time.isLater(end_time)){
+                                            //PUSH THE TIME TO THE WORK SCHEDULE WITH THE NEW DAY
+                                            workSchedule.push_back(std::make_pair(user_add_day, std::vector< std::pair< Time, Time> >{std::make_pair(start_time, end_time)}));
+                                            cout << sp_colors::GREEN << "Your time period is added!" << sp_colors::RESET << endl;
+                                            cout << sp_colors::GREEN << "FROM " << start_time.getTime() << " TO: " << end_time.getTime() << sp_colors::RESET << endl;
+
+                                            check_time_add = false;//get out the get time loop
+                                            check_add_day = false;
+                                            add_check = false;//return add/remove page 
+                                            break;
+
+                                        }else{
+                                            //THE END TIME IS EALIER THAN THE STAART TIME --> INVALID
+                                            cout << sp_colors::RED << "Your end time must be greater than the start time" << sp_colors::RESET << endl;
+                                            continue;
+                                        }
+                                    }
+
+                                }
+                            } else{
+                                cout << sp_colors::RED << "Invalid Choice!" << sp_colors::RESET << endl;
+                                continue;
+                            }
+                        }
+
+
+                        // add_check = false; //return add/remove page
+                    } else{
+                        //USER WANT TO ADD THE TIME TO THE EXISTING DAY
+                        bool is_valid_add_time = false;
+
+                        for(int i = 0; i < workSchedule.size(); ++i){
+                            if(user_add_day_choice == std::to_string(i + 1)){
+                                bool check_time = true;
+                                while(check_time){
+                                    cout << "Please enter the start time (HH:MM)" << endl;
+                                    Time start_time = getTimeFromUser();
+                                    cout << "Please enter the end time (HH:MM)" << endl;
+                                    Time end_time = getTimeFromUser();
+                                    
+                                    if(!start_time.isLater(end_time)){
+                                        //the isLater function will return the true if the start time is later than end time
+                                        //if the start time is ealier than end time --> go to this statement --> valid
+                                        //WE NEED TO CHECK IF THE TIME IS OVERLAP WITH THE EXISTING TIME
+                                        if(isOverlap(start_time, end_time, workSchedule[i].first)){
+                                            //if this isOverLap return true// prompts users to enter again
+                                            cout << sp_colors::RED << "Your time period is overlap with the existing time period!" << sp_colors::RESET << endl;
+                                            continue;
+                                        }
+
+                                        workSchedule[i].second.push_back(std::make_pair(start_time, end_time));
+                                        cout << sp_colors::GREEN << "Your time period is added!" << sp_colors::RESET << endl;
+                                        cout << sp_colors::GREEN << "FROM " << start_time.getTime() << " TO: " << end_time.getTime() << sp_colors::RESET << endl;
+                                        add_check = false;//return add/remove page  
+                                        is_valid_add_time = true;     
+                                        break;
+                                    }else{
+                                        //THE END TIME IS EALIER THAN THE STAART TIME --> INVALID
+                                        cout << sp_colors::RED << "Your end time must be greater than the start time" << sp_colors::RESET << endl;
+                                        continue;
+                                    }
+                                }        
+                            }
+                        }
+                        if(!is_valid_add_time){
+                            cout << sp_colors::RED << "Invalid Choice!" << sp_colors::RESET << endl;
+                        }
+                    }
+                }
+            }else if(user_choice == "2"){
+                //******USER WANT TO REMOVE TIME******
                 while(remove_check){
                     cout << "Please choose your day that you want to remove" << endl;
                     for(int i = 0; i < workSchedule.size(); ++i){
