@@ -583,7 +583,7 @@ public:
 
 
     void displayAvailableSupporter(){
-        booking.displayAvailableSupporter(member_list, logged_in_member,  logged_in_supporter, availableSupporter);
+        booking.displayAvailableSupporter(member_list, logged_in_member,  logged_in_supporter, availableSupporter, booking_list);
     }
 
     double findCreditPointFromTime(int start_hour, int start_minute, int end_hour, int end_minute, int cost_per_hour){
@@ -601,11 +601,23 @@ public:
 
     void createBooking(){
         cout << "****WELCOME TO BOOKING DASHBOARD****"<<endl;
+        Supporter* choose_supporter;
         displayAvailableSupporter();
         cout << "Please input the supporter's id that you want to book: ";
         string input; 
         getline(cin >> std::ws, input);
         input[0] = toupper(input[0]);
+
+
+// to get the supporter that the user is booking, to get the schedule everytime they choose someone
+        loop(member_list.size()){
+            if(Supporter* supporter = dynamic_cast<Supporter*>(member_list[i])){
+                if(supporter->getMemberId() == input){
+                    choose_supporter = supporter;
+                }
+            }
+        }
+
 
 //=========================CHECK IS THAT SUPPORTER IS EXSIT=======================
         
@@ -732,6 +744,7 @@ public:
 
                     bool time_check = true;    
                     while(time_check){
+                        choose_supporter->displayWorkSchedule();
                         cout << "Choose the time you want to book. Noitce that: the time you choose must match with the free time of the supporter!" << endl;
                         int start_time_hour, start_time_minute, end_time_hour, end_time_minute;
                         string start_time_input, end_time_input;

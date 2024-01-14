@@ -58,7 +58,33 @@ class BookingSupporter{
         return false;
     }
 
-    void displayAvailableSupporter(std::vector<Member*> member_list, Member* logged_in_member, Supporter* logged_in_supporter, std::vector<Supporter*>& availableSupporter) {
+    void displayComment(Supporter* selected_supporter, std::vector<BookingSupporter*> booking_list, std::vector<Member*> member_list){
+        int count = 0;
+        std::vector<std::pair<string, string>> comment;
+        cout << "Nearest comment: " << endl;
+        for (int i = booking_list.size() -1 ; i >= 0; i--){
+                if(booking_list[i]->getSupportId() == selected_supporter->getMemberId() && booking_list[i]->getProgress() == "COMPLETED" && booking_list[i]->getSupporterComment() != "x" && booking_list[i]->getSupporterComment() != " " && count < 4){
+                    comment.push_back(std::make_pair(booking_list[i]->getHostId(),booking_list[i]->getSupporterComment()));
+                    count++;
+                }
+        }
+        
+        if(!comment.empty()){
+            for (int x = 0; x < member_list.size(); x++){
+                for (int a = 0; a < comment.size(); a++){
+                    if(member_list[x]->getMemberId() == comment[a].first){
+                        cout << "From: " << member_list[x]->getFullName();
+                        cout << " - \"" << comment[a].second << "\"" << endl;
+                    }
+                }
+            }
+        }
+        else{
+            cout << "This supporter have not have a comment" << endl;
+        }
+    }
+
+    void displayAvailableSupporter(std::vector<Member*> member_list, Member* logged_in_member, Supporter* logged_in_supporter, std::vector<Supporter*>& availableSupporter, std::vector<BookingSupporter*> booking_list) {
         bool isSupporter = (logged_in_member == nullptr);
         if (isSupporter) {
             logged_in_member = logged_in_supporter;
@@ -81,6 +107,8 @@ class BookingSupporter{
                         cout << bk_colors::YELLOW << std::setw(173) << std::setfill('-') << "" << std::setfill(' ') << bk_colors::RESET << std::endl;
                         supporter->displayWorkSchedule();
 
+                        cout << bk_colors::YELLOW << std::setw(173) << std::setfill('-') << "" << std::setfill(' ') << bk_colors::RESET << endl;
+                        displayComment(supporter, booking_list, member_list);
                         cout << bk_colors::YELLOW << std::setw(173) << std::setfill('-') << "" << std::setfill(' ') << bk_colors::RESET << endl;
 
                         availableSupporter.push_back(supporter);
