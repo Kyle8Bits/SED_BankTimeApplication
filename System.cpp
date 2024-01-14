@@ -268,8 +268,18 @@ public:
             case 5: return "Friday";
             case 6: return "Saturday";
             case 7: return "Sunday";
-            default: return "Invalid Day";
         }
+        return "";
+    }
+
+    bool isValidCost(const string& cost_str){
+        for (char ch : cost_str) {
+            if (!std::isdigit(ch)) {
+                cout << colors::RED << "Please enter only digit!" << colors::RESET << endl;
+                return false;
+            }
+        }
+        return true;
     }
 
     bool upgradeToSupporter(){
@@ -279,35 +289,54 @@ public:
         }
         //----------------------THIS FOR GETTING SKILL LIST---------------------
 
-        string skill_input;//declare variable store the input of the users
+        
         cout << "Thank you for becomming the supporter. Your choice helps our community alot!" << endl;
-        cout << "First, you need to add some skills that you have" << endl;
-        bool check = true;
+        cout << "First, you need to add some skills that you have. These skills can change in your account's setting!" << endl;
         std::vector<string> skill_list_input;
         std::vector< std::pair< string, std:: vector< std::pair< Time, Time> > > > workSchedule;
-        std::vector<std::pair<Time,Time>> time_pair_list;
-        string weekday;
-        while(check){
-            cout << ">Your skill:";
+
+        bool skill_check = true;
+        while(skill_check){
+            
+            string choice;
+            string skill_input;//declare variable store the input of the users
+            cout << ">Your skill: ";
             getline(cin >> std::ws, skill_input);
             skill_list_input.push_back(skill_input);
-            cout << "Do you want to continue: [Y/N]";
-            char choice; cin >> choice;
-            if(choice != 'Y' && choice != 'y'){
-                check = false;
+            cout << colors:: GREEN << "Your new skill " << skill_input << " is added sucessfully!" << colors::RESET<< endl;
+            
+            bool confirm_check = true;
+            while(confirm_check){
+                cout << "Do you want to continue!\n";
+                cout << "1. Yes" << endl
+                    << "2. No" << endl;
+                cout << ">Your choice: ";
+                getline(cin >> std::ws, choice);
+
+                if(choice == "1"){
+                    cout << colors:: GREEN << "Continue Adding!" << colors::RESET<< endl;
+                    confirm_check = false;
+                } else if(choice == "2"){
+                    cout << colors:: GREEN << "Stop Adding!" << colors::RESET<< endl;
+                    skill_check = false;
+                    confirm_check = false;
+                }else{
+                    cout << colors::RED << "Please enter the valid input!" <<  colors::RESET << endl;
+                }
             }
-        }
-        cout << "Your skills are added successfully" << endl;
-        
+        }        
             //----------------------THIS FOR GETTING AVAILABILIITY PERIOD---------------------
-        cout << "Now you will make a period schedule, you can change it later" << endl;
+        cout << "***********Now you will make a period schedule, you can change it later***********" << endl;
+        cout << "In the first time, you can only one time period. You can add it more in your account setting!" << endl;
         
         bool schedule_check = true;
         while(schedule_check){
         //----------------------THIS FOR GETTING THE WEEKLY WORKDAY----------------
-            int day_choice;
 
             while(schedule_check){
+                bool time_check = true;
+                string user_day_choice; 
+
                 cout<<"Please enter which days of the week you work.\n";
                 cout << "1. Monday \n"
                     << "2. Tuesday \n"
@@ -317,91 +346,50 @@ public:
                     << "6. Saturday \n"
                     << "7. Sunday \n";
                 cout <<"=============================================================" << endl;
-                cout << "Already in the list: " << endl;
-                loop(workSchedule.size()){
-                    cout << workSchedule[i].first << "-";
-                }
-
-                cout << "\n";
+                cout << ">Your choice: " << endl;
                 bool check_option = true;
-
-                while(check_option){ 
-                cout << "Your option(eg. 1 for Monday,7 for Sunday): "; cin >> day_choice;
+                getline(cin >> std::ws, user_day_choice);
+                if(user_day_choice == "1" || user_day_choice == "2" || user_day_choice == "3" || user_day_choice == "4" || user_day_choice == "5" || user_day_choice == "6" || user_day_choice == "7"){
                     
-                    if(!checkDuplicateDay(workSchedule, getDayString(day_choice))){
-                        cout << "You already select this day, please choose another day" << endl;
-                    }
-                    else{
+                    user_day_choice = getDayString(std::stoi(user_day_choice));//convert from number to the string
+                    while(time_check){
+                        cout << "Please enter the start time (HH:MM)" << endl;
+                        Time start_time = start_time.getTimeFromUser();
+                        cout << "Please enter the end time (HH:MM)" << endl;
+                        Time end_time = end_time.getTimeFromUser();
 
-                        bool option_time = true;
-                        while(option_time){
-                            string start_time_input, end_time_input;
-                            int start_time_hour, start_time_minute, end_time_hour, end_time_minute;
-                            cout << "What is your free time (ex: 8:00 to 10:00, or 20:30 to 22:00)" << endl;
-                            //----------------------THIS FOR GETTING START TIME---------------------
-                            bool check_time_valid = true;
-
-                            while(check_time_valid){
-                                cout << "Start time: ";
-                                getline(cin >> std::ws, start_time_input);
-                                std::stringstream ss1;
-                                ss1 << start_time_input;//Get the startime to the ss1
-
-                                ss1 >> start_time_hour;
-                                ss1.ignore();//ignore the colon
-                                ss1 >> start_time_minute;
-                                
-                                //----------------------THIS FOR GETTING END TIME---------------------
-                                
-                                cout << "End time: ";
-                                getline(cin >> std::ws, end_time_input);
-                                
-                                std::stringstream ss2;
-                                ss2 << end_time_input;//Get the startime to the ss2
-                                ss2 >> end_time_hour;
-                                ss2.ignore();
-                                ss2 >> end_time_minute;
-
-                                if (!checkValidTime(start_time_input) && !checkValidTime(end_time_input)){
-                                    cout << "Invalid format! Please enter in the form HH:MM." << endl;
-                                }
-                                else if(!compareTimes(start_time_input, end_time_input)){
-                                    cout << "Invalid! The start time must come before the end time";
-                                }
-                                else{
-                                    time_pair_list.push_back(std::make_pair(Time(start_time_hour, start_time_minute), Time(end_time_hour, end_time_minute)));
-                                    check_time_valid = false;
-                                }   
-                            }
-
-                            string option;
-                            cout <<"Do you want to to add more period time for " << getDayString(day_choice) <<" [Y/N]: ";
-                            getline(cin >> std::ws, option);
-                            if (option == "N" || option == "n"){
-                                option_time = false;
-                            }
+                        if(!start_time.isLater(end_time)){
+                            //If the start time is ealier than the end time --> valid input
+                            //add the time and the day to the workSchedule
+                            workSchedule.push_back(std::make_pair(user_day_choice, std::vector<std::pair<Time, Time>>{std::make_pair(start_time, end_time)}));
+                            time_check = false;
+                            schedule_check = false;
+                        }else{
+                            //The end time is ealier than the start time --> invalid input
+                            cout << colors::RED << "Your end time must come after the start time" << colors::RESET << endl;
+                            continue;
                         }
-                        weekday = getDayString(day_choice);
-                        check_option = false; 
+
                     }
-
-                    workSchedule.push_back(std::make_pair(weekday,time_pair_list));
-
+                }else{
+                    cout << colors::RED << "Please enter the valid input!" << endl;
                 }
-
-                string option_day;
-                    cout << "Do you want to add more period[Y/N]: "; 
-                    getline(cin >> std::ws, option_day);
-                    if(option_day != "Y" && option_day != "y"){
-                        schedule_check = false;
-                    }
-                }
+                
             }
+        }
 
         //----------------------THIS FOR GETTING COST PER HOUR---------------------
-        int cost_input; 
+        string cost_input_str; 
         cout << "What is the hourly rate you would like to charge: ";
-        cin >> cost_input;
+        getline(cin >> std::ws, cost_input_str);
+        while(!isValidCost(cost_input_str)){//ask users to input the valid cost until the isValidCost return true
+            cout << colors::RED << "Please enter the valid cost!" << colors::RESET << endl;
+            cout << "What is the hourly rate you would like to charge: ";
+            getline(cin >> std::ws, cost_input_str);
+        }
+        
+        int cost_input = std::stoi(cost_input_str);//convert the string to int
+
         //----------------------ADD BASIC INTRODUCTION---------------------
         string about_me_input;
         cout << "Please introduce some basic things about yourself (Academic Level, Hobby, ...)" << endl;
@@ -425,11 +413,9 @@ public:
         logged_in_member->setAboutMe(about_me_input);
         //create new pointer supporter
         
-        Supporter* new_supporter = new Supporter(*logged_in_member,workSchedule, Status::OFFLINE, skill_list_input, cost_input);
-        // loop(workSchedule.weekday.size()){
-        //     cout << workSchedule.weekday[i] << " ";
-        // }
+        Supporter* new_supporter = new Supporter(*logged_in_member, workSchedule, Status::OFFLINE, skill_list_input, cost_input);
 
+        //remove this member to the list, because they already become the supporter
         loop(member_list.size()){
             if(member_list[i] == logged_in_member){
                 member_list.erase(member_list.begin() + i); 
@@ -475,47 +461,7 @@ public:
         } else{
             logged_in_supporter->displayPersonalInformation();
         }
-
-        // cout << "***MY INFORMATION***" << endl;
-        // cout << "ID: " << logged_in_member->getMemberId() << endl;
-        // cout << "Username: " << logged_in_member->getUsername() << endl;
-        // cout << "Password: " << logged_in_member->getPassword() << endl;
-        // cout << "Credit Point: " << logged_in_member->getCreditPoint() << endl;
-        // cout << "Full Name: " << logged_in_member->getFullName() << endl;
-        // cout << "Phone Number: " << logged_in_member->getPhoneNumber() << endl;
-        // cout << "Address: " << logged_in_member->getAddress() << endl;
-        // cout << "City: " << logged_in_member->getCity() << endl;
-        // cout << "About Me: " << logged_in_member->getAboutMe() << endl;
-        // cout << "Host Rating Score: " << logged_in_member->getHostRatingScore() << endl;
-        // cout << "Host Count: " << logged_in_member->getHostCount() << endl;
-        // cout << "Block List: " << logged_in_member->blockListToString()<< endl;
     }
-
-    // void viewPersonalInformationSupporter(){
-    //     cout << "***MY INFORMATION***" << endl;
-    //     cout << "ID: " << logged_in_supporter->getMemberId() << endl;
-    //     cout << "Username: " << logged_in_supporter->getUsername() << endl;
-    //     cout << "Password: " << logged_in_supporter->getPassword() << endl;
-    //     cout << "Credit Point: " << logged_in_supporter->getCreditPoint() << endl;
-    //     cout << "Full Name: " << logged_in_supporter->getFullName() << endl;
-    //     cout << "Phone Number: " << logged_in_supporter->getPhoneNumber() << endl;
-    //     cout << "Address: " << logged_in_supporter->getAddress() << endl;
-    //     cout << "City: " << logged_in_supporter->getCity() << endl;
-    //     cout << "About Me: " << logged_in_supporter->getAboutMe() << endl;
-    //     cout << "Host Rating Score: " << logged_in_supporter->getHostRatingScore() << endl;
-    //     cout << "Host Count: " << logged_in_supporter->getHostCount() << endl;
-    //     cout << "Block List:  HAVEN'T DONE YET" << endl;
-
-    //     // cout << "Time list: " << logged_in_supporter->getPairListToString();
-    // }
-
-
-    // string toLower(string str){
-    //     loop(str.length()){
-    //         str[i] = std::tolower(str[i]);
-    //     }
-    //     return str;
-    // }
 
     bool checkValidTime(string time) {
         

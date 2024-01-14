@@ -202,7 +202,7 @@ int main(){
                                     << "\t\t|                                                           |\n"
                                     << "\t\t|8. Add information about yourself                          |\n"
                                     << "\t\t|                                                           |\n"
-                                    << "\t\t|9. Return                                                 |\n"
+                                    << "\t\t|9. Return                                                  |\n"
                                     << "\t\t-------------------------------------------------------------\n"
                                     << ">Your choice: ";
                                 string member_setting_choice; 

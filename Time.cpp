@@ -5,12 +5,16 @@
 #include <iomanip>
 using std::string;
 
+namespace time_colors{
+    const char* RED = "\033[1;91m";
+    const char* RESET = "\033[0m";  
+}
+
 class Time{
 private:
     int hour;
     int minute;
 public:
-    friend std::istream& operator>>(std::istream& is, Time& time);
     Time(int hour = 0, int minute = 0) : hour(hour), minute(minute) {}
 
     string getTime(){
@@ -19,6 +23,43 @@ public:
                std::setw(2) << std::setfill('0') << std::to_string(this->minute);
         
         return ss.str();
+    }
+
+    
+
+    bool isValidTime(const string& time){//use paste by reference to advoid create the copy of parameter (const to not chagne the time that we paste in)
+        if(time.length() != 5 || time[2] != ':' || !isdigit(time[0]) || !isdigit(time[1]) || !isdigit(time[3]) || !isdigit(time[4])){
+            //if the length of the string is not 5 --> error
+            //if the 0,1,3,4 character is not digit --> error
+            //FORMAT HH:MM
+            return false;
+        } 
+
+        //Check the valid time 
+        int hour = std::stoi(time.substr(0,2));//get the 2 first character of the string --> convert to int
+        int minute = std::stoi(time.substr(3,2));//get the 2 last character of the string --> convert to int
+        if (hour < 0 || hour > 23 || minute < 0 || minute > 59){
+            //if hour is not in range(0-24) --> false
+            //if minutes is not in rnage(0-60) --> false
+            return false;
+        }
+
+        return true;
+    }
+
+    Time getTimeFromUser(){
+        cout << ">Your choice: ";
+        string time;
+        getline(cin >> std::ws, time);
+        while(!isValidTime(time)){
+            cout << time_colors::RED << "Please enter valid time!" << time_colors::RESET << endl;
+            cout << ">Your choice: ";
+            getline(cin >> std::ws, time);
+        }
+        int hour = std::stoi(time.substr(0,2));//get the 2 first character of the string --> convert to int
+        int minute = std::stoi(time.substr(3,2));//get the 2 last character of the string --> convert to int
+        Time time_obj(hour, minute);
+        return time_obj;
     }
 
     bool isLater(Time another_time){

@@ -397,41 +397,6 @@ public:
         return "";
     }
 
-    bool isValidTime(const string& time){//use paste by reference to advoid create the copy of parameter (const to not chagne the time that we paste in)
-        if(time.length() != 5 || time[2] != ':' || !isdigit(time[0]) || !isdigit(time[1]) || !isdigit(time[3]) || !isdigit(time[4])){
-            //if the length of the string is not 5 --> error
-            //if the 0,1,3,4 character is not digit --> error
-            //FORMAT HH:MM
-            return false;
-        } 
-
-        //Check the valid time 
-        int hour = std::stoi(time.substr(0,2));//get the 2 first character of the string --> convert to int
-        int minute = std::stoi(time.substr(3,2));//get the 2 last character of the string --> convert to int
-        if (hour < 0 || hour > 23 || minute < 0 || minute > 59){
-            //if hour is not in range(0-24) --> false
-            //if minutes is not in rnage(0-60) --> false
-            return false;
-        }
-
-        return true;
-    }
-
-    Time getTimeFromUser(){
-        cout << ">Your choice: ";
-        string time;
-        getline(cin >> std::ws, time);
-        while(!isValidTime(time)){
-            cout << sp_colors::RED << "Please enter valid time!" << sp_colors::RESET << endl;
-            cout << ">Your choice: ";
-            getline(cin >> std::ws, time);
-        }
-        int hour = std::stoi(time.substr(0,2));//get the 2 first character of the string --> convert to int
-        int minute = std::stoi(time.substr(3,2));//get the 2 last character of the string --> convert to int
-        Time time_obj(hour, minute);
-        return time_obj;
-    }
-
     bool isOverlap(Time start_time, Time end_time, string day){
         for(int i = 0; i < workSchedule.size(); ++i){
             if(day == workSchedule[i].first){
@@ -528,16 +493,15 @@ public:
                                     //WE get the time from users
                                     while(check_time_add){
                                         cout << "Please enter the start time (HH:MM)" << endl;
-                                        Time start_time = getTimeFromUser();
+                                        Time start_time = start_time.getTimeFromUser();
                                         cout << "Please enter the end time (HH:MM)" << endl;
-                                        Time end_time = getTimeFromUser();
-                                        cout << "FROM: " << start_time.getTime() << " TO: " << end_time.getTime() << endl;
+                                        Time end_time = end_time.getTimeFromUser();
                                         
                                         if(!start_time.isLater(end_time)){
                                             //PUSH THE TIME TO THE WORK SCHEDULE WITH THE NEW DAY
                                             workSchedule.push_back(std::make_pair(user_add_day, std::vector< std::pair< Time, Time> >{std::make_pair(start_time, end_time)}));
                                             cout << sp_colors::GREEN << "Your time period is added!" << sp_colors::RESET << endl;
-                                            cout << sp_colors::GREEN << "FROM " << start_time.getTime() << " TO: " << end_time.getTime() << sp_colors::RESET << endl;
+                                            cout << sp_colors::GREEN << user_add_day << ": FROM " << start_time.getTime() << " TO: " << end_time.getTime() << sp_colors::RESET << endl;
 
                                             check_time_add = false;//get out the get time loop
                                             check_add_day = false;
@@ -546,7 +510,7 @@ public:
 
                                         }else{
                                             //THE END TIME IS EALIER THAN THE STAART TIME --> INVALID
-                                            cout << sp_colors::RED << "Your end time must be greater than the start time" << sp_colors::RESET << endl;
+                                            cout << sp_colors::RED << "Your end time must come after than the start time" << sp_colors::RESET << endl;
                                             continue;
                                         }
                                     }
@@ -569,9 +533,9 @@ public:
                                 bool check_time = true;
                                 while(check_time){
                                     cout << "Please enter the start time (HH:MM)" << endl;
-                                    Time start_time = getTimeFromUser();
+                                    Time start_time = start_time.getTimeFromUser();
                                     cout << "Please enter the end time (HH:MM)" << endl;
-                                    Time end_time = getTimeFromUser();
+                                    Time end_time = end_time.getTimeFromUser();
                                     
                                     if(!start_time.isLater(end_time)){
                                         //the isLater function will return the true if the start time is later than end time
