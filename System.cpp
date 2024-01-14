@@ -43,6 +43,7 @@ namespace colors{
 #define InsufficientPointError() cout << colors::RED << "\t\tERROR: Insufficient credit points to book this supporter" << colors::RESET << std::endl;
 #define SucessBooking() cout << colors::GREEN << "\t\tYour booking has been created" << colors::RESET << endl;
 #define IdNotInListError() cout << colors::RED << "\t\tPlease enter the valid supporter's id" << colors::RESET << endl;
+#define CityError() cout << colors::RED << "You cannot book the supporter with different city" << colors::RESET << endl;
 
 
 class System{
@@ -631,7 +632,7 @@ public:
                 }
 
 //==================================SELECT TIME==========================================================================
-                if(!booking.isInBlockList(logged_in_member->getBlockList(), availableSupporter[i]->getMemberId())){
+                if(!booking.isInBlockList(logged_in_member->getBlockList(), availableSupporter[i]->getMemberId()) && booking.isInTheCity(logged_in_member, input, availableSupporter)){
                     if(logged_in_member->getHostRatingScore() < availableSupporter[i]->getMinHostRating()){
                         cout << colors::RED << "You can not book this supporter because your host rating score is lower than the supporter's min host rating score" << colors::RESET << endl;
                         return;
@@ -823,9 +824,13 @@ public:
                             BookingTimeError();
                         }
                     }
-                }else{
+                }else if (booking.isInBlockList(logged_in_member->getBlockList(), availableSupporter[i]->getMemberId())){
                         // cout <<"You can not book a supporter in your block list" << endl;
                     BlockError();
+                    return;
+                }
+                else if (!booking.isInTheCity(logged_in_member, input, availableSupporter)){
+                    CityError();
                     return;
                 }
                 break;

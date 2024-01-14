@@ -58,6 +58,20 @@ class BookingSupporter{
         return false;
     }
 
+    bool isInTheCity(Member* booker, string id_supporter_selected, std::vector<Supporter*>& availableSupporter){
+        bool check = false;
+
+        for (int i = 0; i < availableSupporter.size(); i++){
+            if(id_supporter_selected == availableSupporter[i]->member_id){
+                if (availableSupporter[i]->getCity() == booker->getCity()){
+                    check = true;
+                }
+            }
+        }
+        
+        return check;
+    }
+
     void displayComment(Supporter* selected_supporter, std::vector<BookingSupporter*> booking_list, std::vector<Member*> member_list){
         int count = 0;
         std::vector<std::pair<string, string>> comment;
