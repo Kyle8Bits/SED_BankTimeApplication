@@ -523,73 +523,57 @@ public:
         }
     }
 
-    bool isAvailableDay(string id, int dayOfWeek){
-        Supporter* booked_supporter = nullptr;
-        loop(availableSupporter.size()){
-            if (availableSupporter[i]->getMemberId() == id){
-                booked_supporter = availableSupporter[i];
-                break;
-            }
-        }
+    bool isAvailableDay(Supporter* id, int dayOfWeek){
         string day = getDayString(dayOfWeek);
 
-        loop(booked_supporter->getWorkSchedule().size()){
-            if( day == booked_supporter->getWorkSchedule()[i].first){
+        loop(id->getWorkSchedule().size()){
+            if(id->getWorkSchedule()[i].first == day){
                 return true;
-                break;
             }
         }
         return false;
     }
 
-    bool isSupporterAvilableInBookingTime(string id, int dayOfweek ,string start_time_booking, string end_time_booking){
-        bool check = false;
-        std::vector<std::pair<Time, Time>> selected_timepair;
-        selected_timepair.clear();
-        id[0] = toupper(id[0]);
-        Supporter* booked_supporter;
-        loop(availableSupporter.size()){
-            if (availableSupporter[i]->getMemberId() == id){
-                booked_supporter = availableSupporter[i];
-                break;
-            }
-        }
-        string day = getDayString(dayOfweek);
+    // bool isSupporterAvilableInBookingTime(Supporter* supporter, int dayOfweek , Time start_time_booking, Time end_time_booking){
+    //     bool check = false;
+    //     std::vector<std::pair<Time, Time>> selected_timepair;
+    //     selected_timepair.clear();
 
-        loop(booked_supporter->getWorkSchedule().size()){
+    //     string day = getDayString(dayOfweek);
 
-            if( day == booked_supporter->getWorkSchedule()[i].first){
-                selected_timepair = booked_supporter->getWorkSchedule()[i].second;
-                break;
-            }
-        }
+    //     loop(booked_supporter->getWorkSchedule().size()){
+    //         if( day == booked_supporter->getWorkSchedule()[i].first){
+    //             selected_timepair = booked_supporter->getWorkSchedule()[i].second;
+    //             break;
+    //         }
+    //     }
 
-        loop(selected_timepair.size()){
-            if(!selected_timepair.empty()){
-                if(isTimeIntervalContained(selected_timepair[i].first.getTime(), selected_timepair[i].second.getTime(),start_time_booking, end_time_booking)){
-                    cout << "work" << endl;
-                    check = true;
-                    break;
-                }
+    //     loop(selected_timepair.size()){
+    //         if(!selected_timepair.empty()){
+    //             if(isTimeIntervalContained(selected_timepair[i].first.getTime(), selected_timepair[i].second.getTime(),start_time_booking, end_time_booking)){
+    //                 cout << "work" << endl;
+    //                 check = true;
+    //                 break;
+    //             }
 
-            }
-            else{
-                cout << "Empty" << endl;
-            }
-        }
+    //         }
+    //         else{
+    //             cout << "Empty" << endl;
+    //         }
+    //     }
 
       
-        return check;
-    }
+    //     return check;
+    // }
 
 
     void displayAvailableSupporter(){
         booking.displayAvailableSupporter(member_list, logged_in_member,  logged_in_supporter, availableSupporter, booking_list);
     }
 
-    double findCreditPointFromTime(int start_hour, int start_minute, int end_hour, int end_minute, int cost_per_hour){
-        int start_minute_total = start_hour * 60 + start_minute;//find the total minues of start time
-        int end_minutes_total = end_hour * 60 + end_minute;//find the total minutes of end time
+    double findCreditPointFromTime(Time start_time, Time end_time, int cost_per_hour){
+        int start_minute_total = start_time.getHour() * 60 + start_time.getMinute();//find the total minues of start time
+        int end_minutes_total = end_time.getHour() * 60 + end_time.getMinute();//find the total minutes of end time
 
         int total_minutes = end_minutes_total - start_minute_total;//find the total minutes of the period
 
@@ -600,247 +584,249 @@ public:
         return total_cost;
     }
 
+    bool isValidInterger(const string& str){
+        for (char ch : str) {
+            if (!std::isdigit(ch)) {
+                cout << colors::RED << "Please enter only digit!" << colors::RESET << endl;
+                return false;
+            }
+        }
+        return true;
+    }
+
     void createBooking(){
         cout << "****WELCOME TO BOOKING DASHBOARD****"<<endl;
-        Supporter* choose_supporter;
+        Supporter* choose_supporter;//supporter that users choose
         displayAvailableSupporter();
         cout << "Please input the supporter's id that you want to book: ";
         string input; 
         getline(cin >> std::ws, input);
         input[0] = toupper(input[0]);
 
-
-// to get the supporter that the user is booking, to get the schedule everytime they choose someone
-        loop(member_list.size()){
-            if(Supporter* supporter = dynamic_cast<Supporter*>(member_list[i])){
-                if(supporter->getMemberId() == input){
-                    choose_supporter = supporter;
-                }
-            }
-        }
-
-
 //=========================CHECK IS THAT SUPPORTER IS EXSIT=======================
         
         bool isSupporter = (logged_in_member == nullptr);
         bool isValidSupporter = false;//this to check the create bookign is successfully or not?
-
+        if(isSupporter){
+            logged_in_member = logged_in_supporter;//use this to prevent segment fault when the current users is supporter
+        }
         loop(availableSupporter.size()){
-            if(input == availableSupporter[i]->getMemberId()){
-                if(isSupporter){
-                    logged_in_member = logged_in_supporter;//use this to prevent segment fault when the current users is supporter
+            if(input == availableSupporter[i]->getMemberId()){// if the id of input is matched with the supporter's id
+                // if(!booking.isInBlockList(logged_in_member->getBlockList(), availableSupporter[i]->getMemberId()) && booking.isInTheCity(logged_in_member, input, availableSupporter)){
+                if(logged_in_member->getHostRatingScore() < availableSupporter[i]->getMinHostRating()){
+                    cout << colors::RED << "You can not book this supporter because your host rating score is lower than the supporter's min host rating score" << colors::RESET << endl;
+                    return;
                 }
-
-//==================================SELECT TIME==========================================================================
-                if(!booking.isInBlockList(logged_in_member->getBlockList(), availableSupporter[i]->getMemberId()) && booking.isInTheCity(logged_in_member, input, availableSupporter)){
-                    if(logged_in_member->getHostRatingScore() < availableSupporter[i]->getMinHostRating()){
-                        cout << colors::RED << "You can not book this supporter because your host rating score is lower than the supporter's min host rating score" << colors::RESET << endl;
-                        return;
-                    }
-//===========================User choose the day to book here===============================================
-                    Calendar calendar;
-                    RealTime today;
-                    int day_save_to_file, month_save_to_file, year_save_to_file;
-                    bool decide_month_check = true;
-                    while(decide_month_check){
-                        // clearScreen();
-                        calendar.printCalendar(today.getThisYear(), today.getThisMonth());
-                        
-                        cout <<"1. Book withtin this month" << endl;
-                        cout <<"2. Book for with another calendar" << endl;
-                        cout <<"3. Cancle" << endl;
-                        
-                        int choice;
-                        cout << "> Your choice: "; cin >> choice;
-
-                        int day;
-                        if (choice == 1){
-                            bool day_check =true;
-                            while(day_check){
-                                bool dayofweek = true;
-                                while(dayofweek){
-                                cout << "> Choose the day in above month: "; cin >> day;
-                                    if(isAvailableDay(input, calendar.extractTheDayweek(day,today.getThisMonth(), today.getThisYear()) -1 )){
-                                        dayofweek = false;
-                                    }
-                                    else{
-                                        cout << colors::RED << "This supporter do not work on " << getDayString( calendar.extractTheDayweek(day,today.getThisMonth(), today.getThisYear()) - 1 )<< colors::RESET << endl;
-                                    }
-                                }
-                                if (day >= 1 && day <= calendar.getDaysInMonth(today.getThisMonth(), today.getThisYear())){
-                                    if ( day >= today.getToday()){
-                                        day_save_to_file = day;
-                                        month_save_to_file = today.getThisMonth();
-                                        year_save_to_file = today.getThisYear();
-                                        day_check = false;
-                                    }
-                                    else{
-                                        calendar.printCalendar(today.getThisYear(), today.getThisMonth());
-                                        cout << colors::RED << "The selected must be today or the following days. Please select again" << colors::RESET <<  endl;
-                                    }
-                                }
-                                else{
-
-                                    calendar.printCalendar(today.getThisYear(), today.getThisMonth());
-                                    cout << colors::RED << "The selected day does not exist in this month. Please select again" << colors::RESET << endl;
-                                }
-                            }
-                            decide_month_check = false;
-                        }
-                        else if( choice == 2){
-                            bool year_month_check = true;
-                            while(year_month_check){
-                                int year, month;
-                                cout << "Please enter the year you want to make the booking: "; cin >> year;
-                                cout << "Please enter the month you want to make the booking: "; cin >> month;
-
-                                if (year >= today.getThisYear() && (month >= today.getThisMonth() &&  month <= 12)){
-                                    calendar.printCalendar(year,month);
-
-                                    bool day_check =true;
-                                    while(day_check){
-                                        bool dayofweek = true;
-                                        while(dayofweek){
-                                            cout << "> Choice the day in above month: "; cin >> day;
-                                            if(isAvailableDay(input, calendar.extractTheDayweek(day,today.getThisMonth(), today.getThisYear()))){
-                                                dayofweek = false;
-                                            }
-                                            else{
-                                                cout << colors::RED << "This supporter do not work on " << getDayString(calendar.extractTheDayweek(day,month, year)) << colors::RESET << endl;
-                                            }
-                                        }
-
-                                        if (day >= 1 && day <= calendar.getDaysInMonth(today.getThisMonth(), today.getThisYear())){
-                                            if ( day >= today.getToday()){
-                                                day_save_to_file = day;
-                                                month_save_to_file = month;
-                                                year_save_to_file = year;
-                                                day_check = false;
-                                            }
-                                            else{
-                                                cout << colors::RED << "The selected must be today or the following days. Please select again" << colors::RESET << endl;
-                                            }
-                                        }
-                                        else{
-                                            cout << colors::RED << "The selected day does not exist in this month. Please select again" << colors::RESET << endl;
-                                        }
-                                    }
-                                    year_month_check =false;
-                                }
-                                else{
-                                    cout << colors::RED <<"The selected month and year is invalid. Please select again" << colors::RESET <<  endl;
-                                }
-                            }
-                            decide_month_check = false;
-                        }
-                        else if (choice == 3){
-                            cout << "Returning to dashboard" << endl;
-                            return;
-                        }
-
-                        else{
-                            cout << colors::RED <<"Invalid select please choose again" << colors::RESET << endl;
-                        }
-                    }
-
-                    bool time_check = true;    
-                    while(time_check){
-                        choose_supporter->displayWorkSchedule();
-                        cout << "Choose the time you want to book. Noitce that: the time you choose must match with the free time of the supporter!" << endl;
-                        int start_time_hour, start_time_minute, end_time_hour, end_time_minute;
-                        string start_time_input, end_time_input;
-                        cout << "Start Time [HH:MM]: ";
-                        getline(cin >> std::ws, start_time_input);
-                        cout << "End Time [HH:MM]: ";
-                        getline(cin >> std::ws, end_time_input);
-    //==================================TIME CHECK==========================================================================
-                        if(isSupporterAvilableInBookingTime(input, calendar.extractTheDayweek(day_save_to_file,month_save_to_file,year_save_to_file), start_time_input , end_time_input)){
-                            
-                                if(checkValidTime(start_time_input) && checkValidTime(end_time_input)){
-                                    //use one string to 2 integer
-                                    std::stringstream ss_start_time;
-                                    ss_start_time << start_time_input;
-
-                                    ss_start_time >> start_time_hour;
-                                    ss_start_time.ignore();
-                                    ss_start_time >> start_time_minute;
-
-                                    std::stringstream ss_end_time;
-                                    ss_end_time << end_time_input;
-
-                                    ss_end_time >> end_time_hour;
-                                    ss_end_time.ignore();
-                                    ss_end_time >> end_time_minute;
-
-                                    if(compareTimes(start_time_input, end_time_input)){
-                                        
-                                        //=============Check is the time is in range with the schedule===============
-                                    
-
-                                        //****CHECK CREDIT POINT****
-
-                                        int total_cost = findCreditPointFromTime(start_time_hour, start_time_minute, end_time_hour, end_time_minute, availableSupporter[i]->getCost());
-                                        cout << "The total cost of this booking is: " << total_cost << endl;
-                                        cout << "Do you want to continue? [Y/N]: ";
-                                        string choice; cin >> choice;
-                                        if(choice == "Y" || choice == "y"){
-                                            if(logged_in_member->getCreditPoint() < total_cost){//check the credit point of the users and the cost per hour of the supporter
-                                                InsufficientPointError();
-                                                return;
-                                            }
-                                            //PUSH NEW BOOKING TO THE BOOKING LIST
-                                            BookingSupporter* booking = new BookingSupporter(logged_in_member->getMemberId(), availableSupporter[i]->getMemberId());
-                                            //SET THE START AND END TIME OF THE NEW BOOKINg
-                                            booking->setStartTime(Time(start_time_hour, start_time_minute));
-                                            booking->setEndTime(Time(end_time_hour, end_time_minute));
-                                            booking->setTotalCost(total_cost);
-                                            booking->setDate(day_save_to_file,month_save_to_file,year_save_to_file);
-                                            booking_list.push_back(booking);
-                                            // cout << "Your booking has been created" << endl;
-                                            SucessBooking();//Print sucessfull message
-                                            isValidSupporter = true;
-                                            this->availableSupporter.clear();
-                                            //clear after create booking to prevent push duplicated Supporter
-                                            break; 
-                                        } else{
-                                            cout << "You have canceled the booking" << endl;
-                                            isValidSupporter = true;
-                                            break;
-                                        }
-
-
-                                    }else{
-                                        LogicTimeError();
-                                        return;
-                                    }
-                                    time_check = false;
-                                }
-                                else{
-                                    TimeFormatError();
-                                    return;
-                                }
-                        }
-                        else{
-                            BookingTimeError();
-                        }
-                    }
-                }else if (booking.isInBlockList(logged_in_member->getBlockList(), availableSupporter[i]->getMemberId())){
-                        // cout <<"You can not book a supporter in your block list" << endl;
+                else if (booking.isInBlockList(logged_in_member->getBlockList(), availableSupporter[i]->getMemberId())){
                     BlockError();
                     return;
                 }
                 else if (!booking.isInTheCity(logged_in_member, input, availableSupporter)){
                     CityError();
                     return;
+                } else{
+                    choose_supporter = availableSupporter[i];
+                    isValidSupporter = true;
+                    break;
                 }
-                break;
             }
-        }
-        if(isSupporter){
-            logged_in_member = nullptr;
         }
         if(!isValidSupporter){
             IdNotInListError();
+            return;
+        }
+    
+        //===========================User choose the day to book here===============================================
+        Calendar calendar;
+        RealTime today;
+        int day_save_to_file, month_save_to_file, year_save_to_file;
+        bool decide_month_check = true;
+        while(decide_month_check){
+            // clearScreen();
+            calendar.printCalendar(today.getThisYear(), today.getThisMonth());
+            
+            cout <<"1. Book withtin this month" << endl;
+            cout <<"2. Book for with another calendar" << endl;
+            cout <<"3. Cancle" << endl;
+            
+            string choice;
+            cout << "> Your choice: "; 
+            getline(std::cin >> std::ws, choice);
+
+            string day_str;
+            string day_str_another_month;//this use for the case 2
+            if (choice == "1"){
+                //User book in the current month
+                bool day_check =true;
+                while(day_check){
+                    bool dayofweek = true;
+                    while(dayofweek){
+                        cout << "> Choose the day in above month: "; 
+                        getline(cin >> std::ws, day_str);
+                        if(!isValidInterger(day_str)){
+                            continue;
+                        }else if(std::stoi(day_str) < 1 && std::stoi(day_str) > calendar.getDaysInMonth(today.getThisMonth(), today.getThisYear())){
+                            cout << colors::RED << "The selected day does not exist in this month. Please select again" << colors::RESET << endl;
+                        }else {
+                            if(isAvailableDay(choose_supporter, calendar.extractTheDayweek(std::stoi(day_str) ,today.getThisMonth(), today.getThisYear()) -1 )){
+                                dayofweek = false;
+                            }
+                            else{
+                                cout << colors::RED << "This supporter do not work on " << getDayString( calendar.extractTheDayweek( std::stoi(day_str),today.getThisMonth(), today.getThisYear()) - 1 )<< colors::RESET << endl;
+                            }
+                        }
+                    }
+
+                    int day_int = std::stoi(day_str);//convert the string back to the integer
+                    if (day_int >= 1 && day_int <= calendar.getDaysInMonth(today.getThisMonth(), today.getThisYear())){
+                        if ( day_int >= today.getToday()){
+                            day_save_to_file = day_int;
+                            month_save_to_file = today.getThisMonth();
+                            year_save_to_file = today.getThisYear();
+                            day_check = false;
+                        }
+                        else{
+                            calendar.printCalendar(today.getThisYear(), today.getThisMonth());
+                            cout << colors::RED << "The selected must be today or the following days. Please select again" << colors::RESET <<  endl;
+                        }
+                    }
+                    else{
+                        calendar.printCalendar(today.getThisYear(), today.getThisMonth());
+                        cout << colors::RED << "The selected day does not exist in this month. Please select again" << colors::RESET << endl;
+                    }
+                }
+                decide_month_check = false;
+            }else if( choice == "2"){
+                //user want to book in the another month
+                bool year_month_check = true;
+                while(year_month_check){
+                    string year_str, month_str;
+                    cout << "Please enter the year you want to make the booking: "; 
+                    getline(cin >> std::ws, year_str);
+                    cout << "Please enter the month you want to make the booking: ";
+                    getline(cin >> std::ws, month_str);
+
+                    if (std::stoi(year_str) >= today.getThisYear() && (std::stoi(month_str) >= today.getThisMonth() &&  std::stoi(month_str) <= 12)){
+                        int year = std::stoi(year_str);//convert the string back to the integer
+                        int month = std::stoi(month_str);//convert the string back to the integer
+                        calendar.printCalendar(year,month);
+
+                        bool day_check =true;
+                        while(day_check){
+                            bool dayofweek = true;
+                            while(dayofweek){
+                                cout << "> Choice the day in the above month: "; 
+                                getline(cin >> std::ws, day_str_another_month);
+                                if(isAvailableDay(choose_supporter, calendar.extractTheDayweek(std::stoi(day_str_another_month), today.getThisMonth(), today.getThisYear()))){
+                                    dayofweek = false;
+                                }
+                                else{
+                                    cout << colors::RED << "This supporter do not work on " << getDayString(calendar.extractTheDayweek(std::stoi(day_str_another_month),month, year)) << colors::RESET << endl;
+                                }
+                            }
+
+                            int day = std::stoi(day_str_another_month);//convert the string back to the integer 
+
+                            if (day >= 1 && day <= calendar.getDaysInMonth(today.getThisMonth(), today.getThisYear())){
+                                //get the correct day in month (getDayInMOnth return the number of days in month (Jan has 31 days, Feb has 28 days, ... ))
+                                if ( day >= today.getToday()){
+                                    day_save_to_file = day;
+                                    month_save_to_file = month;
+                                    year_save_to_file = year;
+                                    day_check = false;
+                                }
+                                else{
+                                    cout << colors::RED << "The selected must be today or the following days. Please select again" << colors::RESET << endl;
+                                }
+                            }
+                            else{
+                                cout << colors::RED << "The selected day does not exist in this month. Please select again" << colors::RESET << endl;
+                            }
+                        }
+                        year_month_check =false;
+                    }else{
+                        cout << colors::RED <<"The selected month and year is invalid. Please select again" << colors::RESET <<  endl;
+                    }
+                }
+                decide_month_check = false;
+            }
+            else if (choice == "3"){
+                cout << "Returning to dashboard" << endl;
+                return;
+            }else{
+                cout << colors::RED <<"Invalid select please choose again" << colors::RESET << endl;
+            }
+        }
+        
+        //*****THIS PART FOR GETTING TIME ********
+        bool time_check = true;    
+        while(time_check){
+            choose_supporter->displayWorkSchedule();
+            cout << "Choose the time you want to book. Noitce that: the time you choose must match with the free time of the supporter!" << endl;
+            // int start_time_hour, start_time_minute, end_time_hour, end_time_minute;
+            // string start_time_input, end_time_input;
+            cout << "Please enter the start time [HH:MM]\n";
+            Time start_time = start_time.getTimeFromUser();
+            cout << "Please enter the start time [HH:MM]\n";
+            Time end_time = end_time.getTimeFromUser();
+            
+            if(!start_time.isLater(end_time)){
+                //If the start time is ealier than the end time --> valid input
+                //add the time and the day to the workSchedule
+                string day_str = getDayString(calendar.extractTheDayweek(day_save_to_file,month_save_to_file,year_save_to_file)); 
+
+                //check the availability of the supporter
+                if(choose_supporter->isAvailableInTime(start_time, end_time, day_str)){
+                        //****CHECK CREDIT POINT****
+                        int total_cost = findCreditPointFromTime(start_time, end_time, choose_supporter->getCost());
+                        
+                        bool check_cost = true;
+                        while(check_cost){
+                            cout << "The total cost of this booking is: " << total_cost << endl;
+                            cout << "Do you want to continue?";
+                            cout << "1. Yes\n";
+                            cout << "2. No\n";
+                            string choice;
+                            getline(cin >> std::ws, choice);
+                            if(choice == "1"){
+                                if(logged_in_member->getCreditPoint() < total_cost){//check the credit point of the users and the cost per hour of the supporter
+                                    InsufficientPointError();
+                                    return;
+                                }
+                                //PUSH NEW BOOKING TO THE BOOKING LIST
+                                BookingSupporter* booking = new BookingSupporter(logged_in_member->getMemberId(), choose_supporter->getMemberId());
+                                //SET THE START AND END TIME OF THE NEW BOOKINg
+                                booking->setStartTime(start_time);
+                                booking->setEndTime(end_time);
+                                booking->setTotalCost(total_cost);
+                                booking->setDate(day_save_to_file, month_save_to_file, year_save_to_file);
+                                booking_list.push_back(booking);
+                                // cout << "Your booking has been created" << endl;
+                                SucessBooking();//Print sucessfull message
+                                isValidSupporter = true;
+                                this->availableSupporter.clear();
+                                //clear after create booking to prevent push duplicated Supporter
+                                //get out of function and return to the main dashboard
+                                check_cost = false;
+                                time_check = false;
+                            } else if(choice == "2"){
+                                cout << colors::YELLOW << "You have canceled the booking" << colors::YELLOW << endl;
+                                isValidSupporter = true;
+                                return;
+                            } else{
+                                cout << colors::RED << "Please enter the valid input!" << colors::RESET << endl;
+                            }
+                            time_check = false;
+                        }
+                }else{
+                    BookingTimeError();
+                }
+            }
+        }
+
+        if(isSupporter){
+            //retur nthe logged_inmember become nullptr
+            logged_in_member = nullptr;
         }
     }
 

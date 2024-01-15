@@ -90,10 +90,18 @@ public:
         return digitalTime;
     }
 
-    string getHour(){
+    int getHour(){
+        return this->hour;
+    }
+
+    int getMinute(){
+        return this->minute;
+    }
+
+    string getHourToString(){
         return std::to_string(this->hour);
     }
-    string getMinute(){
+    string getMinuteToString(){
         return std::to_string(this->minute);
     }
 };

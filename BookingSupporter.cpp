@@ -188,10 +188,10 @@ class BookingSupporter{
 
     string getTimeToFile(){
         std::stringstream ss;
-        ss << std::setw(2) << std::setfill('0') << start_time.getHour() << "-"
-           << std::setw(2) << std::setfill('0') << start_time.getMinute() << "-"
-           << std::setw(2) << std::setfill('0') << end_time.getHour() << "-"
-           << std::setw(2) << std::setfill('0') << end_time.getMinute() << std::setfill(' ');
+        ss << std::setw(2) << std::setfill('0') << start_time.getHourToString() << "-"
+           << std::setw(2) << std::setfill('0') << start_time.getMinuteToString() << "-"
+           << std::setw(2) << std::setfill('0') << end_time.getHourToString() << "-"
+           << std::setw(2) << std::setfill('0') << end_time.getMinuteToString() << std::setfill(' ');
            return ss.str();
     }
     

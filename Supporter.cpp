@@ -397,6 +397,25 @@ public:
         return "";
     }
 
+    bool isAvailableInTime(Time start_time_booking, Time end_time_booking, string day){
+        for(int i = 0; i < workSchedule.size(); ++i){
+            if(day == workSchedule[i].first){
+                    //if the input day is the same with the day in the work schedule
+                    //we will go to each time of the period in the work schedule to check
+                for(int a = 0; a < workSchedule[i].second.size(); ++a){
+                    if(!end_time_booking.isLater(workSchedule[i].second[a].second) && start_time_booking.isLater(workSchedule[i].second[a].first)){
+                       //the booking time must align in side the range of the free time
+                       //==> start_time_booking must be later than the start time of the free time
+                        //==> end_time_booking must be ealier than the end time of the free time
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
     bool isOverlap(Time start_time, Time end_time, string day){
         for(int i = 0; i < workSchedule.size(); ++i){
             if(day == workSchedule[i].first){
