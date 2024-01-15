@@ -664,11 +664,21 @@ public:
                         cout << "> Choose the day in above month: "; 
                         getline(cin >> std::ws, day_str);
                         if(!isValidInterger(day_str)){
-                            continue;
-                        }else if(std::stoi(day_str) < 1 && std::stoi(day_str) > calendar.getDaysInMonth(today.getThisMonth(), today.getThisYear())){
+                        }
+                        else if(std::stoi(day_str) < 1 || std::stoi(day_str) > calendar.getDaysInMonth(today.getThisMonth(), today.getThisYear())){
+                            calendar.printCalendar(today.getThisYear(), today.getThisMonth());
                             cout << colors::RED << "The selected day does not exist in this month. Please select again" << colors::RESET << endl;
-                        }else {
+                        }
+                        else if (std::stoi(day_str) < today.getToday()){
+                            calendar.printCalendar(today.getThisYear(), today.getThisMonth());
+                            cout << colors::RED << "The selected must be today or the following days. Please select again" << colors::RESET <<  endl;
+                        }
+                        else {
                             if(isAvailableDay(choose_supporter, calendar.extractTheDayweek(std::stoi(day_str) ,today.getThisMonth(), today.getThisYear()) -1 )){
+                                day_save_to_file = std::stoi(day_str);
+                                year_save_to_file = today.getThisYear();
+                                month_save_to_file = today.getThisMonth();
+                                day_check = false;
                                 dayofweek = false;
                             }
                             else{
@@ -676,78 +686,66 @@ public:
                             }
                         }
                     }
-
-                    int day_int = std::stoi(day_str);//convert the string back to the integer
-                    if (day_int >= 1 && day_int <= calendar.getDaysInMonth(today.getThisMonth(), today.getThisYear())){
-                        if ( day_int >= today.getToday()){
-                            day_save_to_file = day_int;
-                            month_save_to_file = today.getThisMonth();
-                            year_save_to_file = today.getThisYear();
-                            day_check = false;
-                        }
-                        else{
-                            calendar.printCalendar(today.getThisYear(), today.getThisMonth());
-                            cout << colors::RED << "The selected must be today or the following days. Please select again" << colors::RESET <<  endl;
-                        }
-                    }
-                    else{
-                        calendar.printCalendar(today.getThisYear(), today.getThisMonth());
-                        cout << colors::RED << "The selected day does not exist in this month. Please select again" << colors::RESET << endl;
-                    }
                 }
-                decide_month_check = false;
+
+            decide_month_check = false;
             }else if( choice == "2"){
-                //user want to book in the another month
-                bool year_month_check = true;
-                while(year_month_check){
-                    string year_str, month_str;
+                bool month_year_check = true;
+                string year_str, month_str;
+                
+                while(month_year_check){
+                    //user want to book in the another month
                     cout << "Please enter the year you want to make the booking: "; 
                     getline(cin >> std::ws, year_str);
                     cout << "Please enter the month you want to make the booking: ";
                     getline(cin >> std::ws, month_str);
-
-                    if (std::stoi(year_str) >= today.getThisYear() && (std::stoi(month_str) >= today.getThisMonth() &&  std::stoi(month_str) <= 12)){
-                        int year = std::stoi(year_str);//convert the string back to the integer
-                        int month = std::stoi(month_str);//convert the string back to the integer
-                        calendar.printCalendar(year,month);
-
-                        bool day_check =true;
-                        while(day_check){
-                            bool dayofweek = true;
-                            while(dayofweek){
-                                cout << "> Choice the day in the above month: "; 
-                                getline(cin >> std::ws, day_str_another_month);
-                                if(isAvailableDay(choose_supporter, calendar.extractTheDayweek(std::stoi(day_str_another_month), today.getThisMonth(), today.getThisYear()))){
-                                    dayofweek = false;
-                                }
-                                else{
-                                    cout << colors::RED << "This supporter do not work on " << getDayString(calendar.extractTheDayweek(std::stoi(day_str_another_month),month, year)) << colors::RESET << endl;
-                                }
-                            }
-
-                            int day = std::stoi(day_str_another_month);//convert the string back to the integer 
-
-                            if (day >= 1 && day <= calendar.getDaysInMonth(today.getThisMonth(), today.getThisYear())){
-                                //get the correct day in month (getDayInMOnth return the number of days in month (Jan has 31 days, Feb has 28 days, ... ))
-                                if ( day >= today.getToday()){
-                                    day_save_to_file = day;
-                                    month_save_to_file = month;
-                                    year_save_to_file = year;
-                                    day_check = false;
-                                }
-                                else{
-                                    cout << colors::RED << "The selected must be today or the following days. Please select again" << colors::RESET << endl;
-                                }
-                            }
-                            else{
-                                cout << colors::RED << "The selected day does not exist in this month. Please select again" << colors::RESET << endl;
-                            }
-                        }
-                        year_month_check =false;
-                    }else{
-                        cout << colors::RED <<"The selected month and year is invalid. Please select again" << colors::RESET <<  endl;
+                    if( !isValidInterger(month_str) || !isValidInterger(year_str)){
+                    }
+                    else if(year_str.length() > 4 || month_str.length() > 2 ){
+                        cout << colors::RED << "Please enter the valid input!" << colors::RESET << endl;
+                    }
+                    else if(std::stoi(month_str) < 1 || std::stoi(month_str) > 12){
+                        cout << colors::RED << "Plese enter the valid month! Only 12 months in a year" << colors::RESET << endl;
+                    }
+                    else if(std::stoi(year_str) < today.getThisYear() || std::stoi(month_str) < today.getThisMonth()){
+                        cout << colors::RED << "You can not book in the past!" << colors::RESET << endl;
+                    }
+                    else{
+                        month_year_check = false;
                     }
                 }
+
+                bool day_check =true;
+                while(day_check){
+                    bool dayofweek = true;
+                    while(dayofweek){
+                        cout << "> Choose the day in above month: "; 
+                        getline(cin >> std::ws, day_str);
+                        if(!isValidInterger(day_str)){
+                        }
+                        else if(std::stoi(day_str) < 1 || std::stoi(day_str) > calendar.getDaysInMonth(std::stoi(month_str), std::stoi(year_str))){
+                            calendar.printCalendar(std::stoi(year_str), std::stoi(month_str));
+                            cout << colors::RED << "The selected day does not exist in this month. Please select again" << colors::RESET << endl;
+                        }
+                        else if (std::stoi(day_str) < today.getToday()){
+                            calendar.printCalendar(std::stoi(year_str), std::stoi(month_str));
+                            cout << colors::RED << "The selected must be today or the following days. Please select again" << colors::RESET <<  endl;
+                        }
+                        else {
+                            if(isAvailableDay(choose_supporter, calendar.extractTheDayweek(std::stoi(day_str) ,std::stoi(month_str), std::stoi(year_str)) -1 )){
+                                day_save_to_file = std::stoi(day_str);
+                                year_save_to_file = std::stoi(month_str);
+                                month_save_to_file = std::stoi(year_str);
+                                day_check = false;
+                                dayofweek = false;
+                            }
+                            else{
+                                cout << colors::RED << "This supporter do not work on " << getDayString( calendar.extractTheDayweek( std::stoi(day_str),std::stoi(month_str), std::stoi(year_str)) - 1 )<< colors::RESET << endl;
+                            }
+                        }
+                    }
+                }
+
                 decide_month_check = false;
             }
             else if (choice == "3"){
