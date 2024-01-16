@@ -166,7 +166,7 @@ public:
         cout << ">Password: ";
         getline(cin >> std::ws, pass_word_input);
 
-        if(user_name_input == "admin" && pass_word_input == "admin"){
+        if(user_name_input == "admin" && pass_word_input == "rmit1234"){
             is_admin = true;
             return true;
         }
