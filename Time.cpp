@@ -68,7 +68,7 @@ public:
             //if this hour is greater than another_time hour, return true
             return true;
         }else if(this->hour == another_time.hour){
-            if(this->minute > another_time.minute){
+            if(this->minute >= another_time.minute){
                 //if is the same hour, but this minute is larger --> true
                 return true;
             }

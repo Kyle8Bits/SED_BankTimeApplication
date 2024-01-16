@@ -37,7 +37,7 @@ namespace colors{
 
 #define NotExistSupporterError() cout << colors::RED << "\t\tERROR: This supporter do not exsit in the list" << colors::RESET << std::endl;
 #define BookingTimeError() cout << colors::RED << "\t\tERROR: This supporter work schedule do not match your booking time" << colors::RESET << std::endl;
-#define LogicTimeError() cout << colors::RED << "\t\tERROR: The start time must come before the endtime" << colors::RESET << std::endl;
+#define LogicTimeError() cout << colors::RED << "\t\tERROR: The start time should be earlier than the end time." << colors::RESET << std::endl;
 #define TimeFormatError() cout << colors::RED << "\t\tERROR: The time must be in form HH:MM" << colors::RESET << std::endl;
 #define BlockError() cout << colors::RED << "\t\tERROR: You can not book a supporter in your block list" << colors::RESET << std::endl;
 #define InsufficientPointError() cout << colors::RED << "\t\tERROR: Insufficient credit points to book this supporter" << colors::RESET << std::endl;
@@ -635,7 +635,7 @@ public:
             IdNotInListError();
             return;
         }
-    
+
         //===========================User choose the day to book here===============================================
         Calendar calendar;
         RealTime today;
@@ -692,7 +692,7 @@ public:
             }else if( choice == "2"){
                 bool month_year_check = true;
                 string year_str, month_str;
-                
+        //==========================CHECK MONTH AND YEAR==============================
                 while(month_year_check){
                     //user want to book in the another month
                     cout << "Please enter the year you want to make the booking: "; 
@@ -714,7 +714,7 @@ public:
                         month_year_check = false;
                     }
                 }
-
+            //======================CHECK THE DAY==================================
                 bool day_check =true;
                 while(day_check){
                     bool dayofweek = true;
@@ -757,70 +757,73 @@ public:
         }
         
         //*****THIS PART FOR GETTING TIME ********
-        bool time_check = true;    
+        string day_str = getDayString(calendar.extractTheDayweek(day_save_to_file,month_save_to_file,year_save_to_file)-1); 
+        Time start_time, end_time;
+        bool time_check = true;  
+        //=====================CHECK THE TIME==============================================
         while(time_check){
             choose_supporter->displayWorkSchedule();
             cout << "Choose the time you want to book. Noitce that: the time you choose must match with the free time of the supporter!" << endl;
             // int start_time_hour, start_time_minute, end_time_hour, end_time_minute;
             // string start_time_input, end_time_input;
             cout << "Please enter the start time [HH:MM]\n";
-            Time start_time = start_time.getTimeFromUser();
-            cout << "Please enter the start time [HH:MM]\n";
-            Time end_time = end_time.getTimeFromUser();
+            start_time = start_time.getTimeFromUser();
+            cout << "Please enter the end time [HH:MM]\n";
+            end_time = end_time.getTimeFromUser();
             
-            if(!start_time.isLater(end_time)){
-                //If the start time is ealier than the end time --> valid input
-                //add the time and the day to the workSchedule
-                string day_str = getDayString(calendar.extractTheDayweek(day_save_to_file,month_save_to_file,year_save_to_file)); 
-
-                //check the availability of the supporter
-                if(choose_supporter->isAvailableInTime(start_time, end_time, day_str)){
-                        //****CHECK CREDIT POINT****
-                        int total_cost = findCreditPointFromTime(start_time, end_time, choose_supporter->getCost());
-                        
-                        bool check_cost = true;
-                        while(check_cost){
-                            cout << "The total cost of this booking is: " << total_cost << endl;
-                            cout << "Do you want to continue?";
-                            cout << "1. Yes\n";
-                            cout << "2. No\n";
-                            string choice;
-                            getline(cin >> std::ws, choice);
-                            if(choice == "1"){
-                                if(logged_in_member->getCreditPoint() < total_cost){//check the credit point of the users and the cost per hour of the supporter
-                                    InsufficientPointError();
-                                    return;
-                                }
-                                //PUSH NEW BOOKING TO THE BOOKING LIST
-                                BookingSupporter* booking = new BookingSupporter(logged_in_member->getMemberId(), choose_supporter->getMemberId());
-                                //SET THE START AND END TIME OF THE NEW BOOKINg
-                                booking->setStartTime(start_time);
-                                booking->setEndTime(end_time);
-                                booking->setTotalCost(total_cost);
-                                booking->setDate(day_save_to_file, month_save_to_file, year_save_to_file);
-                                booking_list.push_back(booking);
-                                // cout << "Your booking has been created" << endl;
-                                SucessBooking();//Print sucessfull message
-                                isValidSupporter = true;
-                                this->availableSupporter.clear();
-                                //clear after create booking to prevent push duplicated Supporter
-                                //get out of function and return to the main dashboard
-                                check_cost = false;
-                                time_check = false;
-                            } else if(choice == "2"){
-                                cout << colors::YELLOW << "You have canceled the booking" << colors::YELLOW << endl;
-                                isValidSupporter = true;
-                                return;
-                            } else{
-                                cout << colors::RED << "Please enter the valid input!" << colors::RESET << endl;
-                            }
-                            time_check = false;
-                        }
-                }else{
-                    BookingTimeError();
-                }
+            if(start_time.isLater(end_time)){
+                LogicTimeError();
+            }
+            else if(!choose_supporter->isAvailableInTime(start_time, end_time, day_str)){
+                BookingTimeError();
+            }
+            else{
+                time_check = false;
             }
         }
+
+        //===========This part return thr price and wait for confirm================================
+        int total_cost = findCreditPointFromTime(start_time, end_time, choose_supporter->getCost());
+                        
+        bool check_cost = true;
+        while(check_cost){
+            cout << "The total cost of this booking is: " << total_cost << endl;
+            cout << "Do you want to continue?\n";
+            cout << "1. Yes\n";
+            cout << "2. No\n";
+            string choice;
+            getline(cin >> std::ws, choice);
+            if(choice == "1"){
+                if(logged_in_member->getCreditPoint() < total_cost){//check the credit point of the users and the cost per hour of the supporter
+                    InsufficientPointError();
+                    return;
+                }
+                //PUSH NEW BOOKING TO THE BOOKING LIST
+                BookingSupporter* booking = new BookingSupporter(logged_in_member->getMemberId(), choose_supporter->getMemberId());
+                //SET THE START AND END TIME OF THE NEW BOOKINg
+                booking->setStartTime(start_time);
+                booking->setEndTime(end_time);
+                booking->setTotalCost(total_cost);
+                booking->setDate(day_save_to_file, month_save_to_file, year_save_to_file);
+                booking_list.push_back(booking);
+                // cout << "Your booking has been created" << endl;
+                SucessBooking();//Print sucessfull message
+                isValidSupporter = true;
+                this->availableSupporter.clear();
+                //clear after create booking to prevent push duplicated Supporter
+                //get out of function and return to the main dashboard
+                check_cost = false;
+                time_check = false;
+            } else if(choice == "2"){
+                cout << colors::YELLOW << "You have canceled the booking" << colors::YELLOW << endl;
+                isValidSupporter = true;
+                return;
+            } else{
+                cout << colors::RED << "Please enter the valid input!" << colors::RESET << endl;
+            }
+
+        }
+        
 
         if(isSupporter){
             //retur nthe logged_inmember become nullptr
