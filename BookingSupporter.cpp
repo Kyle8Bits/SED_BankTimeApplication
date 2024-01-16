@@ -195,12 +195,20 @@ class BookingSupporter{
            return ss.str();
     }
     
-    string getStartTime(){
+    string getStartTimeToString(){
         return start_time.getTimeColon();
     }
 
-    string getEndTime(){
+    string getEndTimeToString(){
         return end_time.getTimeColon();
+    }
+
+    Time getStartTime(){
+        return this->start_time;
+    }
+
+    Time getEndTime(){
+        return this->end_time;
     }
 
     string getTime(){

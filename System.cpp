@@ -488,40 +488,31 @@ public:
         return true;
     }
 
-    bool compareTimes( string time1, string time2) {
-        std::istringstream stream1(time1);
-        std::istringstream stream2(time2);
+    // bool compareTimes( string time1, string time2) {
+    //     std::istringstream stream1(time1);
+    //     std::istringstream stream2(time2);
 
-        int hours1, minutes1, hours2, minutes2;
+    //     int hours1, minutes1, hours2, minutes2;
 
-        char colon; // To consume the ':' character
+    //     char colon; // To consume the ':' character
 
-        // Parse the first time
-        stream1 >> hours1 >> colon >> minutes1;
+    //     // Parse the first time
+    //     stream1 >> hours1 >> colon >> minutes1;
 
-        // Parse the second time
-        stream2 >> hours2 >> colon >> minutes2;
+    //     // Parse the second time
+    //     stream2 >> hours2 >> colon >> minutes2;
 
-        // Compare hours
-        if (hours1 < hours2) {
-            return true;
-        } else if (hours1 > hours2) {
-            return false;
-        }
+    //     // Compare hours
+    //     if (hours1 < hours2) {
+    //         return true;
+    //     } else if (hours1 > hours2) {
+    //         return false;
+    //     }
 
-        // Hours are equal, compare minutes
-        return (minutes1 <= minutes2);
-    }
+    //     // Hours are equal, compare minutes
+    //     return (minutes1 <= minutes2);
+    // }
 
-    bool isTimeIntervalContained(string start1, string end1, string start2, string end2) {
-        // Check if start1 is equal to or after start2
-        if(compareTimes(start1, start2) && compareTimes(end2, end1)){
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
 
     bool isAvailableDay(Supporter* id, int dayOfWeek){
         string day = getDayString(dayOfWeek);
@@ -962,12 +953,11 @@ public:
         return 0;
     }
 
-    void decideJob(){//For supporter to answer the request booking from host. Either accept or reject or remain pending
+    std::vector<string> showAvalableBooking(){
         cout << "****THE LIST OF REQUEST BOOKING****\n";
         int count = 1;
-        std::vector<string> current_job = {};
-        
         cout << "\n";
+        std::vector<string> current_job = {};
         cout << colors::YELLOW << std::setw(146) << std::setfill('-') << colors::RESET << endl;
         cout << bk_colors::YELLOW << std::left << std::setw(7) << "| Num |" << std::setw(13) << " Booking ID |" << std::setw(20) << " Host Name         |"
                 << std::setw(15) << " City         |" << std::setw(15) << " Host Rating  |"  << std::setw(12) << " Status    |" << std::setw(17) << " Progress       |"
@@ -982,10 +972,10 @@ public:
                         current_job.push_back(booking_list[i]->getBookingId());
                         //Print basic information
                         cout <<"| "<< std::setw(4) <<std::to_string(count) << "| " 
-                             << std::setw(11)<< booking_list[i]->getBookingId() << "| "
-                             << std::setw(18)<< member_list[a]->getFullName() << "| " 
-                             << std::setw(13)<< member_list[a]->getCity() << "| "
-                             << std::setw(13) << std::fixed << std::setprecision(2) << member_list[a]->getAverageRatingScore() << "| ";
+                            << std::setw(11)<< booking_list[i]->getBookingId() << "| "
+                            << std::setw(18)<< member_list[a]->getFullName() << "| " 
+                            << std::setw(13)<< member_list[a]->getCity() << "| "
+                            << std::setw(13) << std::fixed << std::setprecision(2) << member_list[a]->getAverageRatingScore() << "| ";
 
                             if(booking_list[i]->getStatus() == "ACCEPTED"){
                             cout << colors::GREEN << std::setw(10) << booking_list[i]->getStatus() << colors::RESET << "| ";
@@ -996,8 +986,8 @@ public:
                             cout << colors::YELLOW << std::setw(15)<< "WAIT" << colors::RESET << "| ";
                             }
                         cout << std::setw(18)<< booking_list[i]->getTime() << "| "
-                             << std::setw(13) << booking_list[i]->getDate() << "| "
-                             << std::setw(6) << booking_list[i]->getTotalCost() <<"|" << endl;
+                            << std::setw(13) << booking_list[i]->getDate() << "| "
+                            << std::setw(6) << booking_list[i]->getTotalCost() <<"|" << endl;
 
                         cout << colors::YELLOW << std::setw(146) << std::setfill('-') << colors::RESET << std::setfill(' ') << endl;
                     }
@@ -1006,163 +996,175 @@ public:
             }
         }
 
-        //If current job is empty. Notify that and return the function
+        return current_job;
+    }
+
+
+    void decideJob(){//For supporter to answer the request booking from host. Either accept or reject or remain pending
         bool invitation_code_loop_check = true;
+        std::vector<string> current_job;
         while(invitation_code_loop_check){
+            current_job.clear();
+            std::vector<string> current_job = showAvalableBooking();
             if(current_job.empty()){
                 //if the curernt_job doesn't have that booking, we get out this loop
                 cout << "You do not have booking yet" << endl;
                 invitation_code_loop_check = false;
-            }else{
-                string choice;
-                bool validChoice = false;
+                return;
+            }
+            
+                    
+            string choice;
+            bool validChoice = false;
 
-                cout << "Enter booking invitation code: ";
-                cout << "Type 'q' to exit\n";
-                std::getline(cin >> std::ws, choice);
+            cout << "Enter booking invitation code: ";
+            cout << "Type 'q' to exit\n";
+            std::getline(cin >> std::ws, choice);
 
-                if(choice == "q"){
-                    invitation_code_loop_check = false;
-                    cout << "Returning home page" << endl;
-                    break;
-                } else{
-                    choice[0] = toupper(choice[0]);//make the first character of users'input beomce upper
-                    //it helps users can enter lower character but still match the id
-                    choice[1] = toupper(choice[1]);
+            if(choice == "q"){
+                invitation_code_loop_check = false;
+                cout << "Returning home page" << endl;
+                break;
+            } else{
+                choice[0] = toupper(choice[0]);//make the first character of users'input beomce upper
+                //it helps users can enter lower character but still match the id
+                choice[1] = toupper(choice[1]);
 
-                    loop(current_job.size()){ 
-                        if(choice  == current_job[i]){
-                            validChoice = true;
-                            if(getProgressById(current_job[i]) == "IN PROGRESS"){
-                                string decide_in_progress;
-                                bool in_progress_loop_check = true;
+                loop(current_job.size()){ 
+                    if(choice  == current_job[i]){
+                        validChoice = true;
+                        if(getProgressById(current_job[i]) == "IN PROGRESS"){
+                            string decide_in_progress;
+                            bool in_progress_loop_check = true;
 
-                                while(in_progress_loop_check){
-                                    cout << "Have you completed the job?" << endl;
-                                    cout << "1. Yes\n" 
-                                         << "2. No" << endl;
-                                    cout << ">Your choice: "; getline(cin >> std::ws, decide_in_progress);
-                                    if(decide_in_progress =="1"){
-                                        //&***************UNCOMMENT IT WHEN DONE***************
-                                        setProgressById(current_job[i], "COMPLETED");
-                                        cout << colors::GREEN << "Congratulation! You just finished the job." << colors::RESET << endl;
-                                        cout << colors::GREEN << "You just receive: " << getMoneyById(current_job[i]) << colors::RESET << " CP" << endl;
-                                        logged_in_supporter->addCreditPoint(getMoneyById(current_job[i]));//add the new money to the supporter's account
-                                        cout << colors::YELLOW << "Your new balance: " << logged_in_supporter->getCreditPoint() << colors::RESET << endl;
+                            while(in_progress_loop_check){
+                                cout << "Have you completed the job?" << endl;
+                                cout << "1. Yes\n" 
+                                        << "2. No" << endl;
+                                cout << ">Your choice: "; getline(cin >> std::ws, decide_in_progress);
+                                if(decide_in_progress =="1"){
+                                    //&***************UNCOMMENT IT WHEN DONE***************
+                                    setProgressById(current_job[i], "COMPLETED");
+                                    cout << colors::GREEN << "Congratulation! You just finished the job." << colors::RESET << endl;
+                                    cout << colors::GREEN << "You just receive: " << getMoneyById(current_job[i]) << colors::RESET << " CP" << endl;
+                                    logged_in_supporter->addCreditPoint(getMoneyById(current_job[i]));//add the new money to the supporter's account
+                                    cout << colors::YELLOW << "Your new balance: " << logged_in_supporter->getCreditPoint() << colors::RESET << endl;
 
-                                        string completed_decide;
-                                        bool completed_loop_check = true;
-                                        while(completed_loop_check){
-                                            cout << "Do you want to leave feedback and rate your host\n";
-                                            cout << "1. Yes\n" << "2. No\n" << ">Your choice:";
-                                            getline(cin >> std::ws, completed_decide);
+                                    string completed_decide;
+                                    bool completed_loop_check = true;
+                                    while(completed_loop_check){
+                                        cout << "Do you want to leave feedback and rate your host\n";
+                                        cout << "1. Yes\n" << "2. No\n" << ">Your choice:";
+                                        getline(cin >> std::ws, completed_decide);
 
-                                            if(completed_decide == "1"){
-                                                bool check = true;
-                                                while(check){
-                                                    cout << "Please rate your host (scale: 0 - 10)" << endl;
-                                                    cout << ">Rating: ";
-                                                    string input;  
-                                                    getline(cin >> std::ws, input);
+                                        if(completed_decide == "1"){
+                                            bool check = true;
+                                            while(check){
+                                                cout << "Please rate your host (scale: 0 - 10)" << endl;
+                                                cout << ">Rating: ";
+                                                string input;  
+                                                getline(cin >> std::ws, input);
 
-                                                    std::stringstream iss(input);
-                                                    int rating;
+                                                std::stringstream iss(input);
+                                                int rating;
 
-                                                    if(iss >> rating){
-                                                            //IF the conversion is successful
-                                                        if(rating >= 0 && rating <= 10){
-                                                            if(rating < 5){
-                                                                cout << "Sorry about your bad experiance" << endl;
-                                                                cout << "Do you want to block this host (IMPROVE SOON)" << endl;
-                                                            }
-                                                            //modify rating
-                                                            setHostRatingById(current_job[i], rating);
-                                                            cout << "Leave comment about your host(Put 'x' if you dont want to comment): " << endl;
-                                                            cout << ">Comment: "; 
-                                                            string user_comment; 
-                                                            getline(cin >> std::ws, user_comment);
-                                                            setHostCommentById(current_job[i], user_comment);
+                                                if(iss >> rating){
+                                                        //IF the conversion is successful
+                                                    if(rating >= 0 && rating <= 10){
+                                                        if(rating < 5){
+                                                            cout << "Sorry about your bad experiance" << endl;
+                                                            cout << "Do you want to block this host (IMPROVE SOON)" << endl;
+                                                        }
+                                                        //modify rating
+                                                        setHostRatingById(current_job[i], rating);
+                                                        cout << "Leave comment about your host(Put 'x' if you dont want to comment): " << endl;
+                                                        cout << ">Comment: "; 
+                                                        string user_comment; 
+                                                        getline(cin >> std::ws, user_comment);
+                                                        setHostCommentById(current_job[i], user_comment);
 
-                                                            addHostScoreByID(current_job[i], rating);
+                                                        addHostScoreByID(current_job[i], rating);
 
-                                                            cout << "Thank you for your feedback\n";
-                                                            //remove the booking from the current_job
-                                                            current_job.erase(current_job.begin() + i);
+                                                        cout << "Thank you for your feedback\n";
+                                                        //remove the booking from the current_job
 
-                                                            completed_loop_check = false;
-                                                            in_progress_loop_check = false;
-                                                            check = false;
-                                                        } else{
-                                                            cout << "****Please enter the valid rating****" << endl;
-                                                        } 
-                                                    }else{
-                                                        cout << "Please enter the valid rating!" << endl;
-                                                    }
+                                                        completed_loop_check = false;
+                                                        in_progress_loop_check = false;
+                                                        check = false;
+                                                    } else{
+                                                        cout << "****Please enter the valid rating****" << endl;
+                                                    } 
+                                                }else{
+                                                    cout << "Please enter the valid rating!" << endl;
                                                 }
-                                            } else if (completed_decide == "2"){
-                                                cout << "****Do not leave comment****" << endl;
-                                                setHostRatingById(current_job[i], 11);
-                                                setHostCommentById(current_job[i], "x");
-                                                addHostScoreByID(current_job[i], 11);
-                                                cout << "Return main page!" << endl;
-                                                //remove the booking from the current_job
-                                                current_job.erase(current_job.begin() + i);
-                                                completed_loop_check = false;
-                                                in_progress_loop_check = false;
-
-                                            } else{
-                                                cout << colors::RED << "Please enter the valid choice!" << colors::RESET << endl;
                                             }
+                                        } else if (completed_decide == "2"){
+                                            cout << "****Do not leave comment****" << endl;
+                                            setHostRatingById(current_job[i], 11);
+                                            setHostCommentById(current_job[i], "x");
+                                            addHostScoreByID(current_job[i], 11);
+                                            cout << "Return main page!" << endl;
+                                            //remove the booking from the current_job=
+                                            completed_loop_check = false;
+                                            in_progress_loop_check = false;
 
+                                        } else{
+                                            cout << colors::RED << "Please enter the valid choice!" << colors::RESET << endl;
                                         }
 
-                                    }else if(decide_in_progress == "2"){
-                                            in_progress_loop_check = false;
-                                            cout << "Return the main page" << endl;
-                                    }else{
-                                        cout << colors::RED << "Please enter the valid choice!" << colors::RESET << endl;
                                     }
+
+                                }else if(decide_in_progress == "2"){
+                                        in_progress_loop_check = false;
+                                        cout << "Return the main page" << endl;
+                                }else{
+                                    cout << colors::RED << "Please enter the valid choice!" << colors::RESET << endl;
+                                }
+                            }
+                        }
+
+                        else if(getStatusById(current_job[i]) == "ACCEPTED"){
+                            cout << "***Do you want to start the job***\n" << endl;
+                            cout << "1. Take the job\n" 
+                                << "2. Return\n"
+                                << ">Your choice: ";
+                            string accepted_decide;
+
+                            while(accepted_decide != "1" && accepted_decide != "2"){    
+                                //loop this until the users choose 1 or 2
+                                getline(cin >> std::ws, accepted_decide);
+
+                                if (accepted_decide == "1"){
+                                    cout << colors::GREEN << "You accept to take the job\n" << colors::RESET << endl;
+                                    setProgressById(current_job[i], "IN PROGRESS"); 
+                                }
+                                else if (accepted_decide == "2"){
+                                    cout << "Return to previous page\n";
+                                }
+                                else{
+                                    cout << colors::RED << "Invalid choice!" << colors::RESET << endl;
                                 }
                             }
 
-                            else if(getStatusById(current_job[i]) == "ACCEPTED"){
-                                cout << "***Do you want to start the job***\n" << endl;
-                                cout << "1. Take the job\n" 
-                                    << "2. Return\n"
-                                    << ">Your choice: ";
-                                string accepted_decide;
+                        }else{
+                            //if the status is PENDING
+                            std::vector <BookingSupporter* > overLap_list = isOverLap(choice);
+                            cout << "1. ACCEPTED\n"<<
+                                    "2. REJECTED\n" <<
+                                    "3. RETURN\n"<< endl;
 
-                                while(accepted_decide != "1" && accepted_decide != "2"){    
-                                    //loop this until the users choose 1 or 2
-                                    getline(cin >> std::ws, accepted_decide);
-
-                                    if (accepted_decide == "1"){
-                                        cout << "YOU ACCEPT TAKE THE JOB\n";
-                                        setProgressById(current_job[i], "IN PROGRESS");
-                                    }
-                                    else if (accepted_decide == "2"){
-                                        cout << "Return to previous page\n";
-                                    }
-                                    else{
-                                        cout << colors::RED << "Invalid choice!" << colors::RESET << endl;
-                                    }
-                                }
-
-                            }else{
-                                std::vector <BookingSupporter* > overLap_list = isOverLap(choice);
-                                cout << "1. ACCEPTED\n"<<
-                                        "2. REJECTED\n" <<
-                                        "3. RETURN\n"<< endl;
-                                        string decide;//remove itttt
-                                cout << ">Your choice: "; getline(cin >> std::ws, decide);
-                                if(decide == "1"){
+                            string accept_choice;
+                            cout << ">Your choice: "; 
+                            while(accept_choice != "1" && accept_choice != "2" && accept_choice != "3"){
+                                //run the loop until the users chooose 1 ,2 or 3
+                                getline(cin >> std::ws, accept_choice);
+                                if(accept_choice == "1"){
                                     if(overLap_list.empty()){
                                         setStatusById(current_job[i], "ACCEPTED");
                                         cout<< colors::GREEN << "You have accepted this booking." << colors::RESET << endl;
-                                    }
-                                    else{
+                                    }else{
                                         int count_overlap = 1;
-                                        cout << "ACCEPTED booking " << choice << " will automatically REJECTED the overlapping booking below:" << endl;
+                                        cout << colors::YELLOW << "ACCEPTED booking " << choice << " will automatically REJECTED the overlapping booking below:" << colors::RESET << endl;
                                         cout << "\n";
                                         cout << std::setw(149) << colors::YELLOW << std::setfill('-') << colors::RESET <<  endl;
                                         cout << bk_colors::YELLOW << std::left << std::setw(7) << "| Num |" << std::setw(13) << " Booking ID |" << std::setw(20) << " Host Name         |"
@@ -1195,51 +1197,44 @@ public:
                                             }
                                         }
 
-                                        bool option_for_overlap = true;
-                                        while(option_for_overlap){
-                                            string selection;
-                                            cout << "Do you want to continue ?" << endl;
-                                            cout << "1. ACCEPTED THIS AND REJECTED OTHER \n"
-                                                << "2. CANCEL BOOKING" << endl;
-                                            getline(cin >> std::ws, selection);
+                                        string choice_for_overlap;
+                                        cout << "Do you want to continue ?" << endl;
+                                        cout << "1. ACCEPTED THIS AND REJECTED OTHER \n"
+                                             << "2. CANCEL BOOKING" << endl;
+                                        while(choice_for_overlap != "1" && choice_for_overlap != "2"){
+                                            getline(cin >> std::ws, choice_for_overlap);
 
-                                            if (selection == "2"){
-                                                cout << "Return to main page" << endl;
+                                            if (choice_for_overlap == "2"){
+                                                cout << colors::YELLOW << "You have canceled the booking" << colors::RESET<< endl;
                                                 return;
-                                            }
-                                            else if (selection == "1"){
+                                            } else if (choice_for_overlap == "1"){
                                                 cout << "All the overlap booking have been rejected" << endl;
                                                 loop (overLap_list.size()){
                                                     overLap_list[i]->setStatus("REJECTED");
                                                 }
+                                                
                                                 setStatusById(current_job[i], "ACCEPTED");
-                                                option_for_overlap=false;
+                                                cout << colors::GREEN << "You have accepted the " << current_job[i] << " booking." << colors::RESET << endl;
+                                            } else{
+                                                cout << colors::RED << "Please enter the valid choice!" << colors::RESET << endl;
                                             }
 
                                         }
                                     }
 
-                                }
-                                else if(decide == "2"){
+                                }else if(accept_choice == "2"){
                                     setStatusById(current_job[i], "REJECTED");
-                                }
-                                else{
-                                    cout << "Return main page" << endl;
-                                    decideJob();
+                                }else{
+                                    cout << colors::RED << "Please enter the valid choice!" << colors::RESET << endl;
                                 }
                             }
-                            break;
                         }
-                    }
-                    if(!validChoice){
-                        cout << "Please enter the valid choice!" << endl;
+                        break;
                     }
                 }
-
-
-                
-
-                
+                if(!validChoice){
+                    cout << "Please enter the valid choice!" << endl;
+                }
             }
         }
 
@@ -1269,14 +1264,18 @@ public:
         cout <<"Choose: " << bk_id << "-" <<booking_accept->getTime() << "\n" << endl;
 
         loop(relateBooking.size()){
-            if(booking_accept->getDate() == relateBooking[i]->getDate() && compareTimes(booking_accept->getStartTime(), relateBooking[i]->getEndTime()) && compareTimes(relateBooking[i]->getStartTime(), booking_accept->getEndTime()) && relateBooking[i]->getStatus() != "REJECTED" ){
-                denide_booking_list.push_back(relateBooking[i]);
-                cout << "Status " << relateBooking[i]->getStatus() << endl;
+            if(booking_accept->getDate() == relateBooking[i]->getDate()){
+                Time booking_accept_start_time = booking_accept->getStartTime();
+                Time booking_accept_end_time = booking_accept->getEndTime();
+                if(!booking_accept_start_time.isLater(relateBooking[i]->getEndTime()) && booking_accept_end_time.isLater(relateBooking[i]->getStartTime()) && relateBooking[i]->getStatus() != "REJECTED"){
+                // if(compareTimes(booking_accept->getStartTime(), relateBooking[i]->getEndTime()) && compareTimes(relateBooking[i]->getStartTime(), booking_accept->getEndTime()) && relateBooking[i]->getStatus() != "REJECTED" ){
+                    denide_booking_list.push_back(relateBooking[i]);
+                    cout << "Status " << relateBooking[i]->getStatus() << endl;
+                }
             }
         }
 
         return denide_booking_list;
-
     }
 
     void buyCredit(){
@@ -1446,7 +1445,7 @@ public:
         }
     }
 
-    void checkCompleteTask(){
+    void checkCompleteTask(){//EDIT IT
         std::vector<string> complete_list_id;//store booking id
         bool isSupporter = (logged_in_member == nullptr);
 
