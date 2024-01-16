@@ -116,8 +116,6 @@ public:
         }
     }
 
-    
-
     bool modifySkill(){
         bool check_adding;
         bool check_adding_2;
@@ -230,15 +228,17 @@ public:
     }
 
     void displayPersonalInformation() override{
+        int padding = 30;
         Member::displayPersonalInformation();
-        cout << "My Skill List: " << this->displaySkillList() << endl;
-        cout << "My cost: " << this->cost << endl;
-        cout << "My Skill Rating Score: " << this->skill_rating_score << endl;
-        cout << "My Support Rating Score: " << this->support_rating_score << endl;
-        cout << "My Support Count: " << this->support_count << endl;
-        cout << "Not comment: " << this->host_not_comment << endl;
-        cout << "My Current Status: " << statusToString(status) << endl;
-        cout << "My Minimum Host Rating: " << this->min_host_rating << endl;
+         cout << "\n" <<endl;
+        cout << "****SUPPORTER PORTFOLIO****" << endl;
+        cout << std::left << sp_colors::YELLOW << std::setw(padding) << "My Skill List: " << sp_colors::WHITE_BOLD << this->displaySkillList() << sp_colors::RESET << endl;
+        cout << sp_colors::YELLOW << std::setw(padding) << "My cost: " << sp_colors::WHITE_BOLD << this->cost << sp_colors::RESET << endl;
+        cout << sp_colors::YELLOW << std::setw(padding) << "My Skill Rating Score: " << sp_colors::WHITE_BOLD << this->skill_rating_score << sp_colors::RESET << endl;
+        cout << sp_colors::YELLOW << std::setw(padding) << "My Support Rating Score: " << sp_colors::WHITE_BOLD << this->support_rating_score << sp_colors::RESET << endl;
+        cout << sp_colors::YELLOW << std::setw(padding) << "My Job Count: " << sp_colors::WHITE_BOLD << this->support_count << sp_colors::RESET << endl;
+        cout << sp_colors::YELLOW << std::setw(padding) << "My Current Status: " << sp_colors::WHITE_BOLD << statusToString(status) << sp_colors::RESET << endl;
+        cout << sp_colors::YELLOW << std::setw(padding) << "My Minimum Host Rating: " << sp_colors::WHITE_BOLD << ((this->min_host_rating == 0) ? "None" : std::to_string(this->min_host_rating)) << sp_colors::RESET << endl;
         this->displayWorkSchedule();
     }
 
@@ -649,7 +649,33 @@ public:
                 cout << sp_colors::RED << "Invalid Choice!" << sp_colors::RESET << endl;
             }
         }      
-    };
+    }
+
+    void displayUserList(){
+        cout << sp_colors::YELLOW << std::setw(266) << std::setfill('-') << "" << std::setfill(' ') << sp_colors::RESET <<std::endl;
+        cout << sp_colors::YELLOW << std::left << std::setw(13) << "| Member id |" << std::setw(25) << " Fullname               |" << std::setw(15) << " Credit Point      |"
+                << std::setw(15) << " Phone Number |" << std::setw(35) << " Address                          |"  << std::setw(15) << " City         |"
+                << std::setw(15) << " Host Rating  |" << std::setw(16) << " Hosting Count |"  << std::setw(25) << " Block List              |" 
+                << std::setw(20) << " Supporting Count   |" <<std::setw(10) << " Rating  |" 
+                << std::setw(15) << " Rating Skill |" << std::setw(40) << " Introduction                          |" << endl;
+        cout << std::setw(266) << std::setfill('-') << "" << std::setfill(' ') << sp_colors::RESET <<std::endl;
+        cout << sp_colors::WHITE_BOLD << "| " << std::setw(10) << this->member_id
+                                <<"| "<<std::setw(23) << this->full_name
+                                <<"| " << std::setw(18) << this->credit_point
+                                <<"| " << std::setw(13) << this->phone_number
+                                <<"| " << std::setw(33) << this->address
+                                <<"| " << std::setw(13) << this->city
+                                <<"| " << std::setw(13) << std::to_string(this->host_rating_score)
+                                <<"| " << std::setw(14) << std::to_string(this->host_count)
+                                <<"| " << std::setw(24) << this->displayBlockList()
+                                <<"| " << std::setw(19) << this->support_count
+                                <<"| " << std::setw(8) << this->support_rating_score
+                                <<"| " << std::setw(13) << this->skill_rating_score  
+                                <<"| " << std::setw(38) << this->about_me << "|"<< endl;
+                cout << sp_colors::YELLOW << std::setw(266) << std::setfill('-') << "" << std::setfill(' ') << sp_colors::RESET << std::endl;
+                this->displayWorkSchedule();
+
+    }
 
 };
 

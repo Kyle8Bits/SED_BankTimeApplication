@@ -213,38 +213,15 @@ public:
 
     void displayMemberList(){
         if(is_admin){
-            for(Member* member : member_list){
-                member->displayPersonalInformation();
+            for (int i = 0; i < member_list.size(); i++){
+                Supporter* supporter = dynamic_cast<Supporter*>(member_list[i]);
+                if (supporter == nullptr){ 
+                    member_list[i]->displayUserList();
+                }
+                else {
+                    supporter->displayUserList(); 
+                }
             }
-            // cout << "****Member list****" << endl;
-            // loop(this->member_list.size()){
-            //     //Go to each member to print the information
-            //     cout << "Member " << i + 1 << ": " << endl;
-            //     cout<< "User ID: " << member_list[i]->getMemberId()
-            //         << ", Username: " << member_list[i]->getUsername() 
-            //         << ", Password: "<< member_list[i]->getPassword()
-            //         << ", Credit Point: " << member_list[i]->getCreditPoint()
-            //         << ", Fullname: " << member_list[i]->getFullName()
-            //         << ", Phone Number: " << member_list[i]->getPhoneNumber()
-            //         << ", Address: " << member_list[i]->getAddress()
-            //         << ", City: " << member_list[i]->getCity()
-            //         << ", About Me: " << member_list[i]->getAboutMe()
-            //         << ", Host Rating Score: " << member_list[i]->getHostRatingScore()
-            //         << ", Host Count: " << member_list[i]->getHostCount()
-            //         << ", Block List: HAVEN't DONE YET" << endl;
-            //     //check if the member is a Supporter or a regular member
-            //     if(Supporter* supporter = dynamic_cast<Supporter*>(member_list[i])){
-            //         //If it is a supporter, we will print more information of supporter
-            //         cout << "SUPPORTER:" 
-            //             << ", Availability Time: " << supporter->getAvailabilityPeriod()
-            //             << ", Skill List: " << supporter->displaySkillList()
-            //             << ", Cost: " << supporter->getCost()
-            //             << ", average skill rating score: " << supporter->getSkillRatingScore()
-            //             << ", average support rating score: " << supporter->getSupportRatingScore()
-            //             << ", support count: " << supporter->getSupportCount() << endl;
-
-            //     }
-            // }
         }else{
             cout << "You do not have permisson to do that" << endl;
         }
@@ -1334,21 +1311,7 @@ public:
     }
 
     void displaySupporter(){
-        cout << "****Supporter List****" << endl;
-        cout << "================================================================\n";
-        loop(this->member_list.size()){
-            if(Supporter* supporter = dynamic_cast<Supporter*>(member_list[i])){
-                    cout << "Supporter " << i + 1 << ": " << endl;
-                    cout << "Member id: " << supporter->getMemberId() <<endl;
-                    cout << "Fullname: " << supporter->getFullName() << endl;
-                    cout << "City: " << supporter->getCity() << endl;
-                    cout << "Skill: " << supporter->displaySkillList() << endl;
-                    cout << "Cost Per Hour: " << supporter->getCost() << endl;
-                    cout << "Introduction: " << supporter->getAboutMe() << endl;
-                    cout << "Status: " <<  supporter->statusToString(supporter->getStatus()) << endl;
-                    cout << "================================================================\n";
-            }
-        }
+        booking.displayAvailableSupporterForGuest(member_list, logged_in_member,  logged_in_supporter, availableSupporter, booking_list);
     }
 
     void statusSetting(){

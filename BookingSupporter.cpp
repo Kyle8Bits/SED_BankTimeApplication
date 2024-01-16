@@ -103,12 +103,12 @@ class BookingSupporter{
         if (isSupporter) {
             logged_in_member = logged_in_supporter;
         }
-        cout << std::setw(173) << std::setfill('-') << "" << std::setfill(' ') << bk_colors::RESET <<std::endl;
+        cout << std::setw(191) << std::setfill('-') << "" << std::setfill(' ') << bk_colors::RESET <<std::endl;
         cout << bk_colors::YELLOW << std::left << std::setw(13) << "| Member id |" << std::setw(25) << " Fullname               |" << std::setw(15) << " City         |"
                 << std::setw(16) << " Cost Per Hour |" << std::setw(40) << " Introduction                          |"  << std::setw(40) << " Skill                                 |"
-                << std::setw(15) << " Skill Rating |" << std::setw(9) << " Rating |"  <<endl;
+                << std::setw(15) << " Skill Rating |" << std::setw(9) << " Rating |"  << std::setw(18) << " Min Host Rating |"<<endl;
 
-        cout << std::setw(173) << std::setfill('-') << "" << std::setfill(' ') << bk_colors::RESET <<std::endl;
+        cout << std::setw(191) << std::setfill('-') << "" << std::setfill(' ') << bk_colors::RESET <<std::endl;
 
         for (size_t i = 0; i < member_list.size(); ++i) {
             if (Supporter* supporter = dynamic_cast<Supporter*>(member_list[i])) {
@@ -117,13 +117,14 @@ class BookingSupporter{
                         cout <<bk_colors::WHITE_BOLD<<"| "<< std::setw(10) << supporter->getMemberId() <<"| "<<std::setw(23) << supporter->getFullName()
                                 <<"| " << std::setw(13) << supporter->getCity() <<"| "<< std::setw(14) << supporter->getCost() 
                                 <<"| " << std::setw(38) << supporter->getAboutMe() << "| " <<std::setw(38) << supporter->displaySkillList() 
-                                <<"| " <<std::setw(13) << supporter->getSkillRatingScore() << "| " <<std::setw(7) << supporter->getSupportRatingScore() << "|"<<bk_colors::RESET<<endl;
-                        cout << bk_colors::YELLOW << std::setw(173) << std::setfill('-') << "" << std::setfill(' ') << bk_colors::RESET << std::endl;
+                                <<"| " <<std::setw(13) << supporter->getSkillRatingScore() << "| " <<std::setw(7) << supporter->getSupportRatingScore() 
+                                <<"| " <<std::setw(15) << supporter->getMinHostRating() <<" |"<<bk_colors::RESET<<endl;
+                        cout << bk_colors::YELLOW << std::setw(191) << std::setfill('-') << "" << std::setfill(' ') << bk_colors::RESET << std::endl;
                         supporter->displayWorkSchedule();
 
-                        cout << bk_colors::YELLOW << std::setw(173) << std::setfill('-') << "" << std::setfill(' ') << bk_colors::RESET << endl;
+                        cout << bk_colors::YELLOW << std::setw(191) << std::setfill('-') << "" << std::setfill(' ') << bk_colors::RESET << endl;
                         displayComment(supporter, booking_list, member_list);
-                        cout << bk_colors::YELLOW << std::setw(173) << std::setfill('-') << "" << std::setfill(' ') << bk_colors::RESET << endl;
+                        cout << bk_colors::YELLOW << std::setw(191) << std::setfill('-') << "" << std::setfill(' ') << bk_colors::RESET << endl;
 
                         availableSupporter.push_back(supporter);
                     }
@@ -133,6 +134,27 @@ class BookingSupporter{
 
         if (isSupporter) {
             logged_in_member = nullptr;
+        }
+    }
+
+    void displayAvailableSupporterForGuest(std::vector<Member*> member_list, Member* logged_in_member, Supporter* logged_in_supporter, std::vector<Supporter*>& availableSupporter, std::vector<BookingSupporter*> booking_list) {
+        cout << std::setw(149) << std::setfill('-') << "" << std::setfill(' ') << bk_colors::RESET <<std::endl;
+        cout << bk_colors::YELLOW << std::left << std::setw(13) << "| Member id |" << std::setw(25) << " Fullname               |" << std::setw(15) << " City         |"
+                << std::setw(16) << " Cost Per Hour |" << std::setw(40) << " Introduction                          |"  << std::setw(40) << " Skill                                 |" <<endl;
+
+        cout << std::setw(149) << std::setfill('-') << "" << std::setfill(' ') << bk_colors::RESET <<std::endl;
+
+        for (size_t i = 0; i < member_list.size(); ++i) {
+            if (Supporter* supporter = dynamic_cast<Supporter*>(member_list[i])) {
+                cout <<bk_colors::WHITE_BOLD<<"| "<< std::setw(10) << supporter->getMemberId() <<"| "<<std::setw(23) << supporter->getFullName()
+                        <<"| " << std::setw(13) << supporter->getCity() <<"| "<< std::setw(14) << supporter->getCost() 
+                        <<"| " << std::setw(38) << supporter->getAboutMe() << "| " <<std::setw(38) << supporter->displaySkillList() 
+                        <<"| " <<std::setw(13) <<bk_colors::RESET<<endl;
+                cout << bk_colors::YELLOW << std::setw(149) << std::setfill('-') << "" << std::setfill(' ') << bk_colors::RESET << std::endl;
+                supporter->displayWorkSchedule();
+
+                cout << bk_colors::YELLOW << std::setw(149) << std::setfill('-') << "" << std::setfill(' ') << bk_colors::RESET << endl;
+            }
         }
     }
 

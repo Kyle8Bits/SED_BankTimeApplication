@@ -11,6 +11,14 @@ using std::cin;
 using std::string;
 using std::endl;
 
+namespace mb_colors {
+    const char* RED = "\033[1;91m";
+    const char* YELLOW = "\033[1;93m";
+    const char* WHITE_BOLD = "\033[1;97m";
+    const char* GREEN = "\033[92m";
+    const char* RESET = "\033[0m";
+}
+
 class Member : public Account{
 protected:
     //INHERITANCE FROM ACCOUNT 
@@ -71,20 +79,39 @@ public:
 
 
     virtual void displayPersonalInformation(){
+        int padding = 20;
         cout << "***MY INFORMATION***" << endl;
-        cout << "ID: " << this->member_id << endl;
-        cout << "Username: " << this->user_name << endl;
-        cout << "Password: " << this->pass_word << endl;
-        cout << "Credit Point: " << this->credit_point << endl;
-        cout << "Full Name: " << this->full_name << endl;
-        cout << "Phone Number: " << this->phone_number << endl;
-        cout << "Address: " << this->address << endl;
-        cout << "City: " << this->city << endl;
-        cout << "About Me: " << this->about_me << endl;
-        cout << "Host Rating Score: " << this->host_rating_score << endl;
-        cout << "Host Count: " << this->host_count << endl;
-        cout << "Block List: " << this->displayBlockList() << endl;
+        cout << std::left << mb_colors::YELLOW << std::setw(padding) << "Username: " << mb_colors::WHITE_BOLD << this->user_name << mb_colors::RESET << endl;
+        cout << mb_colors::YELLOW << std::setw(padding) << "Full Name: " << mb_colors::WHITE_BOLD << this->full_name << mb_colors::RESET << endl;
+        cout << mb_colors::YELLOW << std::setw(padding) << "Credit Point: " << mb_colors::WHITE_BOLD << this->credit_point << mb_colors::RESET << endl;
+        cout << mb_colors::YELLOW << std::setw(padding) << "Phone Number: " << mb_colors::WHITE_BOLD << this->phone_number << mb_colors::RESET << endl;
+        cout << mb_colors::YELLOW << std::setw(padding) << "Address: " << mb_colors::WHITE_BOLD << this->address << mb_colors::RESET << endl;
+        cout << mb_colors::YELLOW << std::setw(padding) << "City: " << mb_colors::WHITE_BOLD << this->city << mb_colors::RESET << endl;
+        cout << mb_colors::YELLOW << std::setw(padding) << "Host Rating Score: " << mb_colors::WHITE_BOLD << this->host_rating_score << mb_colors::RESET << endl;
+        cout << mb_colors::YELLOW << std::setw(padding) << "Hosting Count: " << mb_colors::WHITE_BOLD << this->host_count << mb_colors::RESET << endl;
+        cout << mb_colors::YELLOW << std::setw(padding) << "Block List: " << mb_colors::WHITE_BOLD << this->displayBlockList() << mb_colors::RESET << endl;
     }
+
+    void displayUserList(){
+        cout << mb_colors::YELLOW <<std::setw(180) << std::setfill('-') << "" << std::setfill(' ') << mb_colors::RESET <<std::endl;
+        cout << mb_colors::YELLOW << std::left << std::setw(13) << "| Member id |" << std::setw(25) << " Fullname               |" << std::setw(15) << " Credit Point      |"
+                << std::setw(15) << " Phone Number |" << std::setw(35) << " Address                          |"  << std::setw(15) << " City         |"
+                << std::setw(15) << " Host Rating  |" << std::setw(16) << " Hosting Count |"  << std::setw(25) << " Block List              |"<< endl;
+        cout << std::setw(180) << std::setfill('-') << "" << std::setfill(' ') << mb_colors::RESET <<std::endl;
+        cout << mb_colors::WHITE_BOLD << "| " << std::setw(10) << this->member_id
+                                <<"| "<<std::setw(23) << this->full_name
+                                <<"| " << std::setw(18) << this->credit_point
+                                <<"| " << std::setw(13) << this->phone_number
+                                <<"| " << std::setw(33) << this->address
+                                <<"| " << std::setw(13) << this->city
+                                <<"| " << std::setw(13) << std::to_string(this->host_rating_score)
+                                <<"| " << std::setw(14) << std::to_string(this->host_count)
+                                <<"| " << std::setw(23) << this->displayBlockList() << " |" << endl;
+        
+        
+        cout << mb_colors::YELLOW << std::setw(180) << std::setfill('-') << "" << std::setfill(' ') << mb_colors::RESET << std::endl;
+    }
+
 
     string getMemberId(){return this->member_id;}
     void setMemberId(string member_id){this->member_id = member_id;}
