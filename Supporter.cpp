@@ -398,17 +398,22 @@ public:
     }
 
     bool isAvailableInTime(Time start_time_booking, Time end_time_booking, string day){
+        std::vector<std::pair<Time,Time>> selected_day;
+        selected_day.clear();
+        cout << day << endl;
         for(int i = 0; i < workSchedule.size(); ++i){
             if(day == workSchedule[i].first){
-                    //if the input day is the same with the day in the work schedule
-                    //we will go to each time of the period in the work schedule to check
-                for(int a = 0; a < workSchedule[i].second.size(); ++a){
-                    if(!end_time_booking.isLater(workSchedule[i].second[a].second) && start_time_booking.isLater(workSchedule[i].second[a].first)){
-                       //the booking time must align in side the range of the free time
-                       //==> start_time_booking must be later than the start time of the free time
-                        //==> end_time_booking must be ealier than the end time of the free time
-                        return true;
-                    }
+                selected_day = workSchedule [i].second;
+            }
+        }
+
+        if(selected_day.empty()){
+            cout << "empty" << endl;
+        }
+        else{
+            for (int a = 0; a < selected_day.size(); a++){
+                if(selected_day[a].second.isLater(end_time_booking) && start_time_booking.isLater(selected_day[a].first)){
+                    return true;
                 }
             }
         }
