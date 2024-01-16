@@ -1073,7 +1073,6 @@ public:
                                                     if(rating >= 0 && rating <= 10){
                                                         if(rating < 5){
                                                             cout << "Sorry about your bad experiance" << endl;
-                                                            cout << "Do you want to block this host (IMPROVE SOON)" << endl;
                                                         }
                                                         //modify rating
                                                         setHostRatingById(current_job[i], rating);
@@ -1185,7 +1184,7 @@ public:
                                                         << std::setw(13) << std::fixed << std::setprecision(2) 
                                                         << member_list[a]->getAverageRatingScore() << "| "
                                                         << std::setw(10) << overLap_list[i]->getStatus() << "| "
-                                                        << std::setw(15) << "WAIT           " << "| "
+                                                        << std::setw(15) << overLap_list[i]->getProgress() << "| "
                                                         << std::setw(18)<< overLap_list[i]->getTime() << "| "
                                                         << std::setw(13) << overLap_list[i]->getDate() << "| "
                                                         << std::setw(6) <<overLap_list[i]->getTotalCost() <<"|" << endl;
@@ -1246,9 +1245,6 @@ public:
         std::vector<BookingSupporter*> denide_booking_list ={};
         BookingSupporter* booking_accept;
 
-        denide_booking_list.clear();
-        relateBooking.clear();
-
         bk_id[0] = toupper(bk_id[0]);
         bk_id[1] = toupper(bk_id[1]);
 
@@ -1267,10 +1263,12 @@ public:
             if(booking_accept->getDate() == relateBooking[i]->getDate()){
                 Time booking_accept_start_time = booking_accept->getStartTime();
                 Time booking_accept_end_time = booking_accept->getEndTime();
-                if(!booking_accept_start_time.isLater(relateBooking[i]->getEndTime()) && booking_accept_end_time.isLater(relateBooking[i]->getStartTime()) && relateBooking[i]->getStatus() != "REJECTED"){
-                // if(compareTimes(booking_accept->getStartTime(), relateBooking[i]->getEndTime()) && compareTimes(relateBooking[i]->getStartTime(), booking_accept->getEndTime()) && relateBooking[i]->getStatus() != "REJECTED" ){
-                    denide_booking_list.push_back(relateBooking[i]);
-                    cout << "Status " << relateBooking[i]->getStatus() << endl;
+                if(relateBooking[i]->getProgress() != "COMPLETED"){
+                    if(!booking_accept_start_time.isLater(relateBooking[i]->getEndTime()) && booking_accept_end_time.isLater(relateBooking[i]->getStartTime()) && relateBooking[i]->getStatus() != "REJECTED"){
+                    // if(compareTimes(booking_accept->getStartTime(), relateBooking[i]->getEndTime()) && compareTimes(relateBooking[i]->getStartTime(), booking_accept->getEndTime()) && relateBooking[i]->getStatus() != "REJECTED" ){
+                        denide_booking_list.push_back(relateBooking[i]);
+                        cout << "Status " << relateBooking[i]->getStatus() << endl;
+                    }
                 }
             }
         }
@@ -1419,7 +1417,10 @@ public:
                             "\nCity: " << member_list[a]->getCity() <<
                             "\nTime: " << booking_list[i]->getTime() << 
                             "\nHost comment: will update" <<
-                            "\nHost rated you: will update" << endl;
+                            "\nHost rated you: will update" << 
+                            "\nStatus: " << booking_list[i]->getStatus() <<
+                            "\nProgress: " << booking_list[i]->getProgress() << endl;
+                            
                             
                         cout << "==============================================\n" << endl;
                     }
@@ -1488,44 +1489,54 @@ public:
 
         bool valid_choice = false;
 
-        string choice = "";
+        string choice;
         cout <<"Please enter a booking id: ";
         getline(cin >> std::ws, choice);
         bool rate_check = true;
+        choice[0] = std::toupper(choice[0]);
+        choice[1] = std::toupper(choice[1]);
 
         loop (complete_list_id.size()){
             if(complete_list_id[i] == choice){
                 bool check = true;
-                int option;
                 string comment = " ";
-                int rating;
-                int skill;
+                string rating_str;
+                string skill_str;
                 valid_choice = true;
+                int skill, rating;
 
                 while(check){
-                    cout << "Congratulation! Your booking has been finished" <<endl;
-                    cout << "The cost for this booking is: " << getMoneyById(complete_list_id[i]) << endl;
+                    cout << colors::GREEN << "Congratulation! Your booking has been finished" << colors::RESET <<endl;
+                    cout << colors::YELLOW << "The cost for this booking is: " << getMoneyById(complete_list_id[i]) << colors::RESET << endl;
                     logged_in_member->subtractCreditPoint(getMoneyById(complete_list_id[i]));
                     cout << "Your new balance: " << logged_in_member->getCreditPoint() << endl;
                     cout <<"Do you want to give a feedback to this supporter?"<< endl;
-                    cout << "1. Yes"<<
-                            "\n2. No" << endl;
-                    cin >> option;
+                    cout << "1. Yes\n"
+                         << "2. No" << endl;
+                    string option;
 
-                    switch(option){
-                        case 1:
+                    while(option != "1" && option != "2"){
+                        //run the loop until the users enter 1 or 2
+                        getline(cin >> std::ws, option);
+                        if(option == "1"){
                             while(rate_check){
                                 cout << "Please rate your supporter's skill(scale: 0 - 10): ";
                                 cout << ">Rating: ";
-                                cin >> skill;
+                                getline(std::cin >> std::ws, skill_str);
                                 cout << "How would you like this supporter (scale 0 - 10): ";
                                 cout << ">Rating: ";
-                                cin >> rating;
-                                if (rating <= 10 && rating >= 0 && skill <= 10 && skill >= 0){
-                                    rate_check = false;
-                                }
-                                else{
-                                    cout << "Please enter the valid rating!" << endl;
+                                getline(std::cin >> std::ws, rating_str);
+
+                                if(isValidInterger(skill_str) && isValidInterger(rating_str)){
+                                    //CONVERT THEY BACK TO THE INTEGER
+                                    skill = std::stoi(skill_str);
+                                    rating = std::stoi(rating_str);
+
+                                    if (rating <= 10 && rating >= 0 && skill <= 10 && skill >= 0){
+                                        rate_check = false;
+                                    }
+                                }else{
+                                    cout << colors::RED << "Please enter the valid rating!" << colors::RESET << endl;
                                 }
                             }
                             cout << "Give some comment (Put 'x' if you do not want to comment): ";
@@ -1538,15 +1549,15 @@ public:
                             cout << "Thank you for giving feedback" << endl;
                             check = false;
                             break;
-                        case 2:
+                        } else if(option == "2"){
                             setSupportRatingById(11, 11, "x", complete_list_id[i]);
                             addSupporterScoreByID(complete_list_id[i],11,11);
 
                             check = false;
                             break;
-                        default: 
-                            cout << "Please enter again!";
-                            break;
+                        } else{
+                            cout << colors::RED << "Please enter the valid choice!" << colors::RESET << endl;
+                        }
                     }
                 }
             }
