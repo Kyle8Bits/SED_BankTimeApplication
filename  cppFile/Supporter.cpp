@@ -8,7 +8,7 @@
 #include <utility>
 #include <iomanip>
 #include "Member.cpp"
-#include "Time.cpp"
+#include "Time.h"
 
 using std::cout;
 using std::cin;

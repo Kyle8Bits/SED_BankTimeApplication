@@ -10,7 +10,7 @@
 
 #include "Supporter.cpp"
 #include "Member.cpp"
-#include "Time.cpp"
+#include "Time.h"
 #include "BookingSupporter.cpp"
 
 using std::endl;

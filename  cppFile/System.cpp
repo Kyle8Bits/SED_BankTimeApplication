@@ -13,7 +13,7 @@
 
 #include "Member.cpp"
 #include "Supporter.cpp"
-#include "Time.cpp"
+#include "Time.h"
 #include "BookingSupporter.cpp"
 #include "Calendar.cpp"
 #include "RealTime.cpp"

@@ -5,7 +5,7 @@
 #include <vector>
 #include <fstream>
 #include <string>
-#include "Time.cpp"
+#include "Time.h"
 #include "Member.cpp"
 #include "Supporter.cpp"
 

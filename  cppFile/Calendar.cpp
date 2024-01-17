@@ -5,8 +5,6 @@
 #include <vector>
 #include <iomanip>
 #include <sstream>
-// #include <Calendar.h>
-//#define clearScreen() std::cout << "\x1B[2K\x1B[1G"
 
 class Calendar{
     // private:
