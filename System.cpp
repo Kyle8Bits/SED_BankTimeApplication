@@ -571,6 +571,8 @@ void System::createBooking(){
                     month_year_check = false;
                 }
             }
+
+            calendar.printCalendar(std::stoi(year_str), std::stoi(month_str));
         //======================CHECK THE DAY==================================
             bool day_check =true;
             while(day_check){
@@ -591,8 +593,8 @@ void System::createBooking(){
                     else {
                         if(isAvailableDay(choose_supporter, calendar.extractTheDayweek(std::stoi(day_str) ,std::stoi(month_str), std::stoi(year_str)) -1 )){
                             day_save_to_file = std::stoi(day_str);
-                            year_save_to_file = std::stoi(month_str);
-                            month_save_to_file = std::stoi(year_str);
+                            month_save_to_file = std::stoi(month_str);
+                            year_save_to_file = std::stoi(year_str);
                             day_check = false;
                             dayofweek = false;
                         }
@@ -614,7 +616,7 @@ void System::createBooking(){
     }
     
     //*****THIS PART FOR GETTING TIME ********
-    string day_str = getDayString(calendar.extractTheDayweek(day_save_to_file,month_save_to_file,year_save_to_file)); 
+    string day_str = getDayString(calendar.extractTheDayweek(day_save_to_file,month_save_to_file,year_save_to_file) -1); 
     Time start_time, end_time;
     bool time_check = true;  
     //=====================CHECK THE TIME==============================================
@@ -672,7 +674,7 @@ void System::createBooking(){
             check_cost = false;
             time_check = false;
         } else if(choice == "2"){
-            cout << colors::YELLOW << "You have canceled the booking" << colors::YELLOW << endl;
+            cout << colors::YELLOW << "You have canceled the booking" << colors::RESET << endl;
             isValidSupporter = true;
             return;
         } else{
@@ -1149,9 +1151,11 @@ void System::buyCredit(){
         logged_in_member = logged_in_supporter; //use member point to the suppoter
     }
 
+    string password_input;
+    int amount;
     string option;
-    bool check = true;
-    while(check){
+    bool is_exist = false;
+    while(option != "1" && option != "2" && option != "3" && option != "4"){
         cout << "****Buying Credit Menu****" << endl;
         cout << "Current balance: " << logged_in_member->getCreditPoint() << " CP " << endl << endl;
         cout << "Ammount list: \n"
@@ -1169,30 +1173,35 @@ void System::buyCredit(){
         getline(cin >> std::ws, option);
 
         if(option == "1"){
-            logged_in_member->setCreditPoint(logged_in_member->getCreditPoint() + 20);
-            cout << colors::GREEN << "You have bought 20 CP\n" << colors::RESET;
-            cout << colors::GREEN << "New balance: " << logged_in_member->getCreditPoint() << colors::RESET << endl ;
-            check = false;
+            amount = 20;
         }
         else if(option == "2"){
-            logged_in_member->setCreditPoint(logged_in_member->getCreditPoint() + 55);
-            cout << colors::GREEN << "You have bought 55 CP\n" << colors::RESET;
-            cout << colors::GREEN << "New balance: " << logged_in_member->getCreditPoint() << colors::RESET << endl;
-            check = false;
+            amount = 55;
         }
         else if(option == "3"){
-            logged_in_member->setCreditPoint(logged_in_member->getCreditPoint() + 120);
-            cout << colors::GREEN << "You have bought 120 CP\n" << colors::RESET;
-            cout << colors::GREEN << "New balance: " << logged_in_member->getCreditPoint() << colors::RESET << endl;
-            check = false;
+            amount = 120;
         } else if(option == "4"){
-            check = false;
             cout << "Returning main page" << endl;
+            is_exist = true;
         }
         else{
             cout << colors::RED << "Invalid option, please select again" << endl << colors::RESET;
         }
     }
+    if(!is_exist){
+        cout << "Please enter your password: " << endl;
+        cout << "Your choice: ";
+        getline(cin >> std::ws, password_input);
+        if(password_input != logged_in_member->getPassword()){
+            cout << colors::RED << "Wrong password!" << colors::RESET << endl;
+        } else{
+            logged_in_member->setCreditPoint(logged_in_member->getCreditPoint() + amount);
+            cout << colors::GREEN << "You have bought " << amount <<  " CP\n" << colors::RESET;
+            cout << colors::GREEN << "New balance: " << logged_in_member->getCreditPoint() << colors::RESET << endl ;
+        }
+        
+    }
+
     if(isSupporter){
         logged_in_member = nullptr;
     }

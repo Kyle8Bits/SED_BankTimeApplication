@@ -326,7 +326,6 @@ string Supporter::getDayString(int day) {
 bool Supporter::isAvailableInTime(Time start_time_booking, Time end_time_booking, string day){
     std::vector<std::pair<Time,Time>> selected_day;
     selected_day.clear();
-    cout << day << endl;
     for(int i = 0; i < workSchedule.size(); ++i){
         if(day == workSchedule[i].first){
             selected_day = workSchedule [i].second;
