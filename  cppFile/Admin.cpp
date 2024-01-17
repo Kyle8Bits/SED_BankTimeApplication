@@ -1,26 +1,8 @@
-#include <iostream>
-#include <vector>
-#include <string>
-#include <fstream>
+// Admin.cpp
+#include "Admin.h"
 
-#include "Member.cpp"
-
-using std::cout;
-using std::cin;
-using std::endl;
 using std::string;
 
-class Admin {
-private:
-    const string adminUsername = "admin";
-    const string adminPassword = "admin";
-
-public:
-    Admin(string adminUsername = "", string adminPassword = ""){}
-
-    // Method to validate admin login
-    bool adminLogin(const string& uname, const string& pwd) {
-        return (uname == adminUsername && pwd == adminPassword);
-    }
-};
-
+Admin::Admin(string adminUsername, string adminPassword) {
+    // You can add any initialization logic here if needed
+}

@@ -411,22 +411,23 @@ public:
 
     void resetMemberPassword() {
         if(is_admin){
-            string username_input, password_input;
-            cout << "Please enter the User's username that you want to reset password" << endl;
-            getline(cin >> std::ws, username_input);
+            string id_input, password_input;
+            cout << "Please enter the User's Id that you want to reset password" << endl;
+            getline(cin >> std::ws, id_input);
+            id_input[0] = toupper(id_input[0]);
 
             for (Member* member : member_list) {
-                if (member->getUsername() == username_input) {
-                    
+                if (member->getMemberId() == id_input) {
+                    cout << "You are editing " << member->getFullName() << "'s password" << endl;
                     cout << "Enter the new password: ";
                     getline(cin >> std::ws, password_input);
 
                     member->setPassword(password_input);
-                    cout << "Reset password sucessfully!" << endl;
+                    cout << colors::GREEN << "Reset password sucessfully!" << colors::RESET << endl;
                     return;
                 }
             }
-            cout << "Member not found.\n";
+            cout << colors::RED << "Member not found.\n" << colors::RESET;
         } else{
             cout << "Only admin can do that" << endl;
         }

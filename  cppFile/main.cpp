@@ -118,6 +118,7 @@ int main(){
                             << "\t\t|                                                           |\n"
                             << "\t\t|              3. Exit                                      |\n"
                             << "\t\t-------------------------------------------------------------\n";
+                        cout << ">Your choice: ";
                         string admin_choice; 
                         getline(cin >> std::ws, admin_choice);
 
