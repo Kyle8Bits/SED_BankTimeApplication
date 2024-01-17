@@ -2,7 +2,13 @@
 #include "Admin.h"
 
 using std::string;
-
-Admin::Admin(string adminUsername, string adminPassword) {
+class Admin {
+    private:
+        const std::string adminUsername = "admin";
+        const std::string adminPassword = "rmit1234";
+    public:
+    
+    Admin::Admin(string adminUsername, string adminPassword) {
     // You can add any initialization logic here if needed
-}
+    }
+};
