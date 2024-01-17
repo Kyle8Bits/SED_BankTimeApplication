@@ -21,11 +21,11 @@ using std::stoi;
 using std::getline;
 
 #define loop(n) for(int i = 0; i < n; ++i)
-#define MEMBERFILE "SourceFile/members.dat"
-#define SKILLFILE "SourceFile/skills.dat"
-#define BOOKINGFILE "SourceFile/booking.dat"
-#define TIMEFILE "SourceFile/timepair.dat"
-#define BLOCKFILE "SourceFile/blocklist.dat"
+#define MEMBERFILE "../SourceFile/members.dat"
+#define SKILLFILE "../SourceFile/skills.dat"
+#define BOOKINGFILE "../SourceFile/booking.dat"
+#define TIMEFILE "../SourceFile/timepair.dat"
+#define BLOCKFILE "../SourceFile/blocklist.dat"
 
 class FileProcess{//THis class is use for loading the file and save to the file
 public:
