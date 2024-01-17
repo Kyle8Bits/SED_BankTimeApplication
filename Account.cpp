@@ -1,50 +1,33 @@
-#ifndef ACCOUNT_H
-#define ACCOUNT_H
+#include "Account.h"
 
-#include <iostream>
-#include <vector>
+//CONSTRUCTOR
+Account::Account(string user_name, string pass_word)
+        : user_name(user_name), pass_word(pass_word){}
 
-using std::cout;
-using std::cin;
-using std::string;
-using std::endl;
+//GETTER & SETTER
+string Account::getUsername(){return this->user_name;}
+string Account::getPassword(){return this->pass_word;}
 
-class Account{
-protected:
-    string user_name;
-    string pass_word;
-public:
-    //CONSTRUCTOR
-    Account(string user_name = "", string pass_word = "")
-            : user_name(user_name), pass_word(pass_word){}
+void Account::setUsername(string user_name){
+    this->user_name = user_name;
+}
 
-    //GETTER & SETTER
-    string getUsername(){return this->user_name;}
-    string getPassword(){return this->pass_word;}
+void Account::setPassword(string pass_word){
+    this->pass_word = pass_word;
+}
 
-    void setUsername(string user_name){
-        this->user_name = user_name;
-    }
-
-    void setPassword(string pass_word){
-        this->pass_word = pass_word;
-    }
-
-    bool setPasswordRequest(){
-        cout << "Please enter your old password!" << endl;
-        cout << "Password: ";
-        string input;
+bool Account::setPasswordRequest(){
+    cout << "Please enter your old password!" << endl;
+    cout << "Password: ";
+    string input;
+    getline(cin >> std::ws, input);
+    if(input == this->pass_word){
+        cout << "Please enter new password: ";
         getline(cin >> std::ws, input);
-        if(input == this->pass_word){
-            cout << "Please enter new password: ";
-            getline(cin >> std::ws, input);
-            this->pass_word = input;
-            cout << "Your new password is record!" << endl;
-            return true;
-        }
-
-        return false;
+        this->pass_word = input;
+        cout << "Your new password is record!" << endl;
+        return true;
     }
 
-};
-#endif // ACCOUNT_H
+    return false;
+}

@@ -1,52 +1,36 @@
-//CHƯA CHẮC LÀ SẼ XÀI TỚI CÁI NÀY, ĐỂ ĐÂY DỰ PHÒNG//
+#include "RealTime.h"
 
-#ifndef REAL_TIME_H
-#define REAL_TIME_H
+// Constructor
+RealTime::RealTime() {
+    update();
+}
 
-#include <iostream>
-#include <ctime>
+void RealTime::update() {
+    std::time_t t = std::time(0);
+    std::tm* now = std::localtime(&t);
+    year = now->tm_year + 1900;
+    month = now->tm_mon + 1;
+    day = now->tm_mday;
+    dayOfWeek = now->tm_wday;
+}
 
-class RealTime {
-public:
-    // Constructor
-    RealTime() {
-        update();
-    }
+void RealTime::printDate() const {
+    std::cout << "Current Date: " << year << '-' << month << '-' << day << std::endl;
+}
 
-    void update() {
-        std::time_t t = std::time(0);
-        std::tm* now = std::localtime(&t);
-        year = now->tm_year + 1900;
-        month = now->tm_mon + 1;
-        day = now->tm_mday;
-        dayOfWeek = now->tm_wday;
-    }
+int RealTime::getToday(){
+    return day;
+}
 
-    void printDate() const {
-        std::cout << "Current Date: " << year << '-' << month << '-' << day << std::endl;
-    }
+int RealTime::getThisMonth(){
+    return month;
+}
 
-    int getToday(){
-        return day;
-    }
+int RealTime::getThisYear(){
+    return year;
+}
 
-    int getThisMonth(){
-        return month;
-    }
-
-    int getThisYear(){
-        return year;
-    }
-    
-    void printDayOfWeek() const {
-        const char* days[] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
-        std::cout << "Day of the Week: " << days[dayOfWeek] << std::endl;
-    }
-
-private:
-    int year;
-    int month;
-    int day;
-    int dayOfWeek;
-};
-#endif
+void RealTime::printDayOfWeek() const {
+    const char* days[] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
+    std::cout << "Day of the Week: " << days[dayOfWeek] << std::endl;
+}

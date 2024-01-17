@@ -2,8 +2,8 @@
 #include <vector>
 #include <utility>
 
-#include "System.cpp"
-#include "FileProcess.cpp"
+#include "System.h"
+#include "FileProcess.h"
 
 using std::cout;
 using std::string;
