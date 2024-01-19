@@ -971,10 +971,10 @@ void System::decideJob(){//For supporter to answer the request booking from host
                                                     in_progress_loop_check = false;
                                                     check = false;
                                                 } else{
-                                                    cout << "****Please enter the valid rating****" << endl;
+                                                    cout << colors::RED << "****Please enter the valid rating****" << colors::RESET << endl;
                                                 } 
                                             }else{
-                                                cout << "Please enter the valid rating!" << endl;
+                                                cout << colors:: RED << "Please enter the valid rating!" << colors::RESET << endl;
                                             }
                                         }
                                     } else if (completed_decide == "2"){
@@ -1427,6 +1427,8 @@ void System::checkCompleteTask(){//EDIT IT
 
                                 if (rating <= 10 && rating >= 0 && skill <= 10 && skill >= 0){
                                     rate_check = false;
+                                }else{
+                                    cout << colors:: RED << "Please enter the valid rating (From 0 to 10)" << colors::RESET << endl;
                                 }
                             }else{
                                 cout << colors::RED << "Please enter the valid rating!" << colors::RESET << endl;

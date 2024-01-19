@@ -301,13 +301,19 @@ bool Supporter::setMinHostRatingRequest(){
     getline(cin >> std::ws, input);
     for(int i = 0; i < input.length(); i++){
         if(!isdigit(input[i])){
-            cout << "Please enter valid number!" << endl;
+            cout << sp_colors::RED << "Please enter valid number!" << sp_colors::RESET << endl;
             return false;
         }
     }
+    //convert it into integer
+
+    if(std::stoi(input) < 0 || std::stoi(input) > 10){
+        cout << sp_colors::RED << "Please enter the number from 0 to 10 only!" << sp_colors::RESET << endl;
+        return false;
+    }
 
     this->min_host_rating = std::stoi(input);
-    cout << "Your minimum rating is set!" << endl;
+    cout << sp_colors::GREEN << "Your minimum rating is set!" << sp_colors::RESET << endl;
     return true;
 }
 
