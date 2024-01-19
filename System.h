@@ -86,7 +86,7 @@ public:
 
     void resetMemberPassword();
 
-    bool isValidCost(const string& cost_str);
+    bool isValidCost(string str);
 
     double findCreditPointFromTime(Time start_time, Time end_time, int cost_per_hour);
 

@@ -43,7 +43,7 @@ bool System::registerMember(){
     //if the function return -1 --> that user name is not existed. By constrast, position>0 --> that username is existed
 
     if(position >= 0){
-        cout << "This username is taken. Can you please use the another name?" << endl;
+        cout << colors::RED << "This username is taken. Can you please use the another name?" << colors::RESET << endl;
         return false;
     } 
     
@@ -69,12 +69,16 @@ bool System::registerMember(){
     getline(cin >> std::ws, address_input);
 
     string city_choice;
-    cout <<"****Our application only exists at Ho Chi Minh and Hanoi****" << endl;
+    cout << colors::YELLOW << "IMPORTANT: Because of the constraint, this application is only applied in Ho Chi Minh or Hanoi. Sorry about this inconvenience!" << colors::RESET << endl;
+    cout << colors:: YELLOW <<"****Our application only exists at Ho Chi Minh and Hanoi****" << colors::RESET << endl;
     while(city_choice != "1" && city_choice != "2"){
         cout << "1. Hanoi" << endl
-                << "2. Ho Chi Minh" << endl
-                << ">Your choice: ";
+             << "2. Ho Chi Minh" << endl
+             << ">Your choice: ";
         getline(cin >> std::ws, city_choice);
+        if(city_choice != "1" && city_choice != "2"){
+            cout << colors::RED << "Please enter the valid input!" << colors::RESET << endl;
+        }
     }
 
     if(city_choice == "1"){
@@ -196,14 +200,22 @@ string System::getDayString(int day) {
     return "";
 }
 
-bool System::isValidCost(const string& cost_str){
-    for (char ch : cost_str) {
+bool System::isValidCost(string str){
+    for (char ch : str) {
         if (!std::isdigit(ch)) {
             cout << colors::RED << "Please enter only digit!" << colors::RESET << endl;
             return false;
         }
     }
+
+    if(std::stoi(str) <= 0){
+        //if the user enter the negative number or 0 --> return false
+        cout << colors::RED << "Please enter the valid cost (Must larger than 0)" << colors::RESET << endl;
+        return false;
+    }
+
     return true;
+
 }
 
 bool System::upgradeToSupporter(){
@@ -270,7 +282,7 @@ bool System::upgradeToSupporter(){
                 << "6. Saturday \n"
                 << "7. Sunday \n";
             cout <<"=============================================================" << endl;
-            cout << ">Your choice: " << endl;
+            cout << ">Your choice: ";
             bool check_option = true;
             getline(cin >> std::ws, user_day_choice);
             if(user_day_choice == "1" || user_day_choice == "2" || user_day_choice == "3" || user_day_choice == "4" || user_day_choice == "5" || user_day_choice == "6" || user_day_choice == "7"){
@@ -307,7 +319,6 @@ bool System::upgradeToSupporter(){
     cout << "What is the hourly credit point you would like to charge: ";
     getline(cin >> std::ws, cost_input_str);
     while(!isValidCost(cost_input_str)){//ask users to input the valid cost until the isValidCost return true
-        cout << colors::RED << "Please enter the valid cost!" << colors::RESET << endl;
         cout << "What is the hourly rate you would like to charge: ";
         getline(cin >> std::ws, cost_input_str);
     }
