@@ -714,12 +714,42 @@ void System::viewHistory(){//For host to view which supporter they have booked
     for(int i = 0; i < booking_list.size(); i++){
         if ( logged_in_member->getMemberId() == booking_list[i]->getHostId()){//Check if current user is = host id 
             for (int a = 0; a < member_list.size(); a++){
-                if (booking_list[i]->getSupportId() == member_list[a]->getMemberId()){//get the matchecd supporter id in booking list and in memberlist
+                if (booking_list[i]->getSupportId() == member_list[a]->getMemberId() && booking_list[i]->getStatus() != "PENDING" && (booking_list[i]->getProgress() == "COMPLETED" || booking_list[i]->getProgress() == "NOT STARTED")){//get the matchecd supporter id in booking list and in memberlist
                     cout <<"Booking " + std::to_string(count) <<
                         "\nBooking ID: " + booking_list[i]->getBookingId() <<
-                        "\nSupporter name: " + member_list[a]->getFullName() <<
-                        "\nRating score: Will update" <<
-                        "\nCity: " + member_list[a]->getCity() <<
+                        "\nSupporter name: " + member_list[a]->getFullName();
+
+                        if (booking_list[i]->getSkillRatingScore() != 11 && booking_list[i]->getSupporterRatingScore() != 11){
+                           cout << "\nYou rate their skill: "<< booking_list[i]->getSkillRatingScore();
+                           cout << "\nYou rate their service: "<< booking_list[i]->getSupporterRatingScore();
+                        }
+                        else{
+                            cout <<"\nYou rate their skill: None";
+                            cout <<"\nYou rate their service: ";
+                        }
+
+                        if (booking_list[i]->getSupporterComment() == "x"){
+                            cout << "\nYou comment: You did not leave a comment";
+                        }
+                        else{
+                            cout << "\nYou comment: " + booking_list[i]->getSupporterComment();
+                        }
+
+                        if(booking_list[i]->getHostRating() != 11){
+                            cout << "\nSupporter rated you: " << booking_list[i]->getHostRating();
+                        }
+                        else{
+                            cout << "\nSupporter rated you: None";
+                        }
+
+                        if(booking_list[i]->getHostComment() == "x"){
+                            cout << "\nSupporter comment: They did not leave a comment";
+                        }
+                        else{
+                            cout << "\nSupporter comment: " + booking_list[i]->getHostComment();
+                        }
+
+                        cout << "\nCity: " + member_list[a]->getCity() <<
                         "\nStatus: " + booking_list[i]->getStatus() <<
                         "\nProgress: " + booking_list[i]->getProgress() <<
                         "\nTime: " + booking_list[i]->getTime() << endl;
@@ -1277,14 +1307,14 @@ void System::viewHistoryJob(){
     for(int i = 0; i < booking_list.size(); i++){
         if ( logged_in_supporter->getMemberId() == booking_list[i]->getSupportId()){//Check if current user is = host id 
             for (int a = 0; a < member_list.size(); a++){
-                if (booking_list[i]->getHostId() == member_list[a]->getMemberId()){//get the matchecd supporter id in booking list and in memberlist
+                if (booking_list[i]->getHostId() == member_list[a]->getMemberId() && booking_list[i]->getStatus() != "PENDING" && (booking_list[i]->getProgress() == "COMPLETED" || booking_list[i]->getProgress() == "NOT STARTED" )){//get the matchecd supporter id in booking list and in memberlist
                     //push the id to the vector current_job
                     current_job.push_back(booking_list[i]->getBookingId());
                     //Print basic information
                     cout <<"Booking: " << std::to_string(count) <<
                         "\nBooking ID: " << booking_list[i]->getBookingId() <<
                         "\nHost name: " << member_list[a]->getFullName();
-                    if(booking_list[i]->getHostRating() != 11){// the score of 11 --> user do not want to leave rating or commetn
+                    if(booking_list[i]->getHostRating() == 11){// the score of 11 --> user do not want to leave rating or commetn
                         cout << "\nRating score: None";
                     }else{
                         cout << "\nRating score: " << booking_list[i]->getHostRating();
@@ -1294,6 +1324,7 @@ void System::viewHistoryJob(){
                     }else{
                         cout << "\nHost comment: None";
                     }
+                    
                     cout << "\nCity: " << member_list[a]->getCity() <<
                             "\nTime: " << booking_list[i]->getTime();
                     if(booking_list[i]->getSkillRatingScore() != 11){
