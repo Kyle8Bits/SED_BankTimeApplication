@@ -79,6 +79,8 @@ public:
 
     string scheduleToString();
 
+    void displayWorkScheduleBySpecificDay(string day);
+
     void displayWorkSchedule();
 
     string displaySkillList();

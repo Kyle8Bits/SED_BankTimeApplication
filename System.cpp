@@ -632,7 +632,7 @@ void System::createBooking(){
     bool time_check = true;  
     //=====================CHECK THE TIME==============================================
     while(time_check){
-        choose_supporter->displayWorkSchedule();
+        choose_supporter->displayWorkScheduleBySpecificDay(day_str);
         cout << "Choose the time you want to book. Noitce that: the time you choose must match with the free time of the supporter!" << endl;
         // int start_time_hour, start_time_minute, end_time_hour, end_time_minute;
         // string start_time_input, end_time_input;

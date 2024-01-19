@@ -201,6 +201,27 @@ string Supporter::scheduleToString(){
     return result;
 }
 
+void Supporter::displayWorkScheduleBySpecificDay(string day){
+    if(workSchedule.empty()){
+        cout << "EMPTY" << endl;
+    }
+    else{
+        cout << sp_colors::WHITE_BOLD << std::left << std::setw(30)<< "|> Work Schedule:" <<"|" << endl;
+
+        for(int i =0 ; i < workSchedule.size(); i++){
+            if(workSchedule[i].first == day){
+                cout << sp_colors::YELLOW<< "-------------------------------"<< sp_colors::RESET << endl;
+                cout << "| " << std::left << std::setw(28) << workSchedule[i].first << "|" << endl;
+                for(int a  = 0 ; a < workSchedule[i].second.size(); a++){
+                    cout << "| "<< std::left << std::setw(5) << workSchedule[i].second[a].first.getTime() << " to " << std::setw(19)<<workSchedule[i].second[a].second.getTime() << "|" << endl;
+                }
+            }
+        }
+        sp_colors::RESET;
+    }
+    
+}
+
 void Supporter::displayWorkSchedule(){
     if(workSchedule.empty()){
         cout << "EMPTY" << endl;

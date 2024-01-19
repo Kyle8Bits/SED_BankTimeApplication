@@ -131,6 +131,7 @@ bool Member::setCityRequest(){
     cout << "Please choose your current city!" << endl;
     cout << "1. Hanoi" << endl;
     cout << "2. Ho Chi Minh" << endl;
+    cout << "Your input: ";
     string input; 
     getline(cin >> std::ws, input);
     if(input == "1"){
