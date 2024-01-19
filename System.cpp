@@ -661,6 +661,7 @@ void System::createBooking(){
         cout << "Do you want to continue?\n";
         cout << "1. Yes\n";
         cout << "2. No\n";
+        cout << ">Your choice: ";
         string choice;
         getline(cin >> std::ws, choice);
         if(choice == "1"){
@@ -925,7 +926,7 @@ void System::decideJob(){//For supporter to answer the request booking from host
                                 //&***************UNCOMMENT IT WHEN DONE***************
                                 setProgressById(current_job[i], "COMPLETED");
                                 cout << colors::GREEN << "Congratulation! You just finished the job." << colors::RESET << endl;
-                                cout << colors::GREEN << "You just receive: " << getMoneyById(current_job[i]) << colors::RESET << " CP" << endl;
+                                cout << colors::GREEN << "You just receive: " << getMoneyById(current_job[i]) << " CP" << colors::RESET  << endl;
                                 logged_in_supporter->addCreditPoint(getMoneyById(current_job[i]));//add the new money to the supporter's account
                                 cout << colors::YELLOW << "Your new balance: " << logged_in_supporter->getCreditPoint() << colors::RESET << endl;
 
@@ -951,7 +952,7 @@ void System::decideJob(){//For supporter to answer the request booking from host
                                                     //IF the conversion is successful
                                                 if(rating >= 0 && rating <= 10){
                                                     if(rating < 5){
-                                                        cout << "Sorry about your bad experiance" << endl;
+                                                        cout << "Sorry about your bad experience" << endl;
                                                     }
                                                     //modify rating
                                                     setHostRatingById(current_job[i], rating);
@@ -1136,8 +1137,6 @@ std::vector<BookingSupporter*> System::isOverLap(string bk_id){
         }
     }
 
-    cout <<"Choose: " << bk_id << "-" <<booking_accept->getTime() << "\n" << endl;
-
     loop(relateBooking.size()){
         if(booking_accept->getDate() == relateBooking[i]->getDate()){
             Time booking_accept_start_time = booking_accept->getStartTime();
@@ -1271,7 +1270,7 @@ void System::statusSetting(){
 
 void System::viewHistoryJob(){
 
-    cout << "****THE LIST OF HISTORY JOB****\n";
+    cout << colors::YELLOW << "****THE LIST OF HISTORY JOB****\n" << colors::RESET;
     int count = 1;
     std::vector<string> current_job = {};
     
@@ -1284,16 +1283,38 @@ void System::viewHistoryJob(){
                     //Print basic information
                     cout <<"Booking: " << std::to_string(count) <<
                         "\nBooking ID: " << booking_list[i]->getBookingId() <<
-                        "\nHost name: " << member_list[a]->getFullName() <<
-                        "\nRating score: Will update" <<
-                        "\nCity: " << member_list[a]->getCity() <<
-                        "\nTime: " << booking_list[i]->getTime() << 
-                        "\nHost comment: will update" <<
-                        "\nHost rated you: will update" << 
-                        "\nStatus: " << booking_list[i]->getStatus() <<
-                        "\nProgress: " << booking_list[i]->getProgress() << endl;
-                        
-                        
+                        "\nHost name: " << member_list[a]->getFullName();
+                    if(booking_list[i]->getHostRating() != 11){// the score of 11 --> user do not want to leave rating or commetn
+                        cout << "\nRating score: None";
+                    }else{
+                        cout << "\nRating score: " << booking_list[i]->getHostRating();
+                    }
+                    if(booking_list[i]->getHostComment() != "x"){
+                        cout << "\nHost comment: " << booking_list[i]->getHostComment();
+                    }else{
+                        cout << "\nHost comment: None";
+                    }
+                    cout << "\nCity: " << member_list[a]->getCity() <<
+                            "\nTime: " << booking_list[i]->getTime();
+                    if(booking_list[i]->getSkillRatingScore() != 11){
+                        cout << "\nHost rated you: " << booking_list[i]->getSkillRatingScore();
+                    }else{
+                        cout << "\nHost rated you: None";
+                    }
+
+                    if(booking_list[i]->getSupporterRatingScore() != 11){
+                        cout << "\nHost rated your skill: " << booking_list[i]->getSupporterRatingScore();
+                    }else{
+                        cout << "\nHost rated your skill: None";
+                    }
+                    if(booking_list[i]->getSupporterComment() != "x"){
+                        cout << "\nHost left comment: " << booking_list[i]->getSupporterComment();
+                    }else{
+                        cout << "\nHost left comment: None";
+                    }
+                    cout << "\nStatus: " << booking_list[i]->getStatus() <<
+                            "\nProgress: " << booking_list[i]->getProgress() << endl;
+                         
                     cout << "==============================================\n" << endl;
                 }
             }
