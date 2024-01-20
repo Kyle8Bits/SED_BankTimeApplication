@@ -605,16 +605,18 @@ void Supporter::setWorkSchedule() {
 }
 
 void Supporter::displayUserList(){
-    cout << sp_colors::YELLOW << std::setw(266) << std::setfill('-') << "" << std::setfill(' ') << sp_colors::RESET <<std::endl;
-    cout << sp_colors::YELLOW << std::left << std::setw(13) << "| Member id |" << std::setw(25) << " Fullname               |" << std::setw(15) << " Credit Point      |"
+    cout << sp_colors::YELLOW << std::setw(235) << std::setfill('-') << "" << std::setfill(' ') << sp_colors::RESET <<std::endl;
+    cout << sp_colors::YELLOW << std::left << std::setw(13) << "| Member id |" << std::setw(25) << std::setw(12) << " Username  |" << std::setw(12) << " Password  |" << " Fullname               |" << std::setw(6) << " CP   |"
             << std::setw(15) << " Phone Number |" << std::setw(35) << " Address                          |"  << std::setw(15) << " City         |"
             << std::setw(15) << " Host Rating  |" << std::setw(16) << " Hosting Count |"  << std::setw(25) << " Block List              |" 
             << std::setw(20) << " Supporting Count   |" <<std::setw(10) << " Rating  |" 
-            << std::setw(15) << " Rating Skill |" << std::setw(40) << " Introduction                          |" << endl;
-    cout << std::setw(266) << std::setfill('-') << "" << std::setfill(' ') << sp_colors::RESET <<std::endl;
+            << std::setw(15) << " Rating Skill |" << endl;
+    cout << std::setw(235) << std::setfill('-') << "" << std::setfill(' ') << sp_colors::RESET <<std::endl;
     cout << sp_colors::WHITE_BOLD << "| " << std::setw(10) << this->member_id
+                            <<"| "<<std::setw(10) << this->user_name
+                            <<"| "<<std::setw(10) << this->pass_word
                             <<"| "<<std::setw(23) << this->full_name
-                            <<"| " << std::setw(18) << this->credit_point
+                            <<"| " << std::setw(5) << this->credit_point
                             <<"| " << std::setw(13) << this->phone_number
                             <<"| " << std::setw(33) << this->address
                             <<"| " << std::setw(13) << this->city
@@ -623,9 +625,8 @@ void Supporter::displayUserList(){
                             <<"| " << std::setw(24) << this->displayBlockList()
                             <<"| " << std::setw(19) << this->support_count
                             <<"| " << std::setw(8) << this->support_rating_score
-                            <<"| " << std::setw(13) << this->skill_rating_score  
-                            <<"| " << std::setw(38) << this->about_me << "|"<< endl;
-            cout << sp_colors::YELLOW << std::setw(266) << std::setfill('-') << "" << std::setfill(' ') << sp_colors::RESET << std::endl;
+                            <<"| " << std::setw(13) << this->skill_rating_score  << endl;
+            cout << sp_colors::YELLOW << std::setw(235) << std::setfill('-') << "" << std::setfill(' ') << sp_colors::RESET << std::endl;
             this->displayWorkSchedule();
 
 }

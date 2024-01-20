@@ -60,23 +60,25 @@ void Member::displayPersonalInformation(){
 }
 
 void Member::displayUserList(){
-    cout << mb_colors::YELLOW <<std::setw(180) << std::setfill('-') << "" << std::setfill(' ') << mb_colors::RESET <<std::endl;
-    cout << mb_colors::YELLOW << std::left << std::setw(13) << "| Member id |" << std::setw(25) << " Fullname               |" << std::setw(15) << " Credit Point      |"
-            << std::setw(15) << " Phone Number |" << std::setw(35) << " Address                          |"  << std::setw(15) << " City         |"
+    cout << mb_colors::YELLOW <<std::setw(187) << std::setfill('-') << "" << std::setfill(' ') << mb_colors::RESET <<std::endl;
+    cout << mb_colors::YELLOW << std::left << std::setw(13) << "| Member id |" << std::setw(25) << std::setw(12) << " Username   |" << std::setw(12) << " Password   |"<<" Fullname               |" << std::setw(6) << " CP  |"
+            << std::setw(15) << " Phone Number |" << std::setw(30) << " Address                     |"  << std::setw(15) << " City         |"
             << std::setw(15) << " Host Rating  |" << std::setw(16) << " Hosting Count |"  << std::setw(25) << " Block List              |"<< endl;
-    cout << std::setw(180) << std::setfill('-') << "" << std::setfill(' ') << mb_colors::RESET <<std::endl;
+    cout << std::setw(187) << std::setfill('-') << "" << std::setfill(' ') << mb_colors::RESET <<std::endl;
     cout << mb_colors::WHITE_BOLD << "| " << std::setw(10) << this->member_id
+                            <<"| "<<std::setw(11) << this->user_name
+                            <<"| "<<std::setw(11) << this->pass_word
                             <<"| "<<std::setw(23) << this->full_name
-                            <<"| " << std::setw(18) << this->credit_point
+                            <<"| " << std::setw(4) << this->credit_point
                             <<"| " << std::setw(13) << this->phone_number
-                            <<"| " << std::setw(33) << this->address
+                            <<"| " << std::setw(28) << this->address
                             <<"| " << std::setw(13) << this->city
                             <<"| " << std::setw(13) << std::to_string(this->host_rating_score)
                             <<"| " << std::setw(14) << std::to_string(this->host_count)
                             <<"| " << std::setw(23) << this->displayBlockList() << " |" << endl;
     
     
-    cout << mb_colors::YELLOW << std::setw(180) << std::setfill('-') << "" << std::setfill(' ') << mb_colors::RESET << std::endl;
+    cout << mb_colors::YELLOW << std::setw(187) << std::setfill('-') << "" << std::setfill(' ') << mb_colors::RESET << std::endl;
 }
 
 
