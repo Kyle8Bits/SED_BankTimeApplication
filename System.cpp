@@ -452,6 +452,10 @@ double System::findCreditPointFromTime(Time start_time, Time end_time, int cost_
     return total_cost;
 }
 
+void System::clearAvailableSupporterList(){
+    this->availableSupporter.clear();
+}
+
 bool System::isValidInterger(const string& str){
     for (char ch : str) {
         if (!std::isdigit(ch)) {
@@ -484,7 +488,7 @@ void System::createBooking(){
             if(logged_in_member->getHostRatingScore() < availableSupporter[i]->getMinHostRating()){
                 cout << colors::RED << "You can not book this supporter because your host rating score is lower than the supporter's min host rating score" << colors::RESET << endl;
                 return;
-            }
+            } 
             else if (booking.isInBlockList(logged_in_member->getBlockList(), availableSupporter[i]->getMemberId())){
                 BlockError();
                 return;

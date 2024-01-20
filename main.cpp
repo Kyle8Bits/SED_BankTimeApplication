@@ -11,6 +11,7 @@ using std::vector;
 
 namespace color_main {
     const char* RED = "\033[1;91m";
+    const char* GREEN = "\033[92m";
     const char* RESET = "\033[0m";  
 }
 
@@ -23,11 +24,12 @@ int main(){
     cout << "EEET2482/COSC2082 ASSIGNMENT\n"
         << "'TIME BANK' APPLICATION\n"
         << "Instructor: Mr. Tran Duc Linh\n"
-        << "Group: Group ...\n"
-        << "S, Student Name\n"
-        << "S, Student Name\n"
-        << "S, Student Name\n"
-        << "S, Student Name\n";
+        << "Group: Group 7\n"
+        << "S3974892, Ngo Van Tai\n"
+        << "S3974876, Mai Dang Khoa\n"
+        << "S3926681, Pham Ngoc Huy\n"
+        << "S3978477, Nguyen Trong Khoa\n";
+        
     //---------------------------------------------START PROGRAM---------------------------------------------------------------------------
     System system;
     FileProcess file_process;
@@ -242,6 +244,7 @@ int main(){
                                 } else if(member_setting_choice == "9"){
                                     clearScreen();
                                     cout << "Returning to main dashboard" << endl;
+                                    system.clearAvailableSupporterList();
                                     request_setting_member = false;
                                 }
                                 else{
@@ -251,6 +254,7 @@ int main(){
                             }
                         }else if(member_choice == "8"){
                             request_member = false;
+                            system.clearAvailableSupporterList();
                             cout << "Returning to main dashboard" << endl;
                         }else {
                             clearScreen();
@@ -404,6 +408,7 @@ int main(){
                         } else if (supporter_choice == "11"){
                             clearScreen();
                             request_supporter = false;
+                            system.clearAvailableSupporterList();
                             cout << "Return to main dashboard" << endl;
                         } else{
                             clearScreen();
@@ -416,8 +421,8 @@ int main(){
             }
         } else if(user_choice == "3"){
             clearScreen();
-            cout << "Thank you for using our app" << endl;
-            cout << "Exit successfully!" << endl;
+            cout << color_main::GREEN <<  "Thank you for using our app" << color_main::RESET << endl;
+            cout << color_main::GREEN << "Exit successfully!" << color_main::RESET << endl;
             request = false;
         } else{
             clearScreen();
@@ -426,13 +431,11 @@ int main(){
     }
 
     if( !file_process.saveToFile(system.getMemberList()) ){
-        std::cerr << "Can not save to the file!" << endl;
+        // std::cerr << "Can not save to the file!" << endl;
     }
 
     file_process.saveBookingFile(system.getBookingList());
-    // if( !file_process.saveBookingFile(system.getBookingList()) ){
-    //     cout << "Can not save booking list " << endl;
-    // }
+    
     
     return 0;
 }

@@ -79,6 +79,8 @@ public:
     int getRequestNotification();
 
     int getNotification();
+
+    void clearAvailableSupporterList();
     
     bool checkDuplicateDay(std::vector< std::pair< string, std:: vector< std::pair< Time, Time> > > > list, string choose);
 

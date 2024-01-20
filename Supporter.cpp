@@ -576,6 +576,7 @@ void Supporter::setWorkSchedule() {
                                 workSchedule[i].second.erase(workSchedule[i].second.begin() + a);
                                 cout << sp_colors::GREEN << "Your time period is removed!" << sp_colors::RESET << endl;
                                 isValidRemoveTime = true;
+                                isValidRemove = true;
                                 break;
                             } 
                         }

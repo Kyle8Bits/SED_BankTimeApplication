@@ -20,7 +20,7 @@ bool FileProcess::saveToFile(std::vector<Member*> member_list){
     }
 
     my_file.close();
-    cout << "Save member SUCCESFULLY!" << endl;
+    // cout << "Save member SUCCESFULLY!" << endl;
 
     //***********************SAVE SKILL LIST INFORMATION FOR SUPPORTER***********************
     my_file.open(SKILLFILE, std::ios::out);
@@ -40,7 +40,7 @@ bool FileProcess::saveToFile(std::vector<Member*> member_list){
         }
     }
     my_file.close();
-    cout << "Save supporter SUCCESFULLY!" << endl;
+    // cout << "Save supporter SUCCESFULLY!" << endl;
 
     //***********************SAVE TIME PAIR LIST INFORMATION FOR SUPPORTER***********************
     my_file.open(TIMEFILE, std::ios::out);
@@ -60,7 +60,7 @@ bool FileProcess::saveToFile(std::vector<Member*> member_list){
         }
     }
     my_file.close();
-    cout << "Save to file SUCCESFULLY!" << endl;
+    // cout << "Save to file SUCCESFULLY!" << endl;
 
 
     //***********************SAVE BLOCK LIST FOR MEMBER & SUPPORTER***********************
@@ -276,7 +276,7 @@ bool FileProcess::saveBookingFile(std::vector<BookingSupporter*>& booking_list){
         }
     }
     my_file.close();
-    cout << "SAVE BOOKING SUCCESSFULLY" << endl;
+    // cout << "SAVE BOOKING SUCCESSFULLY" << endl;
     return true;
 }
 
