@@ -68,7 +68,7 @@ void BookingSupporter::displayComment(Supporter* selected_supporter, std::vector
     }
 }
 
-void BookingSupporter::displayAvailableSupporter(std::vector<Member*> member_list, Member* logged_in_member, Supporter* logged_in_supporter, std::vector<Supporter*>& availableSupporter, std::vector<BookingSupporter*> booking_list) {
+void BookingSupporter::displayAvailableSupporter(std::vector<Member*> member_list, Member* logged_in_member, Supporter* logged_in_supporter, std::vector<Supporter*>& availableSupporter, std::vector<BookingSupporter*> booking_list, bool filterCity) {
     bool isSupporter = (logged_in_member == nullptr);
     if (isSupporter) {
         logged_in_member = logged_in_supporter;
@@ -85,19 +85,22 @@ void BookingSupporter::displayAvailableSupporter(std::vector<Member*> member_lis
             if (supporter->getMemberId() != logged_in_member->getMemberId() && supporter->getStatus() == Status::ONLINE) {
                 if (!isInBlockList(logged_in_member->block_list, supporter->getMemberId()) && !isInBlockList(supporter->block_list, logged_in_member->getMemberId())) {
                     //if the the supporter appears in the block list of the member, we will not display the supporter and vice versa
-                    cout <<bk_colors::WHITE_BOLD<<"| "<< std::setw(10) << supporter->getMemberId() <<"| "<<std::setw(23) << supporter->getFullName()
-                            <<"| " << std::setw(13) << supporter->getCity() <<"| "<< std::setw(14) << supporter->getCost() 
-                            <<"| " << std::setw(38) << supporter->getAboutMe() << "| " <<std::setw(38) << supporter->displaySkillList() 
-                            <<"| " <<std::setw(13) << supporter->getSkillRatingScore() << "| " <<std::setw(7) << supporter->getSupportRatingScore() 
-                            <<"| " <<std::setw(15) << supporter->getMinHostRating() <<" |"<<bk_colors::RESET<<endl;
-                    cout << bk_colors::YELLOW << std::setw(191) << std::setfill('-') << "" << std::setfill(' ') << bk_colors::RESET << std::endl;
-                    supporter->displayWorkSchedule();
+                    if(filterCity == true && supporter->getCity() == logged_in_member->getCity() || filterCity == false){
+                        //if filter city is true --> the supporter city must be the same as the member city. If it false, it can run normally
+                        cout <<bk_colors::WHITE_BOLD<<"| "<< std::setw(10) << supporter->getMemberId() <<"| "<<std::setw(23) << supporter->getFullName()
+                                <<"| " << std::setw(13) << supporter->getCity() <<"| "<< std::setw(14) << supporter->getCost() 
+                                <<"| " << std::setw(38) << supporter->getAboutMe() << "| " <<std::setw(38) << supporter->displaySkillList() 
+                                <<"| " <<std::setw(13) << supporter->getSkillRatingScore() << "| " <<std::setw(7) << supporter->getSupportRatingScore() 
+                                <<"| " <<std::setw(15) << supporter->getMinHostRating() <<" |"<<bk_colors::RESET<<endl;
+                        cout << bk_colors::YELLOW << std::setw(191) << std::setfill('-') << "" << std::setfill(' ') << bk_colors::RESET << std::endl;
+                        supporter->displayWorkSchedule();
 
-                    cout << bk_colors::YELLOW << std::setw(191) << std::setfill('-') << "" << std::setfill(' ') << bk_colors::RESET << endl;
-                    displayComment(supporter, booking_list, member_list);
-                    cout << bk_colors::YELLOW << std::setw(191) << std::setfill('-') << "" << std::setfill(' ') << bk_colors::RESET << endl;
+                        cout << bk_colors::YELLOW << std::setw(191) << std::setfill('-') << "" << std::setfill(' ') << bk_colors::RESET << endl;
+                        displayComment(supporter, booking_list, member_list);
+                        cout << bk_colors::YELLOW << std::setw(191) << std::setfill('-') << "" << std::setfill(' ') << bk_colors::RESET << endl;
 
-                    availableSupporter.push_back(supporter);
+                        availableSupporter.push_back(supporter);
+                    }
                 }
             }
         }

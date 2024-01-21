@@ -435,8 +435,8 @@ bool System::isAvailableDay(Supporter* id, int dayOfWeek){
 }
 
 
-void System::displayAvailableSupporter(){
-    booking.displayAvailableSupporter(member_list, logged_in_member,  logged_in_supporter, availableSupporter, booking_list);
+void System::displayAvailableSupporter(bool filterCity){
+    booking.displayAvailableSupporter(member_list, logged_in_member,  logged_in_supporter, availableSupporter, booking_list, filterCity);
 }
 
 double System::findCreditPointFromTime(Time start_time, Time end_time, int cost_per_hour){
@@ -469,14 +469,21 @@ bool System::isValidInterger(const string& str){
 void System::createBooking(){
     cout << "****WELCOME TO BOOKING DASHBOARD****"<<endl;
     Supporter* choose_supporter;//supporter that users choose
-    displayAvailableSupporter();
+    displayAvailableSupporter(false);//false here is the city filter
+    cout << "NOTE: If you want to filter the supporter in the same city with you, please enter 'f' character!" << endl;
     cout << "Please input the supporter's id that you want to book: ";
     string input; 
     getline(cin >> std::ws, input);
     input[0] = toupper(input[0]);
 
 //=========================CHECK IS THAT SUPPORTER IS EXSIT=======================
-    
+    if(input == "F"){
+        this->availableSupporter.clear();
+        displayAvailableSupporter(true);//set the true for the boolean city fitler
+        cout << "Please input the supporter's id that you want to book: ";
+        getline(cin >> std::ws, input);
+        input[0] = toupper(input[0]);
+    }
     bool isSupporter = (logged_in_member == nullptr);
     bool isValidSupporter = false;//this to check the create bookign is successfully or not?
     if(isSupporter){

@@ -98,7 +98,7 @@ public:
 
     bool isAvailableDay(Supporter* id, int dayOfWeek);
 
-    void displayAvailableSupporter();
+    void displayAvailableSupporter(bool filterCity);
 
     void createBooking();
 

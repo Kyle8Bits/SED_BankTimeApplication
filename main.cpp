@@ -170,7 +170,7 @@ int main(){
                             system.buyCredit();
                         } else if(member_choice == "2"){
                             clearScreen();
-                            system.displayAvailableSupporter();
+                            system.displayAvailableSupporter(false);
                         } else if(member_choice == "3"){
                             clearScreen();
                             system.createBooking();
@@ -205,9 +205,7 @@ int main(){
                                     << "\t\t|                                                           |\n"
                                     << "\t\t|8. Add information about yourself                          |\n"
                                     << "\t\t|                                                           |\n"
-                                    << "\t\t|9. Create booking setting                                  |\n"
-                                    << "\t\t|                                                           |\n"
-                                    << "\t\t|10. Return                                                 |\n"
+                                    << "\t\t|9. Return                                                 |\n"
                                     << "\t\t-------------------------------------------------------------\n"
                                     << ">Your choice: ";
                                 string member_setting_choice; 
@@ -243,16 +241,12 @@ int main(){
                                 } else if(member_setting_choice == "8"){
                                     clearScreen();
                                     system.getLoggedInMember()->addInformation();
-                                } else if(member_setting_choice == "9"){
-                                    clearScreen();
-                                    
-                                } else if(member_setting_choice == "10"){
+                                }else if(member_setting_choice == "9"){
                                     clearScreen();
                                     cout << "Returning to main dashboard" << endl;
                                     system.clearAvailableSupporterList();
                                     request_setting_member = false;
-                                }
-                                else{
+                                }else{
                                     clearScreen();
                                     Error_Main();
                                 }
@@ -307,7 +301,7 @@ int main(){
                             system.buyCredit();
                         } else if(supporter_choice == "2"){
                             clearScreen();
-                            system.displayAvailableSupporter();
+                            system.displayAvailableSupporter(false);
                         } else if(supporter_choice == "3"){
                             clearScreen();
                             system.createBooking();
@@ -358,9 +352,7 @@ int main(){
                                     << "\t\t|                                                           |\n"
                                     << "\t\t|11. Set min host rating                                    |\n"
                                     << "\t\t|                                                           |\n"
-                                    << "\t\t|12. Create booking setting                                 |\n"
-                                    << "\t\t|                                                           |\n"
-                                    << "\t\t|13. Return                                                 |\n"
+                                    << "\t\t|12. Return                                                 |\n"
                                     << "\t\t-------------------------------------------------------------\n"
                                     << ">Your choice: ";
                                 string suppoter_setting_choice;
@@ -402,15 +394,11 @@ int main(){
                                 } else if(suppoter_setting_choice == "11"){
                                     clearScreen();
                                     system.getLoggedInSupporter()->setMinHostRatingRequest();
-                                } else if(suppoter_setting_choice == "12"){
-                                    clearScreen();
-                                    // create booking setting
-                                }else if(suppoter_setting_choice == "13"){
+                                }else if(suppoter_setting_choice == "12"){
                                     clearScreen();
                                     cout << "Returning to main dashboard" << endl;
                                     request_setting_supporter = false;
-                                }
-                                else{
+                                }else{
                                     clearScreen();
                                     Error_Main();
                                 }

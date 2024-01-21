@@ -47,7 +47,7 @@ class BookingSupporter{
 
     void displayComment(Supporter* selected_supporter, std::vector<BookingSupporter*> booking_list, std::vector<Member*> member_list);
 
-    void displayAvailableSupporter(std::vector<Member*> member_list, Member* logged_in_member, Supporter* logged_in_supporter, std::vector<Supporter*>& availableSupporter, std::vector<BookingSupporter*> booking_list);
+    void displayAvailableSupporter(std::vector<Member*> member_list, Member* logged_in_member, Supporter* logged_in_supporter, std::vector<Supporter*>& availableSupporter, std::vector<BookingSupporter*> booking_list, bool filterCity);
 
     void displayAvailableSupporterForGuest(std::vector<Member*> member_list, Member* logged_in_member, Supporter* logged_in_supporter, std::vector<Supporter*>& availableSupporter, std::vector<BookingSupporter*> booking_list);
 
