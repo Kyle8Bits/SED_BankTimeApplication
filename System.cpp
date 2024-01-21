@@ -1061,7 +1061,10 @@ void System::decideJob(){//For supporter to answer the request booking from host
 
                     }else{
                         //if the status is PENDING
-                        std::vector <BookingSupporter* > overLap_list = isOverLap(choice);
+                        
+                        std::vector <BookingSupporter* > overLap_list = isOverLap(choice);//get the overlap list from the isOverLap method
+
+                        cout << "****Do you want to accept this booking****\n";
                         cout << "1. ACCEPTED\n"<<
                                 "2. REJECTED\n" <<
                                 "3. RETURN\n"<< endl;
@@ -1137,6 +1140,7 @@ void System::decideJob(){//For supporter to answer the request booking from host
 
                             }else if(accept_choice == "2"){
                                 setStatusById(current_job[i], "REJECTED");
+                                cout << colors::YELLOW << "You just rejected this booking successfully!" << colors:: RESET << endl;
                             }else{
                                 cout << colors::RED << "Please enter the valid choice!" << colors::RESET << endl;
                             }
@@ -1542,7 +1546,7 @@ bool System::blockUser(){
     string input;
     getline(cin >> std::ws, input);
     
-
+    input[0] = toupper(input[0]);//conver the fisrt character of input become uppercase
     bool isSupporter = (logged_in_member == nullptr);
     if(isSupporter){
         logged_in_member = logged_in_supporter;//use this to prevent segment fault when the current users is supporter

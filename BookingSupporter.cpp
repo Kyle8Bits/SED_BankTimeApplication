@@ -83,7 +83,8 @@ void BookingSupporter::displayAvailableSupporter(std::vector<Member*> member_lis
     for (size_t i = 0; i < member_list.size(); ++i) {
         if (Supporter* supporter = dynamic_cast<Supporter*>(member_list[i])) {
             if (supporter->getMemberId() != logged_in_member->getMemberId() && supporter->getStatus() == Status::ONLINE) {
-                if (!isInBlockList(logged_in_member->block_list, supporter->getMemberId())) {
+                if (!isInBlockList(logged_in_member->block_list, supporter->getMemberId()) && !isInBlockList(supporter->block_list, logged_in_member->getMemberId())) {
+                    //if the the supporter appears in the block list of the member, we will not display the supporter and vice versa
                     cout <<bk_colors::WHITE_BOLD<<"| "<< std::setw(10) << supporter->getMemberId() <<"| "<<std::setw(23) << supporter->getFullName()
                             <<"| " << std::setw(13) << supporter->getCity() <<"| "<< std::setw(14) << supporter->getCost() 
                             <<"| " << std::setw(38) << supporter->getAboutMe() << "| " <<std::setw(38) << supporter->displaySkillList() 

@@ -179,6 +179,7 @@ bool Member::unblockUser(){
     cout << "Do you want to unblock any user?" << endl;
     cout << "1. Yes" << endl;
     cout << "2. No" << endl;
+    cout << ">Your choice: ";
     string choice;
     getline(cin >> std::ws, choice);
     if(choice == "1"){
@@ -186,6 +187,7 @@ bool Member::unblockUser(){
         cout << ">Your choice: ";
         string input;
         getline(cin >> std::ws, input);
+        input[0] = toupper(input[0]);//UPPERCASE THE FIRST LETTER
         for(int i = 0; i < this->block_list.size(); ++i){
             if(this->block_list[i] == input){
                 this->block_list.erase(this->block_list.begin() + i);
